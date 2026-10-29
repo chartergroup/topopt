@@ -1,0 +1,304 @@
+{
+ "ok": true,
+ "input": {
+  "kind": "run",
+  "run_dir": "/Users/me/topopt-work/runs/tshirt_hook/run"
+ },
+ "out_dir": "/Users/me/topopt-work/runs/tshirt_hook/run/renders",
+ "montage": {
+  "path": "/Users/me/topopt-work/runs/tshirt_hook/run/renders/final_montage.png",
+  "width": 1280,
+  "height": 1050,
+  "bytes": 166433
+ },
+ "views": [
+  {
+   "name": "iso",
+   "direction": [
+    1.0,
+    -1.0,
+    0.8
+   ],
+   "back_face_share": 0.0,
+   "cut_face_visible_px": 0,
+   "path": "/Users/me/topopt-work/runs/tshirt_hook/run/renders/final_iso.png",
+   "width": 640,
+   "height": 480,
+   "bytes": 54962
+  },
+  {
+   "name": "front",
+   "direction": [
+    0.0,
+    -1.0,
+    0.0
+   ],
+   "back_face_share": 0.0,
+   "cut_face_visible_px": 0,
+   "path": "/Users/me/topopt-work/runs/tshirt_hook/run/renders/final_front.png",
+   "width": 640,
+   "height": 480,
+   "bytes": 35859
+  },
+  {
+   "name": "right",
+   "direction": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "back_face_share": 0.0,
+   "cut_face_visible_px": 0,
+   "path": "/Users/me/topopt-work/runs/tshirt_hook/run/renders/final_right.png",
+   "width": 640,
+   "height": 480,
+   "bytes": 30817
+  },
+  {
+   "name": "top",
+   "direction": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "back_face_share": 0.0,
+   "cut_face_visible_px": 0,
+   "path": "/Users/me/topopt-work/runs/tshirt_hook/run/renders/final_top.png",
+   "width": 640,
+   "height": 480,
+   "bytes": 31700
+  }
+ ],
+ "section": null,
+ "meshes": [
+  {
+   "file": "final.stl",
+   "path": "/Users/me/topopt-work/runs/tshirt_hook/run/result/final.stl",
+   "role": "part",
+   "drawn": "solid",
+   "bbox_mm": {
+    "min": [
+     0.0,
+     -17.5,
+     -30.0
+    ],
+    "max": [
+     76.0,
+     17.5,
+     36.0
+    ],
+    "size": [
+     76.0,
+     35.0,
+     66.0
+    ]
+   },
+   "triangles": 20146,
+   "watertight": true,
+   "winding_consistent": true,
+   "volume_mm3": 20742.7,
+   "inside_out": false
+  },
+  {
+   "file": "design.stl",
+   "path": "/Users/me/topopt-work/runs/tshirt_hook/design.stl",
+   "role": "design",
+   "drawn": "ghost",
+   "bbox_mm": {
+    "min": [
+     2.0,
+     -14.0,
+     -30.0
+    ],
+    "max": [
+     72.0,
+     14.0,
+     36.0
+    ],
+    "size": [
+     70.0,
+     28.0,
+     66.0
+    ]
+   },
+   "triangles": 16,
+   "watertight": true,
+   "winding_consistent": true,
+   "volume_mm3": 65940.0,
+   "inside_out": false
+  },
+  {
+   "file": "wall_plate.stl",
+   "path": "/Users/me/topopt-work/runs/tshirt_hook/wall_plate.stl",
+   "role": "fixed",
+   "drawn": "ghost",
+   "bbox_mm": {
+    "min": [
+     0.0,
+     -17.5,
+     -30.0
+    ],
+    "max": [
+     3.5,
+     17.5,
+     36.0
+    ],
+    "size": [
+     3.5,
+     35.0,
+     66.0
+    ]
+   },
+   "triangles": 12,
+   "watertight": true,
+   "winding_consistent": true,
+   "volume_mm3": 8085.0,
+   "inside_out": false
+  },
+  {
+   "file": "screw_hole_top.stl",
+   "path": "/Users/me/topopt-work/runs/tshirt_hook/screw_hole_top.stl",
+   "role": "keep-out",
+   "drawn": "ghost",
+   "bbox_mm": {
+    "min": [
+     -1.0,
+     -4.5,
+     25.5
+    ],
+    "max": [
+     80.0,
+     4.5,
+     34.5
+    ],
+    "size": [
+     81.0,
+     9.0,
+     9.0
+    ]
+   },
+   "triangles": 316,
+   "watertight": true,
+   "winding_consistent": true,
+   "volume_mm3": 4918.0,
+   "inside_out": false
+  },
+  {
+   "file": "screw_hole_bottom.stl",
+   "path": "/Users/me/topopt-work/runs/tshirt_hook/screw_hole_bottom.stl",
+   "role": "keep-out",
+   "drawn": "ghost",
+   "bbox_mm": {
+    "min": [
+     -1.0,
+     -4.5,
+     -24.5
+    ],
+    "max": [
+     80.0,
+     4.5,
+     -15.5
+    ],
+    "size": [
+     81.0,
+     9.0,
+     9.0
+    ]
+   },
+   "triangles": 316,
+   "watertight": true,
+   "winding_consistent": true,
+   "volume_mm3": 4918.0,
+   "inside_out": false
+  },
+  {
+   "file": "hook_tip.stl",
+   "path": "/Users/me/topopt-work/runs/tshirt_hook/hook_tip.stl",
+   "role": "load",
+   "drawn": "ghost",
+   "bbox_mm": {
+    "min": [
+     56.0,
+     -9.0,
+     11.0
+    ],
+    "max": [
+     76.0,
+     9.0,
+     24.0
+    ],
+    "size": [
+     20.0,
+     18.0,
+     13.0
+    ]
+   },
+   "triangles": 26,
+   "watertight": true,
+   "winding_consistent": true,
+   "volume_mm3": 1926.0,
+   "inside_out": false
+  }
+ ],
+ "back_face_share": 0.0,
+ "missing_files": [],
+ "notes": [],
+ "regions": "ghost",
+ "load_arrows": null,
+ "colors": {
+  "part": "#9aa7b4",
+  "design": "#78a5eb",
+  "fixed": "#285ac8",
+  "load": "#d62728",
+  "keep-out": "#966428",
+  "interface": "#32a05a",
+  "cut": "#eb466e",
+  "back_face": "#d91abf",
+  "cut_face": "#e88c3c"
+ },
+ "ghost_style": {
+  "design, keep-out": "tint alpha 0.14, thin lines",
+  "fixed, load (with a part)": "tint alpha 0.35, lines in the role color"
+ },
+ "scale": {
+  "px_per_mm": 4.695,
+  "bar_mm": 20.0
+ },
+ "tile_size": [
+  640,
+  480
+ ],
+ "triangles_drawn": 20832,
+ "memory_estimate_mb": 459,
+ "legend": [
+  {
+   "label": "part",
+   "style": "solid"
+  },
+  {
+   "label": "design",
+   "style": "ghost"
+  },
+  {
+   "label": "fixed",
+   "style": "ghost"
+  },
+  {
+   "label": "load",
+   "style": "ghost"
+  },
+  {
+   "label": "keep-out",
+   "style": "ghost"
+  },
+  {
+   "label": "back face",
+   "style": "solid"
+  }
+ ],
+ "font": "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+ "elapsed_s": 2.87,
+ "out_dir_rel": "runs/tshirt_hook/run/renders",
+ "montage_rel": "runs/tshirt_hook/run/renders/final_montage.png",
+ "inline": false
+}

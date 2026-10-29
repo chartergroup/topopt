@@ -1,0 +1,304 @@
+{
+ "ok": true,
+ "input": {
+  "kind": "run",
+  "stl": "/Users/me/topopt-work/runs/tshirt_hook/run/result/final.stl",
+  "run_dir": "/Users/me/topopt-work/runs/tshirt_hook/run",
+  "sha256": "1d7c87b51c3f68bc786bdfa3518c543d0b42b17bf0b3ef26e25484c517d6db17",
+  "bytes": 1025684,
+  "triangles": 20512,
+  "total_area_mm2": 12591.765
+ },
+ "settings": {
+  "build_direction": [
+   0.0,
+   0.0,
+   1.0
+  ],
+  "build_direction_label": "+z",
+  "bed_mm": [
+   220.0,
+   220.0
+  ],
+  "printer_type": "fdm",
+  "self_supporting_angle_deg": 45.0,
+  "angle_source": "default of printer_type fdm",
+  "limits": {
+   "min_wall_mm": {
+    "value": null,
+    "source": "none"
+   },
+   "min_wall_area_pct": {
+    "value": 0.5,
+    "source": "assumed"
+   },
+   "max_closed_void_mm3": {
+    "value": null,
+    "source": "none"
+   },
+   "max_bodies": {
+    "value": 1,
+    "source": "assumed"
+   },
+   "max_overhang_area_mm2": {
+    "value": null,
+    "source": "none"
+   },
+   "max_support_volume_mm3": {
+    "value": null,
+    "source": "none"
+   },
+   "min_plate_contact_mm2": {
+    "value": null,
+    "source": "none"
+   }
+  },
+  "assumed": [
+   "build_direction",
+   "bed_mm",
+   "printer_type"
+  ],
+  "from": [
+   "defaults",
+   "run.json"
+  ]
+ },
+ "checks": [
+  {
+   "id": "mesh_closed",
+   "state": "pass",
+   "reason": "after the float32 reload every edge joins 2 faces, the winding agrees and the volume is positive",
+   "value": {
+    "triangles": 20512,
+    "vertices": 10248,
+    "watertight": true,
+    "winding_consistent": true,
+    "open_edges": 0,
+    "nonmanifold_edges": 0,
+    "winding_conflicts": 0,
+    "zero_area_faces": 0,
+    "degenerate_shells": 0,
+    "volume_mm3": 20738.481,
+    "inside_out": false,
+    "inverted_shells": 0
+   },
+   "limit": {
+    "value": "closed manifold, positive volume",
+    "key": null,
+    "source": "definition"
+   },
+   "method": "edge counts on the STL as read (float32)",
+   "estimate": false
+  },
+  {
+   "id": "bodies",
+   "state": "pass",
+   "reason": "1 body; the limit is 1 (assumed)",
+   "value": {
+    "count": 1,
+    "shells": 1,
+    "largest": [
+     {
+      "triangles": 20512,
+      "volume_mm3": 20738.481,
+      "closed": true,
+      "inside_out": false
+     }
+    ]
+   },
+   "limit": {
+    "value": 1,
+    "key": "max_bodies",
+    "source": "assumed"
+   },
+   "method": "shells of faces joined along edges",
+   "estimate": false
+  },
+  {
+   "id": "closed_voids",
+   "state": "pass",
+   "reason": "no closed void",
+   "value": {
+    "count": 0,
+    "total_mm3": 0,
+    "largest_mm3": 0.0,
+    "voids": []
+   },
+   "limit": {
+    "value": null,
+    "key": "max_closed_void_mm3",
+    "source": "none",
+    "compared": "the largest void"
+   },
+   "method": "closed shells with a negative volume that lie inside a closed shell with a positive volume",
+   "estimate": false
+  },
+  {
+   "id": "bed_fit",
+   "state": "pass",
+   "reason": "with build direction +z (assumed) the part fits on a 220 x 220 mm bed (assumed)",
+   "value": {
+    "extents_mm": [
+     76.024,
+     35.0,
+     66.024
+    ],
+    "height_mm": 66.024,
+    "bed_fit": true,
+    "bed_turn_deg": 0,
+    "bed_footprint_mm": [
+     76.024,
+     35.0
+    ],
+    "bed_margin_mm": 143.976,
+    "build_direction_label": "+z"
+   },
+   "limit": {
+    "value": [
+     220.0,
+     220.0
+    ],
+    "key": "bed_mm",
+    "source": "assumed"
+   },
+   "method": "V2 bed fit: extents in the build frame, turn about the build axis",
+   "estimate": false
+  },
+  {
+   "id": "overhang",
+   "state": "unknown",
+   "reason": "2,414 mm2 of overhang (19.17 % of the area) below 45 degrees from the plate (default of printer_type fdm). No max_overhang_area_mm2 in the print block, so there is no limit",
+   "value": {
+    "area_mm2": 2413.646,
+    "fraction": 0.19168,
+    "angle_deg": 45.0,
+    "angle_source": "default of printer_type fdm",
+    "build_direction_label": "+z"
+   },
+   "limit": {
+    "value": null,
+    "key": "max_overhang_area_mm2",
+    "source": "none"
+   },
+   "method": "V2 overhang rule n.b < -cos(angle)",
+   "estimate": false
+  },
+  {
+   "id": "support_volume",
+   "state": "unknown",
+   "reason": "the support estimate is 52,590 mm3 (a solid-column upper bound; real supports use less). No max_support_volume_mm3 in the print block, so there is no limit",
+   "value": {
+    "volume_mm3": 52589.7,
+    "rays": 6826,
+    "support_needed": true
+   },
+   "limit": {
+    "value": null,
+    "key": "max_support_volume_mm3",
+    "source": "none"
+   },
+   "method": "V2 support estimate, gap definition",
+   "estimate": true
+  },
+  {
+   "id": "plate_contact",
+   "state": "unknown",
+   "reason": "122.5 mm2 rests on the plate. No min_plate_contact_mm2 in the print block, so there is no limit",
+   "value": {
+    "area_mm2": 122.5,
+    "build_direction_label": "+z"
+   },
+   "limit": {
+    "value": null,
+    "key": "min_plate_contact_mm2",
+    "source": "none"
+   },
+   "method": "V2 plate contact",
+   "estimate": false
+  },
+  {
+   "id": "wall_thickness",
+   "state": "unknown",
+   "reason": "no min_wall_mm in the print block, so there is no limit. p1 of the chords is 2.811 mm; the area with a chord under 0.8 / 1.2 / 2.0 mm is 0.0 / 0.0 / 6.72 mm2. The rule of this check: a pass needs a limit of at least 3 x the resolution (2 mm, voxel size of the run (run.json), or the median mesh edge if that is larger), here 6 mm (see pitfalls/mesh-coarser-than-members). A member under 6 mm (3 x the voxel size 2 mm of this run) was under-resolved in the analysis of the run. This is the printed shape, not the stress",
+   "value": {
+    "thinnest_member_mm": 2.811,
+    "min_mm": 1.507,
+    "samples": 60000,
+    "percentiles_mm": {
+     "p0.1": 2.102,
+     "p1": 2.811,
+     "p5": 3.437,
+     "p50": 4.509
+    },
+    "area_below_mm2": {
+     "0.8": 0.0,
+     "1.2": 0.0,
+     "2.0": 6.72
+    },
+    "area_below_pct": {
+     "0.8": 0.0,
+     "1.2": 0.0,
+     "2.0": 0.053
+    },
+    "percentile": 1.0,
+    "max_chord_mm": 12.0,
+    "resolution": {
+     "resolution_mm": 2.0,
+     "source": "voxel size of the run (run.json), or the median mesh edge if that is larger",
+     "voxel_size_mm": 2.0,
+     "mesh_edge_median_mm": 0.9083,
+     "elements_across": 3,
+     "resolves_from_mm": 6.0
+    }
+   },
+   "limit": {
+    "value": null,
+    "key": "min_wall_mm",
+    "source": "none",
+    "tolerance_pct": 0.5,
+    "tolerance_key": "min_wall_area_pct",
+    "tolerance_source": "assumed",
+    "chord_tolerance_mm": 0.0001
+   },
+   "method": "V2 chord estimate along the inward face normal on the STL mesh",
+   "estimate": true
+  }
+ ],
+ "summary": {
+  "pass": 4,
+  "fail": 0,
+  "unknown": 4,
+  "failed": [],
+  "unknown_ids": [
+   "overhang",
+   "support_volume",
+   "plate_contact",
+   "wall_thickness"
+  ]
+ },
+ "gate": {
+  "strict": false,
+  "state": "off",
+  "exit_code": 0,
+  "failed": [],
+  "override": null,
+  "note": "Report only. With --strict (or strict=true) a failed check sets gate.state to fail and the exit code 4"
+ },
+ "definitions": {
+  "mesh_closed": "The STL is read as float32 and the vertices that are equal are joined. A face with two equal corners is left out (it has no area). Closed: every edge joins exactly 2 faces, the winding agrees across each edge, the volume is positive, and no closed shell is inside out (a closed shell with a negative volume that lies in no other shell).",
+  "bodies": "A body is a shell of faces joined along edges that have exactly 2 faces, with an area above 1e-12 mm2. A closed shell that has a negative volume and lies inside a closed shell with a positive volume is a void (the wall of a cavity), not a body. A closed shell with a negative volume that lies in no other shell is a body that is written inside out: it counts as a body and mesh_closed fails. A body inside a void counts as a body.",
+  "closed_voids": "A closed shell with a negative volume that lies inside a closed shell with a positive volume: a cavity inside the part with no opening. The volume is the volume of the cavity. A cavity that only touches the outside along an edge is not closed (the mesh is not manifold there). A cavity that two bodies enclose together is not found.",
+  "bed_fit": "V2 bed fit in the build frame, with a turn about the build axis (CONTRACTS.md section 18).",
+  "overhang": "V2: area of faces with n.b < -cos(angle), plate contact excluded (CONTRACTS.md section 18).",
+  "support_volume": "estimate of the space under the overhang faces: sum over the faces of (free gap down to the plate or to the part) x (projected face area), in mm3; a solid-column upper bound, real supports use less material; for up to 30000 faces (random sample, fixed seed) scaled to the full overhang area",
+  "plate_contact": "V2: area of faces that rest on the plate (CONTRACTS.md section 18).",
+  "wall_thickness": "V2 chord estimate: 60,000 surface points, a chord along the inward face normal to the first wall. The share of the surface area with a chord under min_wall_mm - 0.0001 mm is compared with min_wall_area_pct. The rule of this check: a pass needs min_wall_mm to be at least 3 x the resolution (the voxel size of the run, or the median mesh edge, or the option); see pitfalls/mesh-coarser-than-members. The share has a sampling error of about sqrt(f (1 - f) / samples), given in the value."
+ },
+ "note": "Geometry only: no solve. A print pass is not a structural pass: the stress and the safety factor are separate checks. The thickness and the support volume are estimates. Nothing here stops a run.",
+ "timing_s": {
+  "mesh_health": 0.04,
+  "v2_numbers": 0.23,
+  "thickness": 1.51
+ },
+ "elapsed_s": 1.78
+}

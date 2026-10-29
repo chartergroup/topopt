@@ -1,0 +1,1201 @@
+{
+ "done": true,
+ "metrics": {
+  "mass_design_space_g": 24.65,
+  "mass_final_g": 10.79,
+  "mass_saved_pct": 56.2,
+  "volume_final_mm3": 8701.3,
+  "compliance_initial": 18938.446701128283,
+  "compliance_final": 851.8327009014666,
+  "stiffness_cases": [
+   {
+    "name": "thrust",
+    "N_per_mm": null,
+    "reason": "the case has loads of kind force_moment: |F|^2 / c holds for plain forces (c is the work of all loads, F is only their resultant)"
+   },
+   {
+    "name": "side_hit",
+    "N_per_mm": null,
+    "reason": "the case has loads of kind remote_force: |F|^2 / c holds for plain forces (c is the work of all loads, F is only their resultant)"
+   },
+   {
+    "name": "front_hit",
+    "N_per_mm": null,
+    "reason": "the case has loads of kind remote_force: |F|^2 / c holds for plain forces (c is the work of all loads, F is only their resultant)"
+   }
+  ],
+  "run_time_s": 969.8,
+  "iterations": 200,
+  "solver": "gpu-mg",
+  "filter": {
+   "radius_mm": 3.0,
+   "radius_source": "default",
+   "solid_neighbours": "density_one",
+   "min_member_mm": null,
+   "min_member_radius_mm": null,
+   "min_feature_mm": 3.0,
+   "min_feature_note": "walls survive from about 1.6 mm and rods from about 2.81 mm (continuum values, interior of the design space; thinner ones vanish). The grid sets a floor of about one voxel (2 mm). A skin at a free face of the design space can be about half as thin (0.799 mm for a wall)",
+   "size": {
+    "radius_voxels": 1.5,
+    "entries_per_row": 19,
+    "entries": 145369,
+    "build_peak_bytes_estimate": 8722140,
+    "build_peak_gib_estimate": 0.01,
+    "held_bytes_estimate": 4070332,
+    "held_gib_estimate": 0.0
+   },
+   "facts": []
+  },
+  "constraints": [
+   {
+    "name": "volume",
+    "value": 0.2000291240085148,
+    "limit": 0.2,
+    "g": 0.00014562004257401284,
+    "violation": 0.00014562004257401284
+   }
+  ],
+  "rows": [],
+  "watertight": true,
+  "triangles": 95590,
+  "mesh": {
+   "method": "sdf",
+   "params": {
+    "sigma": 1.0,
+    "window": 1.67,
+    "level_range": 0.67,
+    "n_levels": 13,
+    "clip": 2.8,
+    "near": 1.33,
+    "taubin_iterations": 10,
+    "taubin_lambda": 0.5,
+    "taubin_mu": -0.53,
+    "pin_tol": 0.35,
+    "calibrate_steps": 3,
+    "calibrate_steps_fill": 8,
+    "surface_depth": 1.0,
+    "surface_overshoot": 1.0,
+    "fill_max_share": 0.05,
+    "fill_slope_min": 0.2,
+    "fill_slope_max": 1.5,
+    "envelope_fill": "on",
+    "band": 3.0,
+    "simplify_tol": 1e-05,
+    "deep_depth": 1.5,
+    "up": 2,
+    "sigma_mm": 0.5,
+    "pitch_mm": 0.25
+   },
+   "sources": {
+    "frozen": "stl",
+    "keep_out": "stl"
+   },
+   "exact": {
+    "union": true,
+    "cut": true
+   },
+   "snap": {
+    "moved": 9128,
+    "in_band": 36865,
+    "of": 131884,
+    "target_outside": 0,
+    "largest_move_mm": 0.17478241434339342,
+    "turned_faces": 154,
+    "halving_rounds": 4,
+    "band_mm": 0.0875,
+    "depth_mm": 0.0875,
+    "volume_change_mm3": 0.4777430764424935
+   },
+   "volume_thresholded_mm3": 8700.21875,
+   "volume_smoothed_mm3": 9497.38872680775,
+   "calibration": [
+    {
+     "delta_mm": 0.0,
+     "mc_mm3": 9494.220769652668,
+     "final_mm3": 8701.317690771688,
+     "target_mm3": 8700.218739791773,
+     "error": 0.00012631302876196,
+     "plane_clip_removed_mm3": 27.29449821569324,
+     "envelope_cut_removed_mm3": 777.2930493032327
+    }
+   ],
+   "islands_removed": 0,
+   "extra_bodies_removed": 1,
+   "extra_bodies_volume_mm3": 1.0208227119624588e-05,
+   "voids_filled": {
+    "count": 1,
+    "volume_mm3": 0.001395026594010626
+   },
+   "plane_clip": {
+    "planes": 89,
+    "margin_mm": 0.0875,
+    "vertices_beyond": 38123,
+    "largest_excess_mm": 0.35500645725611424,
+    "volume_removed_mm3": 27.29449821569324,
+    "left": [],
+    "skipped_for_interfaces": 0,
+    "passes": 2
+   },
+   "envelope_cut": {
+    "cut": true,
+    "vertices_beyond": 51327,
+    "largest_excess_mm": 0.4213414208075596,
+    "volume_removed_mm3": 777.2930493032327,
+    "volume_removed_pct": 8.19533904026243,
+    "faces": [
+     {
+      "kind": "plane",
+      "normal": [
+       0.024502447,
+       0.99969977,
+       0.0
+      ],
+      "offset_mm": 5.26802599148883,
+      "vertices": 17548,
+      "largest_excess_mm": 0.4213414208075596,
+      "volume_removed_mm3": 265.1030275198788
+     },
+     {
+      "kind": "plane",
+      "normal": [
+       0.024502447,
+       -0.99969977,
+       0.0
+      ],
+      "offset_mm": 5.26802599148883,
+      "vertices": 16943,
+      "largest_excess_mm": 0.41680352051399205,
+      "volume_removed_mm3": 257.62651232749533
+     },
+     {
+      "kind": "plane",
+      "normal": [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      "offset_mm": 6.0,
+      "vertices": 5936,
+      "largest_excess_mm": 0.3489646911621094,
+      "volume_removed_mm3": 88.06137540377257
+     },
+     {
+      "kind": "plane",
+      "normal": [
+       0.0,
+       0.0,
+       1.0
+      ],
+      "offset_mm": 12.0,
+      "vertices": 8384,
+      "largest_excess_mm": 0.3471183776855469,
+      "volume_removed_mm3": 121.30889547716531
+     },
+     {
+      "kind": "plane",
+      "normal": [
+       -0.008219539,
+       -0.999966219,
+       0.0
+      ],
+      "offset_mm": 2.2504905681842895,
+      "vertices": 70,
+      "largest_excess_mm": 0.34602178814197493,
+      "volume_removed_mm3": 1.2252017447481403
+     },
+     {
+      "kind": "plane",
+      "normal": [
+       -0.321436679,
+       0.946931075,
+       0.0
+      ],
+      "offset_mm": -27.164975912590904,
+      "vertices": 138,
+      "largest_excess_mm": 0.3300509078570423,
+      "volume_removed_mm3": 2.0187983294145493
+     },
+     {
+      "kind": "plane",
+      "normal": [
+       -0.258819292,
+       0.96592576,
+       0.0
+      ],
+      "offset_mm": -21.208740668005458,
+      "vertices": 59,
+      "largest_excess_mm": 0.32867182646835663,
+      "volume_removed_mm3": 0.8910558143622839
+     },
+     {
+      "kind": "plane",
+      "normal": [
+       -0.449652084,
+       -0.893203786,
+       0.0
+      ],
+      "offset_mm": -39.49457479841128,
+      "vertices": 59,
+      "largest_excess_mm": 0.32712448126728183,
+      "volume_removed_mm3": 0.932824055660516
+     },
+     {
+      "kind": "plane",
+      "normal": [
+       -0.382685463,
+       0.923878691,
+       0.0
+      ],
+      "offset_mm": -33.03131493609329,
+      "vertices": 66,
+      "largest_excess_mm": 0.3246135880929993,
+      "volume_removed_mm3": 1.0024377911575693
+     },
+     {
+      "kind": "plane",
+      "normal": [
+       -0.507101488,
+       -0.861886351,
+       0.0
+      ],
+      "offset_mm": -45.08433483071994,
+      "vertices": 58,
+      "largest_excess_mm": 0.32151092182457885,
+      "volume_removed_mm3": 0.9467468027599265
+     },
+     {
+      "kind": "plane",
+      "normal": [
+       -0.390263422,
+       -0.920703243,
+       0.0
+      ],
+      "offset_mm": -33.76003674101583,
+      "vertices": 49,
+      "largest_excess_mm": 0.3194332065899689,
+      "volume_removed_mm3": 0.8214420788652305
+     },
+     {
+      "kind": "plane",
+      "normal": [
+       -0.329212098,
+       -0.944256,
+       0.0
+      ],
+      "offset_mm": -27.907433704123154,
+      "vertices": 48,
+      "largest_excess_mm": 0.3159224214826957,
+      "volume_removed_mm3": 0.8075193317658198
+     },
+     {
+      "kind": "plane",
+      "normal": [
+       -0.442284856,
+       0.896874632,
+       0.0
+      ],
+      "offset_mm": -38.78086134003351,
+      "vertices": 102,
+      "largest_excess_mm": 0.31551542214985123,
+      "volume_removed_mm3": 1.5175794338357647
+     },
+     {
+      "kind": "plane",
+      "normal": [
+       -0.83601196,
+       -0.54871122,
+       0.0
+      ],
+      "offset_mm": -78.29276765349864,
+      "vertices": 39,
+      "largest_excess_mm": 0.3097647484910113,
+      "volume_removed_mm3": 0.7796738375669984
+     },
+     {
+      "kind": "plane",
+      "normal": [
+       -0.562378931,
+       -0.82687964,
+       0.0
+      ],
+      "offset_mm": -50.506662121095836,
+      "vertices": 60,
+      "largest_excess_mm": 0.3082048726790762,
+      "volume_removed_mm3": 0.9745922969587479
+     },
+     {
+      "kind": "plane",
+      "normal": [
+       -0.55557558,
+       0.83146604,
+       0.0
+      ],
+      "offset_mm": -49.83679787173823,
+      "vertices": 126,
+      "largest_excess_mm": 0.3042553110745064,
+      "volume_removed_mm3": 1.990952835215728
+     },
+     {
+      "kind": "plane",
+      "normal": [
+       -0.608752946,
+       0.793359849,
+       0.0
+      ],
+      "offset_mm": -55.09301741773577,
+      "vertices": 85,
+      "largest_excess_mm": 0.30279704747882596,
+      "volume_removed_mm3": 1.42012020413989
+     },
+     {
+      "kind": "plane",
+      "normal": [
+       -0.266749598,
+       -0.96376587,
+       0.0
+      ],
+      "offset_mm": -21.960868091298746,
+      "vertices": 55,
+      "largest_excess_mm": 0.3025749730113159,
+      "volume_removed_mm3": 0.9049785614616945
+     },
+     {
+      "kind": "plane",
+      "normal": [
+       -0.798329103,
+       -0.602221424,
+       0.0
+      ],
+      "offset_mm": -74.32932632959906,
+      "vertices": 44,
+      "largest_excess_mm": 0.30213444543800805,
+      "volume_removed_mm3": 0.793596584666409
+     },
+     {
+      "kind": "plane",
+      "normal": [
+       -0.793348406,
+       0.608767859,
+       0.0
+      ],
+      "offset_mm": -73.81019932879882,
+      "vertices": 66,
+      "largest_excess_mm": 0.30142467944066675,
+      "volume_removed_mm3": 1.1277425150522655
+     },
+     {
+      "kind": "plane",
+      "normal": [
+       -0.19509352,
+       0.980784644,
+       0.0
+      ],
+      "offset_mm": -15.18735522495214,
+      "vertices": 104,
+      "largest_excess_mm": 0.299330063447557,
+      "volume_removed_mm3": 1.5315021809351752
+     },
+     {
+      "kind": "plane",
+      "normal": [
+       -0.870107188,
+       -0.492862538,
+       0.0
+      ],
+      "offset_mm": -81.94581359763704,
+      "vertices": 37,
+      "largest_excess_mm": 0.29849888088797893,
+      "volume_removed_mm3": 0.7239828491693556
+     },
+     {
+      "kind": "plane",
+      "normal": [
+       -0.073603832,
+       -0.997287559,
+       0.0
+      ],
+      "offset_mm": -3.814417705110416,
+      "vertices": 40,
+      "largest_excess_mm": 0.29824812104180015,
+      "volume_removed_mm3": 0.8910558143622839
+     },
+     {
+      "kind": "plane",
+      "normal": [
+       -0.83147063,
+       0.55556871,
+       0.0
+      ],
+      "offset_mm": -77.81143361787574,
+      "vertices": 64,
+      "largest_excess_mm": 0.2961073851491365,
+      "volume_removed_mm3": 1.0581287795552121
+     },
+     {
+      "kind": "plane",
+      "normal": [
+       -0.615263492,
+       -0.78832153,
+       0.0
+      ],
+      "offset_mm": -55.73990110201636,
+      "vertices": 62,
+      "largest_excess_mm": 0.2956510089460997,
+      "volume_removed_mm3": 0.9885150440581586
+     },
+     {
+      "kind": "plane",
+      "normal": [
+       -0.499999956,
+       0.866025429,
+       0.0
+      ],
+      "offset_mm": -44.39095371415442,
+      "vertices": 111,
+      "largest_excess_mm": 0.29365562425054004,
+      "volume_removed_mm3": 1.6289614106310502
+     },
+     {
+      "kind": "plane",
+      "normal": [
+       -0.659352309,
+       0.751834113,
+       0.0
+      ],
+      "offset_mm": -60.141857773301936,
+      "vertices": 87,
+      "largest_excess_mm": 0.28956688355937793,
+      "volume_removed_mm3": 1.3922747099410686
+     },
+     {
+      "kind": "plane",
+      "normal": [
+       -0.138672144,
+       -0.990338344,
+       0.0
+      ],
+      "offset_mm": -9.888597444437153,
+      "vertices": 53,
+      "largest_excess_mm": 0.2891517037616929,
+      "volume_removed_mm3": 0.9745922969587479
+     },
+     {
+      "kind": "plane",
+      "normal": [
+       -0.751846543,
+       0.659338134,
+       0.0
+      ],
+      "offset_mm": -69.52040397097623,
+      "vertices": 72,
+      "largest_excess_mm": 0.2888004287622159,
+      "volume_removed_mm3": 1.197356250549319
+     },
+     {
+      "kind": "plane",
+      "normal": [
+       -0.203144467,
+       -0.979148776,
+       0.0
+      ],
+      "offset_mm": -15.945907330683827,
+      "vertices": 57,
+      "largest_excess_mm": 0.28683990735038534,
+      "volume_removed_mm3": 0.932824055660516
+     },
+     {
+      "kind": "plane",
+      "normal": [
+       -0.757229088,
+       -0.653149377,
+       0.0
+      ],
+      "offset_mm": -70.07343313781668,
+      "vertices": 46,
+      "largest_excess_mm": 0.2825407915302834,
+      "volume_removed_mm3": 0.7657510904675876
+     },
+     {
+      "kind": "plane",
+      "normal": [
+       -0.707103138,
+       0.707110425,
+       0.0
+      ],
+      "offset_mm": -64.9563278735171,
+      "vertices": 76,
+      "largest_excess_mm": 0.27541703629302167,
+      "volume_removed_mm3": 1.239124491847551
+     },
+     {
+      "kind": "plane",
+      "normal": [
+       -0.665508406,
+       -0.746390355,
+       0.0
+      ],
+      "offset_mm": -60.75964402230841,
+      "vertices": 50,
+      "largest_excess_mm": 0.2749026127443018,
+      "volume_removed_mm3": 0.8353648259646411
+     },
+     {
+      "kind": "plane",
+      "normal": [
+       -0.004109596,
+       0.999991556,
+       0.0
+      ],
+      "offset_mm": 2.6296756236403476,
+      "vertices": 55,
+      "largest_excess_mm": 0.2746685378218099,
+      "volume_removed_mm3": 0.8632103201634624
+     },
+     {
+      "kind": "plane",
+      "normal": [
+       -0.910864319,
+       0.412705939,
+       0.0
+      ],
+      "offset_mm": -86.43650350293744,
+      "vertices": 62,
+      "largest_excess_mm": 0.27444591795577294,
+      "volume_removed_mm3": 1.4340429512393007
+     },
+     {
+      "kind": "plane",
+      "normal": [
+       -0.866028322,
+       0.499994946,
+       0.0
+      ],
+      "offset_mm": -81.50473013768112,
+      "vertices": 60,
+      "largest_excess_mm": 0.27397298941844267,
+      "volume_removed_mm3": 1.0859742737540334
+     },
+     {
+      "kind": "plane",
+      "normal": [
+       -0.06540421,
+       0.997858852,
+       0.0
+      ],
+      "offset_mm": -3.0517181190877687,
+      "vertices": 104,
+      "largest_excess_mm": 0.27326900523725894,
+      "volume_removed_mm3": 1.5593476751339967
+     },
+     {
+      "kind": "plane",
+      "normal": [
+       -0.130524537,
+       0.991445079,
+       0.0
+      ],
+      "offset_mm": -9.125881030695378,
+      "vertices": 105,
+      "largest_excess_mm": 0.27136934143207553,
+      "volume_removed_mm3": 1.545424928034586
+     },
+     {
+      "kind": "plane",
+      "normal": [
+       -0.712897785,
+       -0.701267957,
+       0.0
+      ],
+      "offset_mm": -65.54431009797726,
+      "vertices": 47,
+      "largest_excess_mm": 0.2691400329037058,
+      "volume_removed_mm3": 0.8214420788652305
+     },
+     {
+      "kind": "plane",
+      "normal": [
+       -0.896867676,
+       0.442298961,
+       0.0
+      ],
+      "offset_mm": -84.87361096592451,
+      "vertices": 48,
+      "largest_excess_mm": 0.26686439830072883,
+      "volume_removed_mm3": 0.9606695498593373
+     },
+     {
+      "kind": "plane",
+      "normal": [
+       -0.898678355,
+       -0.438608269,
+       0.0
+      ],
+      "offset_mm": -85.07489618089808,
+      "vertices": 22,
+      "largest_excess_mm": 0.23950927219855556,
+      "volume_removed_mm3": 0.7518283433681769
+     },
+     {
+      "kind": "plane",
+      "normal": [
+       -0.896866646,
+       0.442301051,
+       0.0
+      ],
+      "offset_mm": -84.849145401264,
+      "vertices": 10,
+      "largest_excess_mm": 0.2032887866971775,
+      "volume_removed_mm3": 0.2923776890876244
+     },
+     {
+      "kind": "plane",
+      "normal": [
+       -0.004111853,
+       -0.999991546,
+       0.0
+      ],
+      "offset_mm": 4.952271137465862,
+      "vertices": 3,
+      "largest_excess_mm": 0.04775127989651858,
+      "volume_removed_mm3": 0.0974592296958748
+     },
+     {
+      "kind": "plane",
+      "normal": [
+       -0.004111853,
+       0.999991546,
+       0.0
+      ],
+      "offset_mm": 4.9522711374658615,
+      "vertices": 2,
+      "largest_excess_mm": 0.04255538567174605,
+      "volume_removed_mm3": 0.0974592296958748
+     },
+     {
+      "kind": "plane",
+      "normal": [
+       -0.03271904,
+       -0.999464589,
+       0.0
+      ],
+      "offset_mm": 4.6374133819189,
+      "vertices": 2,
+      "largest_excess_mm": 0.028283774327473154,
+      "volume_removed_mm3": 0.12530472389469616
+     },
+     {
+      "kind": "plane",
+      "normal": [
+       -0.03271904,
+       0.999464589,
+       0.0
+      ],
+      "offset_mm": 4.6374133819189,
+      "vertices": 2,
+      "largest_excess_mm": 0.02752889105865713,
+      "volume_removed_mm3": 0.08353648259646411
+     },
+     {
+      "kind": "plane",
+      "normal": [
+       -0.065402269,
+       0.99785898,
+       0.0
+      ],
+      "offset_mm": 4.277362541995668,
+      "vertices": 4,
+      "largest_excess_mm": 0.01623563068317715,
+      "volume_removed_mm3": 0.13922747099410684
+     },
+     {
+      "kind": "plane",
+      "normal": [
+       -0.065402269,
+       -0.99785898,
+       0.0
+      ],
+      "offset_mm": 4.277362541995668,
+      "vertices": 3,
+      "largest_excess_mm": 0.01494931909037816,
+      "volume_removed_mm3": 0.12530472389469616
+     },
+     {
+      "kind": "plane",
+      "normal": [
+       -0.098018228,
+       -0.99518462,
+       0.0
+      ],
+      "offset_mm": 3.9191224250575174,
+      "vertices": 2,
+      "largest_excess_mm": 0.003876306174228415,
+      "volume_removed_mm3": 1.461888447062394
+     },
+     {
+      "kind": "plane",
+      "normal": [
+       -0.098018228,
+       0.99518462,
+       0.0
+      ],
+      "offset_mm": 3.9191224250575174,
+      "vertices": 2,
+      "largest_excess_mm": 0.003588175274350223,
+      "volume_removed_mm3": 0.8214420868369596
+     }
+    ],
+    "tol_mm": 5.285799583645255e-05,
+    "regions": 2,
+    "interface_pieces": 0,
+    "passes": 2,
+    "t_s": {
+     "mesh_step": 162.744,
+     "cut_pass": 29.656
+    }
+   },
+   "envelope_fill": {
+    "ran": true,
+    "candidates": 204185,
+    "grown": 46844,
+    "loose_dropped": 1,
+    "grown_inside_mm3": 125.71875,
+    "grown_overshoot_mm3": 606.21875,
+    "note": "the fill moves material from the members to the skin of the design space: at the same mass the stiffness can drop, more on a coarse grid (CONTRACTS.md section 19). Option: settings.envelope_fill: off",
+    "target_mm3": 8700.21875,
+    "grown_share_pct": 1.445006770663094
+   },
+   "local_loss": {
+    "deep_lost_mm3": 0.141,
+    "parts": 6,
+    "largest_mm3": 0.031,
+    "depth_fine_voxels": 1.5,
+    "sharp_mm3": 9432.2
+   },
+   "grid": {
+    "voxels": 12687360,
+    "limit": 30000000,
+    "est_peak_gib": 1.48,
+    "ram_gib": 93.8,
+    "ok": true,
+    "message": "the SDF grid has 12687360 voxels (about 1.5 GiB peak), the limit is 30000000."
+   },
+   "t_s": {
+    "fields": 7.349,
+    "smooth": 171.144,
+    "mesh": 162.744,
+    "local_loss": 4.418,
+    "checks": 0.595
+   },
+   "requested": "sdf",
+   "fallback": null,
+   "volume_final_mm3": 8701.3,
+   "volume_error_pct": 0.013,
+   "stl_roundtrip": {
+    "watertight": true,
+    "winding_consistent": true,
+    "bodies": 1,
+    "open_edges": 0,
+    "nonmanifold_edges": 0,
+    "zero_area_faces": 0,
+    "volume_mm3": 8701.318,
+    "triangles": 95590,
+    "ok": true
+   },
+   "watertight": true,
+   "checks": {
+    "fixed": {
+     "fixed:frame_clamp.stl": {
+      "uncovered_mm3": 0.0,
+      "max_outside_mm": 0.0,
+      "region_mm3": 1003.226078281262
+     },
+     "load:motor_mount": {
+      "uncovered_mm3": 9.00231477166726e-07,
+      "max_outside_mm": 3.1967350793883342e-06,
+      "region_mm3": 2060.695802084717
+     }
+    },
+    "keep_out": {
+     "plate_stack.stl": {
+      "intersect_mm3": 4.104531826397684e-06
+     },
+     "root_bolt_hole_a.stl": {
+      "intersect_mm3": 0.0
+     },
+     "root_bolt_hole_b.stl": {
+      "intersect_mm3": 0.0
+     },
+     "motor_bolt_hole_1.stl": {
+      "intersect_mm3": -5.551115123125783e-17
+     },
+     "motor_bolt_hole_2.stl": {
+      "intersect_mm3": 1.199040866595169e-14
+     },
+     "motor_bolt_hole_3.stl": {
+      "intersect_mm3": -4.163336342344337e-15
+     },
+     "motor_bolt_hole_4.stl": {
+      "intersect_mm3": 4.440892098500626e-16
+     },
+     "motor_shaft.stl": {
+      "intersect_mm3": 0.0
+     },
+     "motor_bell.stl": {
+      "intersect_mm3": 4.2926850008699366e-07
+     }
+    }
+   }
+  },
+  "robust": {
+   "on": false
+  },
+  "print": {
+   "ok": true,
+   "settings": {
+    "build_direction": [
+     0.0,
+     0.0,
+     1.0
+    ],
+    "build_direction_label": "+z",
+    "bed_mm": [
+     220.0,
+     220.0
+    ],
+    "printer_type": "fdm",
+    "self_supporting_angle_deg": 45.0,
+    "angle_source": "default of printer_type fdm",
+    "assumed": [
+     "build_direction",
+     "bed_mm",
+     "printer_type"
+    ],
+    "assumed_note": "these keys are not in the YAML print block: the report uses the defaults of CONTRACTS.md section 18"
+   },
+   "support_needed": true,
+   "total_area_mm2": 12591.765,
+   "configured": {
+    "label": "+z",
+    "direction": [
+     0.0,
+     0.0,
+     1.0
+    ],
+    "extents_mm": [
+     76.024,
+     35.0,
+     66.024
+    ],
+    "height_mm": 66.024,
+    "bed_fit": true,
+    "bed_turn_deg": 0,
+    "bed_footprint_mm": [
+     76.024,
+     35.0
+    ],
+    "bed_margin_mm": 143.976,
+    "overhang_area_mm2": 2413.646,
+    "overhang_fraction": 0.19168,
+    "plate_contact_area_mm2": 122.5,
+    "support_volume_mm3": 52589.7,
+    "support_rays": 6826
+   },
+   "options": [
+    {
+     "label": "+x",
+     "direction": [
+      1.0,
+      0.0,
+      0.0
+     ],
+     "extents_mm": [
+      35.0,
+      66.024,
+      76.024
+     ],
+     "height_mm": 76.024,
+     "bed_fit": true,
+     "bed_turn_deg": 0,
+     "bed_footprint_mm": [
+      35.0,
+      66.024
+     ],
+     "bed_margin_mm": 153.976,
+     "overhang_area_mm2": 224.6,
+     "overhang_fraction": 0.01784,
+     "plate_contact_area_mm2": 2278.323,
+     "support_volume_mm3": 7223.4,
+     "support_rays": 358
+    },
+    {
+     "label": "-x",
+     "direction": [
+      -1.0,
+      0.0,
+      0.0
+     ],
+     "extents_mm": [
+      35.0,
+      66.024,
+      76.024
+     ],
+     "height_mm": 76.024,
+     "bed_fit": true,
+     "bed_turn_deg": 0,
+     "bed_footprint_mm": [
+      35.0,
+      66.024
+     ],
+     "bed_margin_mm": 153.976,
+     "overhang_area_mm2": 2099.199,
+     "overhang_fraction": 0.16671,
+     "plate_contact_area_mm2": 234.0,
+     "support_volume_mm3": 120933.7,
+     "support_rays": 589
+    },
+    {
+     "label": "+y",
+     "direction": [
+      0.0,
+      1.0,
+      0.0
+     ],
+     "extents_mm": [
+      76.024,
+      66.024,
+      35.0
+     ],
+     "height_mm": 35.0,
+     "bed_fit": true,
+     "bed_turn_deg": 0,
+     "bed_footprint_mm": [
+      76.024,
+      66.024
+     ],
+     "bed_margin_mm": 143.976,
+     "overhang_area_mm2": 952.85,
+     "overhang_fraction": 0.07567,
+     "plate_contact_area_mm2": 231.0,
+     "support_volume_mm3": 5907.9,
+     "support_rays": 2742
+    },
+    {
+     "label": "-y",
+     "direction": [
+      0.0,
+      -1.0,
+      0.0
+     ],
+     "extents_mm": [
+      76.024,
+      66.024,
+      35.0
+     ],
+     "height_mm": 35.0,
+     "bed_fit": true,
+     "bed_turn_deg": 0,
+     "bed_footprint_mm": [
+      76.024,
+      66.024
+     ],
+     "bed_margin_mm": 143.976,
+     "overhang_area_mm2": 904.494,
+     "overhang_fraction": 0.07183,
+     "plate_contact_area_mm2": 231.0,
+     "support_volume_mm3": 7292.2,
+     "support_rays": 2406
+    },
+    {
+     "label": "+z",
+     "direction": [
+      0.0,
+      0.0,
+      1.0
+     ],
+     "extents_mm": [
+      76.024,
+      35.0,
+      66.024
+     ],
+     "height_mm": 66.024,
+     "bed_fit": true,
+     "bed_turn_deg": 0,
+     "bed_footprint_mm": [
+      76.024,
+      35.0
+     ],
+     "bed_margin_mm": 143.976,
+     "overhang_area_mm2": 2413.646,
+     "overhang_fraction": 0.19168,
+     "plate_contact_area_mm2": 122.5,
+     "support_volume_mm3": 52589.7,
+     "support_rays": 6826
+    },
+    {
+     "label": "-z",
+     "direction": [
+      0.0,
+      0.0,
+      -1.0
+     ],
+     "extents_mm": [
+      76.024,
+      35.0,
+      66.024
+     ],
+     "height_mm": 66.024,
+     "bed_fit": true,
+     "bed_turn_deg": 0,
+     "bed_footprint_mm": [
+      76.024,
+      35.0
+     ],
+     "bed_margin_mm": 143.976,
+     "overhang_area_mm2": 2372.583,
+     "overhang_fraction": 0.18842,
+     "plate_contact_area_mm2": 122.273,
+     "support_volume_mm3": 40417.4,
+     "support_rays": 6049
+    }
+   ],
+   "thinnest_member": {
+    "thinnest_member_mm": 2.811,
+    "min_mm": 1.507,
+    "samples": 60000,
+    "percentiles_mm": {
+     "p0.1": 2.102,
+     "p1": 2.811,
+     "p5": 3.437,
+     "p50": 4.509
+    },
+    "area_below_mm2": {
+     "0.8": 0.0,
+     "1.2": 0.0,
+     "2.0": 6.72
+    },
+    "area_below_pct": {
+     "0.8": 0.0,
+     "1.2": 0.0,
+     "2.0": 0.053
+    },
+    "percentile": 1.0,
+    "seed": 1,
+    "max_chord_mm": 12.0,
+    "method": "inward chord along the surface normal on the final mesh",
+    "estimate": true
+   },
+   "definitions": {
+    "overhang": "faces with n.b < -cos(angle) (strict), n the outward face normal and b the unit build direction (up); the angle is measured from the plate; plate-contact faces are not counted; a face within about 1e-15 of the limit can fall on either side (floating point)",
+    "plate_contact": "faces with n.b < -0.99 whose centre is less than 0.3 mm above the lowest point along b",
+    "support_volume": "estimate of the space under the overhang faces: sum over the faces of (free gap down to the plate or to the part) x (projected face area), in mm3; a solid-column upper bound, real supports use less material; for up to 30000 faces (random sample, fixed seed) scaled to the full overhang area",
+    "bed_fit": "extents_mm are the part extents in the build frame (two in-plane extents and the height). The footprint is the part projected on the plate. For a turn about the build axis of 0 to 89 degrees in 1-degree steps, the margin is the smaller of the two spare lengths: bed side minus footprint side, the sides sorted (so a turn of 90 degrees is the same as 0). For a part in the middle of the bed, the gap to each edge is half of the spare length. bed_turn_deg is the turn with the largest margin. If the part fits as it is, a turn is reported only if it gains at least 10 mm of margin; otherwise bed_turn_deg is 0. bed_footprint_mm is the footprint at that turn and bed_margin_mm that margin. bed_fit is true if the margin is not negative. If no turn fits, bed_margin_mm is negative: the footprint is that many mm longer than the bed at the best turn. The height is not limited",
+    "thinnest_member": "estimate: percentile 1 of the inward chord lengths (surface point along the negative face normal to the first wall), in mm. It means: 1 percent of the sampled surface area has a thinner chord. A thin feature on less than about 1 percent of the area does not move it: see area_below_mm2. min_mm is the shortest chord of the sample; it includes noise from sharp edges. A value equal to max_chord_mm means that many mm or more",
+    "area_below_mm2": "surface area (mm2) whose chord is thinner than each threshold in mm: the share of the sampled chords below the threshold times the total area; area_below_pct is the same share in percent. The sampling error of a share f is about sqrt(f (1 - f) / samples)"
+   },
+   "elapsed_s": 2.55
+  },
+  "verdict": {
+   "format": 1,
+   "state": "converged",
+   "text": "converged at the last pass (200). Tests: objective change 3.67e-05 (relative) in the last 5 passes (threshold 0.0001: met); grayness 0.0346 (threshold 0.1: met); largest g -1.69e-06 (row volume, threshold 0.005: met); the beta schedule has reached its last stage (beta 32 from pass 140). Facts: volume: 1.00 of the allowed volume used (projected design), 1.00 (thresholded part at 0.5).",
+   "final_iteration": 200,
+   "iterations": 200,
+   "converged": true,
+   "feasible": true,
+   "measures": {
+    "objective_change": {
+     "value": 3.6685520737286555e-05,
+     "threshold": 0.0001,
+     "window": 5,
+     "met": true,
+     "passes_at_beta": 61,
+     "passes_needed": 6,
+     "beta": 32.0
+    },
+    "grayness": {
+     "value": 0.03457340859546312,
+     "threshold": 0.1,
+     "met": true
+    },
+    "max_g": {
+     "value": -1.6865340632943315e-06,
+     "threshold": 0.005,
+     "met": true,
+     "row": "volume"
+    },
+    "last_beta_stage": {
+     "value": true,
+     "met": true,
+     "beta": 32.0,
+     "last_beta": 32.0,
+     "from_iteration": 140
+    },
+    "last_step_change": {
+     "value": 0.0994107569285787,
+     "threshold": null,
+     "met": null
+    }
+   },
+   "stop_rules": {
+    "enabled": false,
+    "objective_change": 0.0001,
+    "window": 5,
+    "grayness_max": 0.1,
+    "time_budget_s": null
+   },
+   "stop": null,
+   "resume_points": [],
+   "notes": [],
+   "facts": {
+    "iteration": 200,
+    "beta": 32.0,
+    "next_beta": null,
+    "volume": {
+     "limit": 0.33659831186530936,
+     "projected": 0.33659774418079075,
+     "thresholded": 0.33592381461358034,
+     "used_projected": 0.9999983134659367,
+     "used_thresholded": 0.9979961359639886
+    },
+    "load_path": {
+     "regions": {
+      "motor_mount": true
+     },
+     "not_joined": [],
+     "bodies": 1,
+     "bodies_with_a_support": 1
+    }
+   }
+  },
+  "mass_asked_g": 10.801
+ },
+ "final_stl": "/Users/me/topopt-work/runs/drone_arm/run/result/final.stl",
+ "final_stl_rel": "runs/drone_arm/run/result/final.stl",
+ "run_dir": "/Users/me/topopt-work/runs/drone_arm/run",
+ "run_dir_rel": "runs/drone_arm/run",
+ "workspace": "/Users/me/topopt-work",
+ "lost_force": {
+  "cases": [
+   {
+    "name": "thrust",
+    "lost_percent": 0.0
+   },
+   {
+    "name": "side_hit",
+    "lost_percent": 0.0
+   },
+   {
+    "name": "front_hit",
+    "lost_percent": 0.0
+   }
+  ],
+  "max_lost_percent": 0.0
+ },
+ "preview": {
+  "kind": "ascii-silhouettes",
+  "note": "Coarse silhouettes of surface points. The tool render_part gives real images.",
+  "triangles": 95590,
+  "watertight": true,
+  "volume_mm3": 8701.3
+ }
+}

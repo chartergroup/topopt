@@ -1,0 +1,810 @@
+<!doctype html>
+<!-- The problem view (tool show_problem): an MCP Apps page. topopt_mcp/problem_view.py puts three.js into the slot of the script and serves the
+     page as the resource ui://topopt/problem-view.html. No network: the default sandbox policy of MCP Apps blocks every fetch. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>topopt problem view</title>
+<style>
+  :root {
+    color-scheme: light dark;
+    --bg: var(--color-background-primary, #10151d);
+    --bg2: var(--color-background-secondary, #18202b);
+    --fg: var(--color-text-primary, #e8edf4);
+    --fg2: var(--color-text-secondary, #9aa7b8);
+    --line: var(--color-border-primary, #2a3442);
+    --radius: var(--border-radius-lg, 12px);
+    --font: var(--font-sans, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif);
+  }
+  :root[data-theme="light"] {
+    --bg: var(--color-background-primary, #ffffff);
+    --bg2: var(--color-background-secondary, #f3f5f8);
+    --fg: var(--color-text-primary, #18202b);
+    --fg2: var(--color-text-secondary, #5b6778);
+    --line: var(--color-border-primary, #dde2e9);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: transparent; }
+  body { font: 14px/1.4 var(--font); color: var(--fg); }
+  .card { background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+  .head { display: flex; align-items: baseline; gap: 10px; padding: 12px 14px 8px; }
+  .head h1 { font-size: 15px; font-weight: 600; margin: 0; }
+  .head .path { color: var(--fg2); font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .view { position: relative; height: 340px; background: var(--bg2); touch-action: none; cursor: grab; }
+  .view:active { cursor: grabbing; }
+  .view canvas { display: block; width: 100%; height: 100%; }
+  .hint { position: absolute; right: 10px; bottom: 8px; font-size: 11px; color: var(--fg2); pointer-events: none; }
+  .legend { position: absolute; left: 10px; top: 8px; display: flex; flex-wrap: wrap; gap: 6px; max-width: 70%; pointer-events: none; }
+  .chip { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; padding: 2px 7px; border-radius: 999px;
+          background: color-mix(in srgb, var(--bg) 80%, transparent); border: 1px solid var(--line); }
+  .dot { width: 9px; height: 9px; border-radius: 50%; }
+  .numbers { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--line); }
+  .num { padding: 9px 14px; border-right: 1px solid var(--line); min-width: 0; }
+  .num:last-child { border-right: 0; }
+  .num .k { font-size: 11px; color: var(--fg2); }
+  .num .v { font-size: 15px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .num .s { font-size: 11px; color: var(--fg2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .foot { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-top: 1px solid var(--line); }
+  .foot .status { flex: 1; color: var(--fg2); font-size: 12px; min-width: 0; }
+  .foot .typeline { font-size: 12px; color: var(--fg); user-select: all; }
+  button { font: inherit; font-size: 13px; padding: 6px 12px; border-radius: 8px; border: 1px solid var(--line);
+           background: var(--bg2); color: var(--fg); cursor: pointer; }
+  button.primary { background: #2f6fed; border-color: #2f6fed; color: #fff; }
+  button:disabled { opacity: 0.5; cursor: default; }
+  .runline { padding: 8px 14px; border-top: 1px solid var(--line); font-size: 12px; color: var(--fg); white-space: pre-wrap; }
+  .runline[hidden], .runact[hidden] { display: none; }
+  .runact { display: flex; gap: 8px; padding: 0 14px 10px; }
+  .caps { padding: 6px 14px 8px; border-top: 1px solid var(--line); font-size: 11px; color: var(--fg2); }
+  .caps summary { cursor: pointer; }
+  .error { padding: 14px; color: var(--color-text-danger, #ff6b6b); white-space: pre-wrap; }
+  @media (max-width: 520px) { .numbers { grid-template-columns: repeat(2, 1fr); } .num:nth-child(2) { border-right: 0; }
+                              .num:nth-child(-n+2) { border-bottom: 1px solid var(--line); } }
+</style>
+</head>
+<body>
+<div class="card" id="card">
+  <div class="head"><h1 id="title">Problem view</h1><span class="path" id="path"></span></div>
+  <div class="view" id="view">
+    <canvas id="gl" aria-label="3D view of the part"></canvas>
+    <div class="legend" id="legend"></div>
+    <div class="hint" id="hint">drag to turn · scroll to zoom · double-click to reset</div>
+  </div>
+  <div class="numbers" id="numbers"></div>
+  <div class="foot">
+    <span class="status" id="status">Waiting for the part…</span>
+    <span class="typeline" id="typeline" hidden></span>
+    <button id="full" hidden>Full screen</button>
+    <button id="run" class="primary" disabled>Start the run</button>
+  </div>
+  <div class="runline" id="startline" hidden></div>
+  <div class="runline" id="runline" hidden></div>
+  <div class="runact" id="runact" hidden>
+    <button id="check" hidden>Check again</button>
+    <button id="ask" hidden>Ask the agent</button>
+    <button id="discuss" class="primary" hidden>Discuss the result</button>
+  </div>
+  <details class="caps"><summary>What this host offers</summary><span id="capstext">The host has not answered yet.</span></details>
+</div>
+<script type="module">
+/*__THREE__*/
+(function () {
+  "use strict";
+  const $ = (id) => document.getElementById(id);
+  const PROTOCOL = "2026-01-26";            // MCP Apps spec version
+  const GEOMETRY_KEY = "topopt/problem-view";  // topopt_mcp/problem_view.py GEOMETRY_KEY
+  const RUN_STATUS_POLL_MS = 5000;          // the wait between two run_status calls; one call is one MCP round trip through the host
+  const HOST_ANSWER_WAIT_MS = 30000;        // how long the view waits for the host to answer one request (every method, also ui/message); a host can hold a request while it asks the user
+  const KIND = {
+    design:   { label: "Design space", color: 0x9cc4ff },
+    fixed:    { label: "Fixed",        color: 0x8f9bb3 },
+    solid:    { label: "Solid",        color: 0x5be3a4 },
+    keep_out: { label: "Keep-out",     color: 0xff6b6b },
+    load:     { label: "Load region",  color: 0xffb020 },
+  };
+  const CASE_COLORS = [0xffb020, 0xff5d8f, 0x5be3a4, 0xb28cff];
+  const hex = (c) => "#" + c.toString(16).padStart(6, "0");
+
+  // ------------------------------------------------------------ JSON-RPC over postMessage (View <-> host)
+  let nextId = 1;
+  const pending = new Map();
+  const post = (msg) => window.parent.postMessage(msg, "*");
+  function request(method, params) {
+    const id = nextId++;
+    post({ jsonrpc: "2.0", id, method, params });
+    return new Promise((resolve, reject) => {
+      const guard = setTimeout(() => { if (pending.delete(id)) reject(Object.assign(new Error(method + ": no answer from the host"), { noAnswer: true })); }, HOST_ANSWER_WAIT_MS);
+      pending.set(id, { resolve, reject, guard });
+    });
+  }
+  const notify = (method, params) => post({ jsonrpc: "2.0", method, params: params || {} });
+
+  let toolArgs = null, facts = null, triedCall = false, displayMode = "inline", modes = ["inline"];
+  let canMessage = true;   // until ui/initialize answers; then the host capabilities decide
+  let endView = null, canContext = false, hostCaps = null, inited = false, toolsFailed = false, busy = false, armed = false, checkAction = null;   // inited: ui/initialize has answered; busy: a start was clicked and went through (until a refusal or a failure)
+  let runInfo = null, pollTimer = null, gone = false;
+
+  // ------------------------------------------------------------ run button logic (tests/test_problem_view.py runs this block in node)
+  // MCP Apps spec 2026-01-26 (@modelcontextprotocol/ext-apps 2.0.4): the ui/initialize result has `hostCapabilities`, and its key
+  // `message` is set when the host takes ui/message from the view. `message` lists the content types; this page sends one text block.
+  function messageOffered(caps) {
+    const m = caps && caps.message;
+    if (!m || typeof m !== "object") return false;
+    return Object.keys(m).length === 0 || m.text !== undefined;
+  }
+  function typeLine(yamlRel) { return "Type in the chat: start the run of " + (yamlRel || "this part"); }
+  function hostReason(result) {   // McpUiMessageResult has only isError; a host may add keys. Take a text if there is one.
+    if (!result || typeof result !== "object") return "";
+    const parts = [];
+    for (const c of Array.isArray(result.content) ? result.content : []) {
+      if (c && typeof c.text === "string") parts.push(c.text);
+    }
+    for (const k of ["error", "message", "reason"]) {
+      const v = result[k];
+      if (typeof v === "string") parts.push(v);
+      else if (v && typeof v.message === "string") parts.push(v.message);
+    }
+    return parts.join(" ").trim();
+  }
+  function afterMessage(result, error, yamlRel, noAnswer) {   // -> {status, enable, line}: what the page shows after ui/message
+    // A host may hold ui/message while it asks the user, longer than HOST_ANSWER_WAIT_MS: the message may still go to the chat.
+    if (error && noAnswer) return { status: "No answer from the host: the message may have been sent. Look in the chat before you press the button again.", enable: true, line: typeLine(yamlRel) };
+    if (error) return { status: "The chat did not take the message: " + error, enable: true, line: typeLine(yamlRel) };
+    if (result && result.isError) {
+      const why = hostReason(result).replace(/[.\s]+$/, "");   // one final dot
+      return { status: "The chat did not take the message: " + (why || "the host gave no reason") + ".", enable: true, line: typeLine(yamlRel) };
+    }
+    // A host MAY ask the user first (spec): it can put the text into the chat input without sending it. The result is the same.
+    return { status: "Passed to the chat. If the text is still in the input field, press Enter to send it.", enable: false, line: null };
+  }
+  function runState(offered, f) {   // -> {button: "hidden" | "enabled" | "disabled", line}: the button, or the line to type
+    if (!offered) return { button: "hidden", line: f ? typeLine(f.yaml_rel) : null };
+    return { button: f ? "enabled" : "disabled", line: null };
+  }
+  // ---- direct start (MCP Apps: `serverTools` = the host proxies tools/call; `updateModelContext` = ui/update-model-context)
+  function objectOffered(caps, key) { const v = caps && caps[key]; return !!v && typeof v === "object"; }
+  function updateContextOffered(caps) {   // the same shape as `message`: the content types, this page sends one text block
+    const m = caps && caps.updateModelContext;
+    if (!m || typeof m !== "object") return false;
+    return Object.keys(m).length === 0 || m.text !== undefined;
+  }
+  function structuredOffered(caps) {   // the update may carry `structuredContent` when the host lists it (or lists no type at all)
+    const m = caps && caps.updateModelContext;
+    return !!m && typeof m === "object" && (Object.keys(m).length === 0 || m.structuredContent !== undefined);
+  }
+  function startRoute(caps, toolsFailed) {   // -> "tools" (tools/call run_topopt) | "message" (ui/message) | "line" (the user types)
+    if (objectOffered(caps, "serverTools") && !toolsFailed) return "tools";
+    return messageOffered(caps) ? "message" : "line";
+  }
+  function capabilityLine(caps) {
+    if (!caps || typeof caps !== "object") return "The host sent no capabilities.";
+    const yes = (b) => (b ? "yes" : "no");
+    return "Host offers: message " + yes(messageOffered(caps)) + " · serverTools " + yes(objectOffered(caps, "serverTools")) +
+           " · updateModelContext " + yes(updateContextOffered(caps));
+  }
+  function toolReply(result) {   // a tools/call result -> {kind: "ok" | "refused" | "failed", data, text, steps}
+    if (!result || typeof result !== "object") return { kind: "failed", data: null, text: "the host gave no answer", steps: [] };
+    const text = (Array.isArray(result.content) ? result.content : [])
+      .filter((c) => c && c.type === "text" && typeof c.text === "string").map((c) => c.text).join("\n").trim();
+    if (result.isError) return { kind: "failed", data: null, text: text || "the host gave no reason", steps: [] };
+    let data = result.structuredContent;
+    if (!data || typeof data !== "object") { try { data = JSON.parse(text); } catch (e) { data = null; } }
+    if (!data || typeof data !== "object" || Array.isArray(data)) {
+      return { kind: "failed", data: null, text: text ? "the reply is not readable: " + text : "the reply is empty", steps: [] };
+    }
+    if (data.state === "awaiting_user") {   // run_topopt stops here and says what to do
+      const steps = (Array.isArray(data.options) ? data.options : []).filter((o) => typeof o === "string");
+      return { kind: "refused", data, text: "the case needs a decision first", steps };
+    }
+    if (typeof data.error === "string" && data.error) return { kind: "refused", data, text: data.error, steps: [] };
+    return { kind: "ok", data, text, steps: [] };
+  }
+  const BUSY_RUN = ["starting", "running", "postprocess"];
+  const FINE_BUSY = ["not started", "starting", "running", "postprocess"];
+  function replaceCheck(d, folder) {   // a run_status reply of the run folder -> {action: "start" | "warn" | "alive", text, replaced}
+    const cp = d && d.checkpoint, st = (d && d.state) || "?";
+    // A live job lock (job.state running, also a run of the command line) or a live process of this server in a busy state. A done or stopped run
+    // whose process only serves the dashboard is not working: run_topopt stops that process.
+    // A first run with a fine pass to come: its process goes on to the fine folder, and run_topopt counts the run as busy (server.py _fine_pending).
+    // This comes first: a live job lock on a folder with no status file yet (the first moment of a run) has the state none.
+    const fine = !!(d && d.fine_run && FINE_BUSY.includes(d.fine_run.state));
+    const working = !!d && ((d.job && d.job.state === "running") || (d.process_alive === true && (BUSY_RUN.includes(st) || fine)));
+    if (working) return { action: "alive", text: "A run is working in " + folder + ": " + (d.summary || st) + ".", replaced: null };
+    if (d && d.state === "none" && !cp) return { action: "start", text: null, replaced: null };
+    const pass = cp && cp.iteration != null ? "pass " + cp.iteration + (cp.iterations != null ? " of " + cp.iterations : "")
+               : d.status && d.status.iteration != null ? "pass " + d.status.iteration : null;
+    const yaml = cp && typeof cp.yaml_path === "string" && cp.yaml_path ? "the run of " + cp.yaml_path : null;
+    const what = [st, pass, yaml].filter(Boolean).join(", ");
+    // What the start deletes: a result only for a done run, the checkpoints when the reply shows one; else the files of the run.
+    const deleted = [st === "done" ? "result" : null, cp ? "checkpoints" : null].filter(Boolean);
+    return { action: "warn", replaced: "Replaced the run in " + folder + " (" + what + ").", key: jobKey(d),
+             text: "The run folder " + folder + " holds a run (" + what + "). The start deletes its " + (deleted.length ? deleted.join(" and its ") : "files") +
+                   ". Press \"Replace and start\" to go on." };
+  }
+  function jobKey(d) {   // which job a run_status reply shows: its start time and pid (null when the reply has no job record)
+    const j = d && d.job;
+    return j && (j.started_at != null || j.pid != null) ? String(j.started_at) + "|" + String(j.pid) : null;
+  }
+  function heldCheck(d, look) {   // after a start with no answer: is the run of this folder a new one? look = {empty, key} of the look before the start
+    if (!d || d.state === "none") return false;
+    // These keys exist only for a process of this server that started after the look: a new run, although the job record may be the old one.
+    if ((d.job && (d.job.earlier_run === true || d.job.state === "no_record")) || (d.state === "starting" && d.process_alive === true)) return true;
+    if (look.empty) return true;                     // the folder was empty, and now it holds a run
+    return jobKey(d) !== look.key;                   // the same job (or no job record on both sides) is the old run
+  }
+  function startInfo(data, f, replaced) {   // the run that run_topopt started -> {run_dir, yaml, pid, note}, or null if the reply names no folder
+    const dir = data && (data.run_dir_rel || data.run_dir);
+    if (!dir) return null;
+    const ec = data.earlier_checkpoint;
+    const oj = data.other_server_jobs;
+    return { run_dir: dir, yaml: data.yaml_rel || (f && f.yaml_rel) || null, pid: data.pid == null ? null : data.pid,
+             note: ec && typeof ec.note === "string" ? ec.note : null, others: oj && typeof oj.fact === "string" ? oj.fact : null,
+             replaced: replaced || null };
+  }
+  function startLine(info) {   // the facts of the start reply: they stay on the screen, the poll does not replace them
+    return ["Run started in " + info.run_dir + ".", info.replaced, info.note, info.others].filter(Boolean).join("\n");
+  }
+  const NO_ANSWER = "No answer from the host: the run may have started.";
+  function refusedText(rep) {   // short and plain: the options are for the agent, they go in refusalMessage
+    const first = rep.text.split(/(?<=[.!?])\s/)[0];   // the first sentence is for the user; the rest (override_lock, stop_run) is for the agent
+    return "The run did not start: " + first.replace(/[.\s]+$/, "") + ".";
+  }
+  function refusalMessage(rep, yamlRel) {   // the text of the message that hands a refusal to the agent
+    return "The run of " + (yamlRel || "this part") + " did not start (from the problem view). run_topopt said: " + rep.text.replace(/[.\s]+$/, "") + "." +
+           (rep.steps.length ? "\nOptions in its reply:\n- " + rep.steps.join("\n- ") : "");
+  }
+  function failedText(reason, route) {   // a tools/call that gave no usable answer; `route` is the way left (startRoute with toolsFailed)
+    return "The host did not run the tool: " + reason.replace(/[.\s]+$/, "") + ". " +
+           (route === "message" ? "Use the button to send a chat message instead." : "Type the line in the chat instead.");
+  }
+  function durText(s) {
+    if (s == null || !isFinite(s)) return null;
+    if (s < 90) return Math.round(s) + " s";
+    if (s < 5400) return Math.round(s / 60) + " min";
+    return (s / 3600).toFixed(1) + " h";
+  }
+  const RUN_ENDED = ["done", "error", "stopped"];   // the end states of topopt_mcp/server.py (run_status `state`)
+  function statusView(s, passes) {   // a run_status reply -> {text, ended, end}: one line for the user, and the final facts when it ended
+    const st = (s && s.state) || "?";
+    const info = (s && s.status) || {}, hist = (s && s.last_history) || {};
+    // A reply with `earlier_run` is the reply for a job that was refused over an earlier run (topopt/earlier_run.py): `state` is the state of that
+    // job (error), and only its data keys moved into `earlier_run`. So no guard is needed: the state ends it, and the data keys at the top are null.
+    const ended = !!s && (RUN_ENDED.includes(st) || s.process_alive === false);
+    const it = info.iteration != null ? info.iteration : hist.iteration;
+    const parts = [];
+    if (it != null && st !== "starting") parts.push("pass " + it + (passes ? " of " + passes : ""));
+    if (hist.volume_fraction != null) parts.push("volume " + (hist.volume_fraction * 100).toFixed(1) + " %");
+    const wall = s && s.job && s.job.wall_s != null ? s.job.wall_s : info.elapsed_s;
+    const time = durText(wall);
+    if (time) parts.push(time);
+    if (!ended) {
+      const label = st === "starting" ? "Starting" : st === "postprocess" ? "Post-processing" : "Running";
+      return { text: label + (parts.length ? ": " + parts.join(" · ") : "…"), ended: false, end: null };
+    }
+    const verdict = s && s.verdict ? s.verdict : null;
+    const mat = verdict && verdict.facts && verdict.facts.material;
+    const label = st === "done" ? "Done" : st === "error" ? "Error" : st === "stopped" ? "Stopped" : "The run process ended (state " + st + ")";
+    const more = [];
+    if (verdict && verdict.state) more.push("verdict " + verdict.state.replace(/_/g, " "));
+    if (mat && mat.mass_g != null) more.push("mass of the part " + mat.mass_g + " g");
+    const reason = (st === "error" || st === "stopped") ? String(info.message || (s && s.summary) || "") : "";   // no status message: the summary says why
+    if (reason) more.push(reason);
+    const all = parts.concat(more);
+    const end = { state: st, verdict: verdict && verdict.state ? verdict.state : null, passes: it == null ? null : it,
+                  volume_fraction: hist.volume_fraction == null ? null : hist.volume_fraction,
+                  mass_g: mat && mat.mass_g != null ? mat.mass_g : null, run_time_s: wall == null ? null : wall, reason: reason || null };
+    return { text: label + (all.length ? ": " + all.join(" · ") : "."), ended: true, end };
+  }
+  const folderOf = (info) => info.run_dir || "the last run of this server";
+  function contextStart(info, structured) {   // the ui/update-model-context params after the start; `structured`: the host takes structuredContent
+    const text = "The user started the run of " + (info.yaml || "this part") + " from the problem view. Run folder: " + folderOf(info) + "." +
+                 (info.replaced ? " " + info.replaced : "") + (info.note ? " " + info.note : "") + (info.others ? " " + info.others : "") +
+                 " Call run_status with run_dir " + folderOf(info) + " to see how it goes.";
+    const out = { content: [{ type: "text", text }] };
+    if (structured) {
+      out.structuredContent = { problem_view_run: { event: "started", yaml: info.yaml, run_dir: info.run_dir, pid: info.pid, next: "run_status",
+                                                    replaced: info.replaced, earlier_checkpoint_note: info.note, other_server_jobs: info.others } };
+    }
+    return out;
+  }
+  function contextEnd(info, v, structured) {   // the params after the end: this replaces the context of the start
+    const e = v.end, bits = ["state " + e.state];
+    if (e.verdict) bits.push("verdict " + e.verdict);
+    if (e.passes != null) bits.push("pass " + e.passes);
+    if (e.volume_fraction != null) bits.push("volume " + (e.volume_fraction * 100).toFixed(1) + " %");
+    if (e.mass_g != null) bits.push("mass of the part " + e.mass_g + " g");
+    if (e.reason) bits.push("reason: " + e.reason);
+    const time = durText(e.run_time_s);
+    if (time) bits.push("run time " + time);
+    const text = "The run of " + (info.yaml || "this part") + ", started from the problem view, has ended (" + bits.join(", ") + "). Run folder: " +
+                 folderOf(info) + ". Call run_status or run_result for the facts.";
+    const out = { content: [{ type: "text", text }] };
+    if (structured) out.structuredContent = { problem_view_run: { event: "ended", yaml: info.yaml, run_dir: info.run_dir, ...e } };
+    return out;
+  }
+  function discussText(info, v) {   // the text of the "Discuss the result" message
+    return "Let us discuss the result of the run of " + (info.yaml || "this part") + " (" + folderOf(info) + "). It ended: " + v.end.state +
+           (v.end.verdict ? ", verdict " + v.end.verdict.replace(/_/g, " ") : "") + ".";
+  }
+  // ------------------------------------------------------------ end of the run button logic
+
+  window.addEventListener("message", (ev) => {
+    if (ev.source !== window.parent) return;
+    const m = ev.data;
+    if (!m || m.jsonrpc !== "2.0") return;
+    if (m.method === undefined && m.id !== undefined) {          // a response to one of our requests
+      const p = pending.get(m.id);
+      if (!p) return;
+      pending.delete(m.id);
+      clearTimeout(p.guard);                                     // the answer came: the guard is not needed
+      if (m.error) p.reject(new Error(m.error.message || "error")); else p.resolve(m.result);
+      return;
+    }
+    if (m.id !== undefined) {                                    // a request from the host
+      if (m.method === "ui/resource-teardown") stopWatching();
+      if (m.method === "ui/resource-teardown" || m.method === "ping") post({ jsonrpc: "2.0", id: m.id, result: {} });
+      else post({ jsonrpc: "2.0", id: m.id, error: { code: -32601, message: "not handled by the problem view: " + m.method } });
+      return;
+    }
+    const p = m.params || {};
+    if (m.method === "ui/notifications/tool-input") toolArgs = p.arguments || null;
+    else if (m.method === "ui/notifications/tool-result") onResult(p);
+    else if (m.method === "ui/notifications/host-context-changed") applyContext(p);
+    else if (m.method === "ui/notifications/tool-cancelled") setStatus("The call was cancelled" + (p.reason ? ": " + p.reason : "."));
+  });
+
+  function applyContext(ctx) {
+    if (!ctx) return;
+    const root = document.documentElement;
+    if (ctx.theme) root.dataset.theme = ctx.theme;
+    const vars = ctx.styles && ctx.styles.variables;
+    if (vars) for (const [k, v] of Object.entries(vars)) if (v) root.style.setProperty(k, v);
+    if (ctx.availableDisplayModes) modes = ctx.availableDisplayModes;
+    if (ctx.displayMode) displayMode = ctx.displayMode;
+    $("full").hidden = !modes.includes("fullscreen");
+    $("full").textContent = displayMode === "fullscreen" ? "Back to the chat" : "Full screen";
+    const dim = ctx.containerDimensions || {};
+    const room = dim.height || (displayMode === "fullscreen" ? dim.maxHeight || window.innerHeight : null);
+    $("view").style.height = room ? Math.max(240, room - 190) + "px" : "";
+    resize();
+  }
+
+  function setStatus(text) { $("status").textContent = text; }
+
+  // ------------------------------------------------------------ 3D scene
+  const canvas = $("gl");
+  let renderer = null;
+  try {
+    renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+  } catch (e) {
+    $("hint").textContent = "this view needs WebGL";
+  }
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 1e6);
+  camera.up.set(0, 0, 1);                       // z is up, as in the dashboard
+  scene.add(new THREE.HemisphereLight(0xdbe8ff, 0x1a2230, 1.0));
+  const key = new THREE.DirectionalLight(0xffffff, 2.2);
+  const rim = new THREE.DirectionalLight(0x6fb6ff, 1.0);
+  scene.add(key, rim);
+  const holder = new THREE.Group();
+  scene.add(holder);
+
+  // The view of the owner's renders (front-left, a little from above); the user turns it with the mouse.
+  const HOME = { az: Math.atan2(-1, -1.333), el: Math.atan2(0.373, Math.hypot(1.333, 1)) };
+  const orbit = { az: HOME.az, el: HOME.el, dist: 100, center: new THREE.Vector3(), radius: 50 };
+  let frame = 0;
+  function draw() {
+    if (!renderer || frame) return;
+    frame = requestAnimationFrame(() => {
+      frame = 0;
+      const c = orbit.center, d = orbit.dist;
+      camera.position.set(c.x + d * Math.cos(orbit.el) * Math.cos(orbit.az), c.y + d * Math.cos(orbit.el) * Math.sin(orbit.az),
+                          c.z + d * Math.sin(orbit.el));
+      camera.lookAt(c);
+      key.position.copy(camera.position).add(new THREE.Vector3(0, 0, orbit.radius * 2));
+      rim.position.set(c.x - orbit.radius * 2, c.y + orbit.radius * 2, c.z + orbit.radius);
+      renderer.render(scene, camera);
+    });
+  }
+  function resize() {
+    if (!renderer) return;
+    const w = canvas.clientWidth || 600, h = canvas.clientHeight || 340;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+    draw();
+  }
+  function home() {
+    orbit.az = HOME.az; orbit.el = HOME.el;
+    orbit.dist = orbit.radius / Math.sin(THREE.MathUtils.degToRad(camera.fov / 2)) * 1.05;
+    draw();
+  }
+  let drag = null;
+  canvas.addEventListener("pointerdown", (e) => { drag = { x: e.clientX, y: e.clientY }; canvas.setPointerCapture(e.pointerId); });
+  canvas.addEventListener("pointermove", (e) => {
+    if (!drag) return;
+    orbit.az -= (e.clientX - drag.x) * 0.008;
+    orbit.el = Math.max(-1.45, Math.min(1.45, orbit.el + (e.clientY - drag.y) * 0.008));
+    drag = { x: e.clientX, y: e.clientY };
+    draw();
+  });
+  canvas.addEventListener("pointerup", () => { drag = null; });
+  canvas.addEventListener("pointercancel", () => { drag = null; });
+  canvas.addEventListener("wheel", (e) => {
+    e.preventDefault();
+    orbit.dist = Math.max(orbit.radius * 0.3, Math.min(orbit.radius * 20, orbit.dist * Math.exp(e.deltaY * 0.001)));
+    draw();
+  }, { passive: false });
+  canvas.addEventListener("dblclick", home);
+
+  function decode(b64, Type) {
+    const bin = atob(b64), bytes = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    return new Type(bytes.buffer);
+  }
+
+  function regionMesh(r) {
+    const g = new THREE.BufferGeometry();
+    g.setAttribute("position", new THREE.BufferAttribute(decode(r.positions, Float32Array), 3));
+    g.setIndex(new THREE.BufferAttribute(decode(r.indices, Uint32Array), 1));
+    const flat = g.toNonIndexed();             // flat facets: an STL has no smooth normals
+    flat.computeVertexNormals();
+    const color = (KIND[r.kind] || KIND.design).color;
+    const group = new THREE.Group();
+    if (r.kind === "design") {                 // the space the optimizer may fill: glass, with its edges
+      group.add(new THREE.Mesh(flat, new THREE.MeshStandardMaterial({ color, transparent: true, opacity: 0.14, depthWrite: false,
+                                                                      side: THREE.DoubleSide, roughness: 0.4 })));
+      group.add(new THREE.LineSegments(new THREE.EdgesGeometry(g, 25),
+                                       new THREE.LineBasicMaterial({ color, transparent: true, opacity: 0.65 })));
+    } else {
+      const see = r.kind === "keep_out";
+      group.add(new THREE.Mesh(flat, new THREE.MeshStandardMaterial({ color, roughness: 0.5, metalness: 0.05,
+                                                                      transparent: see, opacity: see ? 0.6 : 1 })));
+    }
+    return group;
+  }
+
+  function label(text, color) {
+    const cv = document.createElement("canvas");
+    cv.width = 256; cv.height = 64;
+    const g = cv.getContext("2d");
+    g.font = "bold 36px -apple-system, Helvetica, Arial, sans-serif";
+    g.textAlign = "center"; g.textBaseline = "middle";
+    g.lineWidth = 8; g.strokeStyle = "#0b0f16"; g.strokeText(text, 128, 34);
+    g.fillStyle = hex(color); g.fillText(text, 128, 34);
+    const tex = new THREE.CanvasTexture(cv);
+    tex.colorSpace = THREE.SRGBColorSpace;
+    const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, depthTest: false, transparent: true }));
+    sp.renderOrder = 5;
+    return sp;
+  }
+
+  // One arrow for each force with a resultant, at `at` (a remote force) or at the centre of its region; the tip touches that point.
+  function arrows(cases, size) {
+    const len = Math.max(size * 0.2, 1);
+    cases.forEach((lc, ci) => {
+      const color = CASE_COLORS[ci % CASE_COLORS.length];
+      let labelled = false;
+      for (const f of lc.forces || []) {
+        const dir = new THREE.Vector3(...f.force);
+        const at = f.at || f.center;
+        if (dir.length() < 1e-12 || !at) continue;
+        dir.normalize();
+        const tip = new THREE.Vector3(...at), tail = tip.clone().addScaledVector(dir, -len);
+        const mat = new THREE.MeshBasicMaterial({ color, depthTest: false, transparent: true, opacity: 0.95 });
+        const headL = len * 0.32, shaftL = len - headL, r = len * 0.045;
+        const arrow = new THREE.Group();
+        const shaft = new THREE.Mesh(new THREE.CylinderGeometry(r, r, shaftL, 12), mat);
+        shaft.position.y = shaftL / 2;
+        const head = new THREE.Mesh(new THREE.ConeGeometry(r * 3, headL, 16), mat);
+        head.position.y = shaftL + headL / 2;
+        arrow.add(shaft, head);
+        arrow.traverse((n) => { n.renderOrder = 4; });
+        arrow.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir);
+        arrow.position.copy(tail);
+        holder.add(arrow);
+        if (!labelled) {
+          const n = Math.hypot(...f.force);
+          const sp = label(lc.name + " " + (n >= 100 ? n.toFixed(0) : n.toPrecision(3)) + " N", color);
+          sp.scale.set(len * 1.6, len * 0.4, 1);
+          // Labels of two cases at the same region go above and below the tail, so that they do not cover each other.
+          sp.position.copy(tail).addScaledVector(dir, -len * 0.2).add(new THREE.Vector3(0, 0, len * 0.3 * (ci % 2 ? -1 : 1)));
+          holder.add(sp);
+          labelled = true;
+        }
+      }
+    });
+  }
+
+  // ------------------------------------------------------------ the view
+  function fmtTime(s) {
+    if (s == null) return "–";
+    if (s < 90) return Math.round(s) + " s";
+    if (s < 5400) return Math.round(s / 60) + " min";
+    return (s / 3600).toFixed(1) + " h";
+  }
+  const fmtGB = (b) => (b == null ? "–" : (b / 1e9 >= 10 ? (b / 1e9).toFixed(0) : (b / 1e9).toFixed(1)) + " GB");
+  const fmtInt = (n) => (n == null ? "–" : Number(n).toLocaleString("en-US"));
+
+  function numbers(est) {
+    const cells = [
+      ["Time", "about " + fmtTime(est.time_s), est.solver ? "solver " + est.solver : ""],
+      ["Memory", fmtGB(est.memory_bytes), est.ram_bytes ? "of " + fmtGB(est.ram_bytes) + " here" : ""],
+      ["Grid", fmtInt(est.voxels) + " voxels", est.voxel_mm != null ? est.voxel_mm + " mm each" : ""],
+      ["Passes", fmtInt(est.iterations), est.volume_fraction != null ? "keeps " + Math.round(est.volume_fraction * 100) + " % material" : ""],
+    ];
+    $("numbers").replaceChildren(...cells.map(([k, v, s]) => {
+      const d = document.createElement("div");
+      d.className = "num";
+      for (const [cls, text] of [["k", k], ["v", v], ["s", s]]) {
+        const e = document.createElement("div"); e.className = cls; e.textContent = text; d.appendChild(e);
+      }
+      return d;
+    }));
+  }
+
+  function legend(regions, cases) {
+    const counts = {};
+    for (const r of regions) counts[r.kind] = (counts[r.kind] || 0) + 1;
+    const chips = Object.keys(KIND).filter((k) => counts[k]).map((k) => [KIND[k].label + (counts[k] > 1 ? " ×" + counts[k] : ""), KIND[k].color]);
+    cases.forEach((lc, i) => chips.push(["Load case " + lc.name, CASE_COLORS[i % CASE_COLORS.length]]));
+    $("legend").replaceChildren(...chips.map(([text, color]) => {
+      const c = document.createElement("span"); c.className = "chip";
+      const d = document.createElement("span"); d.className = "dot"; d.style.background = hex(color);
+      c.append(d, document.createTextNode(text));
+      return c;
+    }));
+  }
+
+  function showError(text) {
+    $("card").replaceChildren(Object.assign(document.createElement("div"), { className: "error", textContent: text }));
+    sizeChanged();
+  }
+
+  function textOf(result) {
+    return ((result && result.content) || []).filter((c) => c.type === "text").map((c) => c.text).join("\n");
+  }
+
+  function onResult(result) {
+    const sc = result.structuredContent || {};
+    if (result.isError || sc.ok === false) return showError(sc.error || textOf(result) || "show_problem gave an error.");
+    const geo = result._meta && result._meta[GEOMETRY_KEY];
+    if (!geo) {
+      // A host that does not pass `_meta` on: ask for the same result once, as a call of the view.
+      if (!triedCall && toolArgs) {
+        triedCall = true;
+        setStatus("Loading the shape…");
+        request("tools/call", { name: "show_problem", arguments: toolArgs }).then(onResult, (e) => setStatus("No shape: " + e.message));
+      } else setStatus("The result has no shape data.");
+      return;
+    }
+    facts = sc;
+    $("title").textContent = sc.name || "Problem view";
+    $("path").textContent = sc.yaml_rel || "";
+    holder.clear();
+    for (const r of geo.regions) holder.add(regionMesh(r));
+    const part = new THREE.Box3().setFromObject(holder);
+    arrows(geo.load_cases || [], part.getSize(new THREE.Vector3()).length());
+    const sphere = new THREE.Box3().setFromObject(holder).getBoundingSphere(new THREE.Sphere());   // the part and its arrows
+    orbit.center.copy(sphere.center);
+    orbit.radius = Math.max(sphere.radius, 1e-3);
+    legend(geo.regions, geo.load_cases || []);
+    numbers(sc.estimate || {});
+    const w = (sc.estimate || {}).warnings;
+    setStatus(w ? w + " warning(s): ask the agent to explain them before the run." : "Checked: no warnings.");
+    runControls();
+    resize();
+    home();
+    sizeChanged();
+  }
+
+  function runControls() {   // the button, or the line to type when the host takes no message from the view
+    const s = runState(route() !== "line", facts);
+    $("run").hidden = s.button === "hidden";
+    $("run").disabled = s.button !== "enabled" || busy;   // while a run is watched, a new tool-result does not enable the button
+    $("typeline").textContent = s.line || "";
+    $("typeline").hidden = !s.line;
+  }
+  const route = () => (inited ? startRoute(hostCaps, toolsFailed) : "message");   // before ui/initialize answers, the button of today
+  function say(text) { $("runline").textContent = text; $("runline").hidden = !text; }
+  function stopWatching() { gone = true; clearTimeout(pollTimer); }
+  window.addEventListener("pagehide", stopWatching);
+  window.addEventListener("pageshow", (e) => {   // back from the page cache: the poll does not start by itself
+    if (!(e && e.persisted) || !runInfo) return;
+    gone = false;
+    clearTimeout(pollTimer);
+    if (endView) { say(endView.text); return; }   // the run had ended: the end view stays, and no second end note goes to the model
+    say("The view came back. Press Check again to see the run.");
+    $("runact").hidden = false;
+    $("check").hidden = false;
+  });
+  function startByMessage() {
+    const text = "Start the run of " + (facts.yaml_rel || "this part") + " (from the problem view).";
+    const show = (o) => {
+      setStatus(o.status);
+      $("run").disabled = !o.enable;
+      if (o.line) { $("typeline").textContent = o.line; $("typeline").hidden = false; }
+    };
+    request("ui/message", { role: "user", content: [{ type: "text", text }] })
+      .then((r) => show(afterMessage(r, null, facts.yaml_rel)), (e) => show(afterMessage(null, e.message, facts.yaml_rel, e.noAnswer)));
+  }
+  // The click is the consent of the user: run_topopt goes through the host at once. A refusal is shown, and nothing is retried.
+  // The first click looks at the run folder (run_status of the folder that run_topopt will use). An empty folder starts at once. A folder with a run
+  // shows what the start replaces, and the second click starts. A run that works there gets no start.
+  function startByTool() {
+    const dir = facts.start_run_dir_rel;
+    if (!dir) return startRun(null, null);
+    const prev = armed;                      // the warning that the user saw, if this is the second click
+    busy = true;
+    checkAction = startByTool;
+    $("startline").hidden = true; $("ask").hidden = true; $("check").hidden = true;
+    say("Looking at the run folder…");
+    request("tools/call", { name: "run_status", arguments: { run_dir: dir } }).then((result) => {
+      const rep = toolReply(result);
+      if (rep.kind !== "ok") return precheckFailed(rep.text);
+      const d = replaceCheck(rep.data, dir);
+      const look = { empty: d.action === "start", key: jobKey(rep.data) };
+      if (d.action === "start") return startRun(null, look);
+      // The second click looks again: it starts only the run that the warning named. Another job in the folder gets a new warning.
+      if (prev && d.action === "warn" && prev.key === d.key) return startRun(prev.replaced, look);
+      say((prev && d.action === "warn" ? "The run folder changed since the last warning. " : "") + d.text);
+      if (d.action === "alive") { $("runact").hidden = false; $("check").hidden = false; return; }   // the button stays off
+      armed = Object.assign(d, { look });
+      busy = false;
+      $("run").textContent = "Replace and start";
+      runControls();
+    }, (e) => precheckFailed(e.message));
+  }
+  function precheckFailed(reason) {   // nothing starts; the old ways are the fallback
+    busy = false; toolsFailed = true;
+    say("Could not look at the run folder: " + reason.replace(/[.\s]+$/, "") + ". " + (route() === "message" ? "Use the button to send a chat message instead." : "Type the line in the chat instead."));
+    runControls();
+  }
+  function startRun(replaced, look) {
+    busy = true;
+    armed = null;
+    checkAction = poll;
+    $("run").textContent = "Start the run";
+    $("startline").hidden = true; $("ask").hidden = true; $("check").hidden = true;
+    say("Starting the run…");
+    const fail = (reason) => { busy = false; toolsFailed = true; say(failedText(reason, route())); runControls(); };
+    const refused = (rep) => {   // the user can hand the refusal to the agent (a message), or type the line
+      busy = false;
+      say(refusedText(rep));
+      runControls();
+      if (canMessage) {
+        $("runact").hidden = false;
+        $("ask").hidden = false;
+        $("ask").disabled = false;
+        $("ask").onclick = () => {
+          $("ask").disabled = true;
+          request("ui/message", { role: "user", content: [{ type: "text", text: refusalMessage(rep, facts.yaml_rel) }] })
+            .then((r) => { const o = afterMessage(r, null, null); setStatus(o.status); $("ask").disabled = !o.enable; },
+                  (e) => { setStatus(afterMessage(null, e.message, null, e.noAnswer).status); $("ask").disabled = false; });
+        };
+      } else {
+        $("typeline").textContent = typeLine(facts.yaml_rel);
+        $("typeline").hidden = false;
+      }
+    };
+    const args = { yaml_path: facts.yaml_rel };
+    if (facts.start_run_dir_rel) args.out_dir = facts.start_run_dir_rel;   // the folder that the pre-check looked at (the default one)
+    request("tools/call", { name: "run_topopt", arguments: args }).then((result) => {
+      const rep = toolReply(result);
+      if (rep.kind === "failed") return fail(rep.text);
+      if (rep.kind === "refused") return refused(rep);
+      const info = startInfo(rep.data, facts, replaced);
+      if (!info) return fail("the reply names no run folder");
+      runInfo = info;
+      $("startline").textContent = startLine(info);
+      $("startline").hidden = false;
+      say("Watching it…");
+      if (canContext) {
+        request("ui/update-model-context", contextStart(info, structuredOffered(hostCaps)))
+          .catch((e) => noteCaps("the host did not take the run note: " + e.message));
+      }
+      poll();
+    }, (e) => {
+      if (!e.noAnswer) return fail(e.message);
+      // The host may have held the call (a question to the user) and run it later: the page cannot know. run_status of the run folder shows
+      // the old run if the call never ran, so "Check again" tells a new job from the one of the look (heldCheck). The button stays off, and
+      // the route does not change.
+      runInfo = { run_dir: facts.start_run_dir_rel || null, yaml: facts.yaml_rel, pid: null, note: null, others: null, held: look || { empty: false, key: null } };
+      say(NO_ANSWER);
+      $("runact").hidden = false;
+      $("check").hidden = false;
+    });
+  }
+  function poll() {
+    if (gone || !runInfo) return;
+    $("check").hidden = true;
+    request("tools/call", { name: "run_status", arguments: runInfo.run_dir ? { run_dir: runInfo.run_dir } : {} }).then((result) => {
+      if (gone) return;
+      const rep = toolReply(result);
+      if (rep.kind !== "ok") return pollError(rep.text);
+      if (runInfo.held) {
+        if (!heldCheck(rep.data, runInfo.held)) {
+          // The held call has not run (the host or the user may have declined it). The start is free again: a new click looks at the folder
+          // first, and run_topopt refuses a start while a run of this server is busy. "Check again" stays for a call that runs late.
+          say("No run has started in " + (runInfo.run_dir || "the run folder") + " yet. You can start it again.");
+          busy = false;
+          armed = null;
+          $("run").textContent = "Start the run";
+          runControls();
+          $("runact").hidden = false;
+          $("check").hidden = false;
+          return;
+        }
+        runInfo.held = null;                 // a new job: watch it as usual
+      }
+      const v = statusView(rep.data, (facts.estimate || {}).iterations);
+      say(v.text);
+      if (v.ended) return finished(v);
+      pollTimer = setTimeout(poll, RUN_STATUS_POLL_MS);
+    }, (e) => { if (!gone) pollError(e.message); });
+  }
+  function pollError(reason) {   // no loop: the user asks again
+    say("Could not read the state of the run: " + reason.replace(/[.\s]+$/, "") + ".");
+    $("runact").hidden = false;
+    $("check").hidden = false;
+  }
+  function finished(v) {   // the button stays off after the end too: a new start replaces the run folder (the user can ask the agent)
+    endView = v;
+    $("check").hidden = true;
+    if (canContext) {
+      request("ui/update-model-context", contextEnd(runInfo, v, structuredOffered(hostCaps))).catch((e) => noteCaps("the host did not take the end note: " + e.message));
+    }
+    if (canMessage) {
+      $("runact").hidden = false;
+      $("discuss").hidden = false;
+      $("discuss").onclick = () => {
+        $("discuss").disabled = true;
+        request("ui/message", { role: "user", content: [{ type: "text", text: discussText(runInfo, v) }] })
+          .then((r) => { const o = afterMessage(r, null, null); setStatus(o.status); $("discuss").disabled = !o.enable; },
+                (e) => { setStatus(afterMessage(null, e.message, null, e.noAnswer).status); $("discuss").disabled = false; });
+      };
+    }
+  }
+  function noteCaps(extra) { $("capstext").textContent = capabilityLine(hostCaps) + " (" + extra + ")"; }
+  $("check").addEventListener("click", () => (checkAction || poll)());
+  $("run").addEventListener("click", () => {
+    if (!facts) return;
+    $("run").disabled = true;
+    $("typeline").hidden = true;
+    if (route() === "tools") startByTool(); else startByMessage();
+  });
+  $("full").addEventListener("click", () => {
+    const want = displayMode === "fullscreen" ? "inline" : "fullscreen";
+    request("ui/request-display-mode", { mode: want }).then((r) => applyContext({ displayMode: (r && r.mode) || want }), () => {});
+  });
+
+  // The host sizes the frame to the page: tell it the height after each change.
+  let lastH = 0;
+  function sizeChanged() {
+    const h = Math.ceil(document.documentElement.getBoundingClientRect().height);
+    if (h === lastH) return;
+    lastH = h;
+    notify("ui/notifications/size-changed", { width: Math.ceil(document.documentElement.clientWidth), height: h });
+  }
+  new ResizeObserver(() => { resize(); sizeChanged(); }).observe(document.body);
+
+  request("ui/initialize", {
+    appInfo: { name: "topopt-problem-view", version: "1" },
+    appCapabilities: { availableDisplayModes: ["inline", "fullscreen"] },
+    protocolVersion: PROTOCOL,
+  }).then((r) => {
+    canMessage = messageOffered(r && r.hostCapabilities);
+    hostCaps = (r && r.hostCapabilities) || null;
+    inited = true;
+    canContext = updateContextOffered(hostCaps);
+    $("capstext").textContent = capabilityLine(hostCaps);
+    applyContext((r && r.hostContext) || {});
+    runControls();
+    notify("ui/notifications/initialized", {});
+  }, (e) => setStatus("No host: " + e.message));
+})();
+</script>
+</body>
+</html>

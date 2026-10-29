@@ -1,0 +1,97 @@
+{
+ "format": 1,
+ "kind": "topopt-verify",
+ "ok": true,
+ "estimate_only": false,
+ "reference_level_mm": 2.195,
+ "exit_code": 0,
+ "material": {
+  "E_MPa": 3500.0,
+  "nu": 0.35
+ },
+ "band_mm": 0.8,
+ "yaml_vs_run": {
+  "matches": true,
+  "differences": []
+ },
+ "limit": {
+  "allowable_MPa": 14.2,
+  "percentile": 99.9,
+  "mesh_size_mm": 2.195,
+  "cases": {
+   "hang": {
+    "value_MPa": 0.07019307625376829,
+    "margin": 202.29915481496906,
+    "exceeded": false,
+    "peak_qp_MPa": 0.40791562409237864,
+    "peak_qp_margin": 34.811120637007505
+   },
+   "pull_off": {
+    "value_MPa": 1.3026471795325334,
+    "margin": 10.900879549822383,
+    "exceeded": false,
+    "peak_qp_MPa": 6.678158352000828,
+    "peak_qp_margin": 2.1263347245645305
+   }
+  },
+  "exceeded": false,
+  "exceeded_cases": [],
+  "note": "the allowable is given by the user; topopt has no default limit. The exit code is 3 only when the percentile value of a case is above it. The peak is shown for information."
+ },
+ "files": {
+  "verify": "verify.json",
+  "mesh": "mesh.npz",
+  "fields": "fields.npz"
+ },
+ "run": {
+  "name": "e2_hook",
+  "voxel_size_mm": 1.6,
+  "final_stl_sha256": "SHA_OF_FINAL_STL",
+  "verified_file": "final.stl"
+ },
+ "backend": {
+  "solver": "pardiso",
+  "requested": "auto"
+ },
+ "mesh": {
+  "size": 2.195,
+  "tets": 10134,
+  "nodes": 3282,
+  "quality_min": 0.08727883617354852,
+  "dofs": 58572
+ },
+ "cases": {
+  "hang": {
+   "weight_of_the_optimizer": 234.0,
+   "max_displacement_mm": 0.0026421438012976736,
+   "compliance_Nmm": 0.0036911920190778806,
+   "stiffness_N_per_mm": 1040.7478072516242,
+   "optimizer_stiffness_N_per_mm": 980.026,
+   "stiffness_over_optimizer": 1.0619593839873884,
+   "von_mises": {
+    "p50_by_volume_MPa": 0.0170318207392155,
+    "p95_by_volume_MPa": 0.04603439256809989,
+    "p99_by_volume_MPa": 0.05547612156163153,
+    "p99_9_by_volume_MPa": 0.07019307625376829,
+    "peak_qp_MPa": 0.40791562409237864,
+    "peak_vertex_MPa": 0.5292218738076511
+   }
+  },
+  "pull_off": {
+   "weight_of_the_optimizer": 1.0,
+   "max_displacement_mm": 0.059430958472667265,
+   "compliance_Nmm": 0.9023543499713721,
+   "stiffness_N_per_mm": 997.3114220910566,
+   "optimizer_stiffness_N_per_mm": 1001.438,
+   "stiffness_over_optimizer": 0.9958793475892233,
+   "von_mises": {
+    "p50_by_volume_MPa": 0.219715340209337,
+    "p95_by_volume_MPa": 0.7928008074290152,
+    "p99_by_volume_MPa": 1.0343263275477084,
+    "p99_9_by_volume_MPa": 1.3026471795325334,
+    "peak_qp_MPa": 6.678158352000828,
+    "peak_vertex_MPa": 8.704908034199114
+   }
+  }
+ }
+}

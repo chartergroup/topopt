@@ -1,0 +1,2662 @@
+# Filament catalog of topopt (CONTRACTS.md section 18.8). Read by topopt/materials_catalog.py. Format 1.
+#
+# Sources. Every number is a fact that the maker states on the data sheet or the product page named in `source_url`
+# (or, for one field, in `field_sources`). The pages were opened on the date in `opened`. `tag: maker TDS` is a data
+# sheet of the maker. `tag: maker page` is a product page of the maker (the Elegoo spec box). `tag: third party` is a
+# copy of a maker sheet that another company hosts. One row is one product and one sheet version: a product with two
+# sheet versions has two rows. A value that no source states, that two sources state differently, or that the sheet
+# gives in a way that does not fit the field is `null`, and `note` says why (the note names every field that is null).
+# Nothing is guessed. Every sheet says its numbers are not for design; the values describe printed test bars of one
+# maker and one set of print settings, not your part.
+#
+# Licence. This file is our own list of facts, written by hand from maker sheets; it is MIT like the rest of topopt.
+# It holds NO data of a slicer profile set: OrcaSlicer, Bambu Studio, PrusaSlicer and SuperSlicer profiles are
+# AGPL-3.0, Cura profiles are LGPL-3.0, and nothing from them is copied here. The file has no price.
+#
+# Fields of a filament:
+#   id                     lower-case slug; the value of `material.filament`
+#   family                 ABS, ASA, PC, PA6-CF, ... (a label for people and for the pick list)
+#   maker, product         the display name is "<maker> <product>"
+#   aliases                other exact names (the maker words of the `makers` table are stripped before the compare)
+#   sheet_version          the version that the sheet prints (the file name can say another one)
+#   E_xy_mpa, E_z_mpa      tensile modulus, MPa. XY: the load runs in the layer plane. Z: the load runs across the layers.
+#                          A Prusament "vertical xz" bar loads the layer plane: it is NOT a Z value, and Z is null.
+#   bending_modulus_xy_mpa, bending_modulus_z_mpa  bending (flexural) modulus of printed bars, MPa, with the same XY and Z meaning.
+#                          Entered only for a row whose sheet gives no tensile modulus and gives a bending modulus of printed bars
+#                          (a run takes E from it, and says so); null in every other row.
+#   strength_xy_mpa, strength_z_mpa  tensile strength of printed bars, MPa
+#   strength_kind          yield | peak | not stated (what the sheet calls the number; most sheets do not say)
+#   elongation_xy_pct      elongation of the XY bar, %
+#   density_g_cm3          g/cm3. Null when the sheet gives a range and no single value
+#   density_range_g_cm3    optional: [min, max] g/cm3 of a sheet that gives a range and no single density (then `density_g_cm3` is
+#                          null). A run takes the middle of the range, and says so; the family median is only for a sheet with neither
+#   hdt_18_c, hdt_045_c    heat deflection temperature at 1.8 MPa and at 0.45 MPa, deg C
+#   conditioned            wet values of a polyamide: condition, strength_xy_mpa, strength_z_mpa, E_xy_mpa, E_z_mpa
+#   nu                     Poisson's ratio: no sheet gives it, so it is null in every row
+#   nozzle_c, bed_c        [min, max] deg C for a 0.4 mm nozzle; "x +/- y" on a sheet is stored as [x - y, x + y]
+#   enclosure              "no" | recommended | required (what the maker says about an enclosed printer)
+#   chamber_c_min          the lowest chamber temperature that the maker names as a need of the filament, deg C. It is entered for a
+#                          filament with `enclosure: required`, and for Prusament PA11 (its sheet gives the chamber as a need). A chamber
+#                          that a sheet lists only among its print conditions, for a filament whose enclosure is `no` or `recommended`,
+#                          is not entered (Bambu Lab PETG Basic, PETG-CF and PET-CF). Null when the maker names none.
+#   hardened_nozzle        true when the maker asks for a hardened or wear-resistant nozzle, false when it says not needed,
+#                          null when the sheet does not say
+#   drying                 text: the maker's drying setting; null when the sheet does not give one
+#   direct_drive           true when the maker recommends a direct drive extruder; null when no source of this list says
+#                          so (every row)
+#   abrasive               true when the product holds carbon or glass fibre (the product name says so)
+#   soft                   true for a rubber-like filament (TPU): a linear model does not fit it
+#   source_url, opened, tag  where the row comes from, when it was opened, and what kind of page it is
+#   field_sources          optional: a field -> the page for that one field, when it is not `source_url`
+#   superseded_by          optional: the id of the row of a NEWER sheet of the same product (the row is an older sheet). A list shows
+#                          the newer row and counts this one; its id still selects it, and a check says that a newer sheet exists
+#   enclosed_note          optional: what the sheet or the product page of this one product says about printing in an enclosed printer,
+#                          in its words. A check gives `care` with this text on an enclosed or heated printer. Only where the page says it
+#   note                   text; required when a field is null (it names the field)
+
+format: 1
+catalog_version: "2026-10-25"
+
+# Words that name a maker. The display name of the maker counts too. A maker word in a name is a hard filter.
+makers:
+  Polymaker: [polymaker]
+  Bambu Lab: [bambu, bambulab, bambu lab, bbl]
+  Prusament: [prusament, prusa, prusa research]
+  Elegoo: [elegoo]
+  eSun: [esun, e-sun]
+  AzureFilm: [azurefilm, azure film]
+
+materials:
+
+  - id: polymaker-polylite-abs
+    family: ABS
+    maker: Polymaker
+    product: PolyLite ABS
+    aliases: []
+    sheet_version: V5.5
+    E_xy_mpa: 2246.6
+    E_z_mpa: 2080.9
+    bending_modulus_xy_mpa: null
+    bending_modulus_z_mpa: null
+    strength_xy_mpa: 33.4
+    strength_z_mpa: 29.7
+    strength_kind: not stated
+    elongation_xy_pct: 17.9
+    density_g_cm3: 1.04
+    hdt_18_c: 98
+    hdt_045_c: 100
+    conditioned: null
+    nu: null
+    nozzle_c: [245, 265]
+    bed_c: [90, 100]
+    enclosure: required
+    chamber_c_min: null
+    hardened_nozzle: false
+    drying: "70 C, 6 h"
+    direct_drive: null
+    abrasive: false
+    soft: false
+    source_url: "https://cdn.shopify.com/s/files/1/0548/7299/7945/files/PolyLite_ABS_TDS_EN_V5.4.pdf?v=1731955200"
+    opened: "2026-10-24"
+    tag: maker TDS
+    note: >-
+      density_g_cm3: the PDF says 1.04; the wiki page of the same sheet says 1.12, which is a transcription error (the PDF
+      is used). The file name says V5.4 and the PDF says V5.5. The sheet says a closed chamber is needed.
+
+  - id: polymaker-abs-pro
+    family: ABS
+    maker: Polymaker
+    product: ABS Pro
+    aliases: []
+    sheet_version: V1.0 (2026-05-29)
+    E_xy_mpa: 2330
+    E_z_mpa: 1950
+    bending_modulus_xy_mpa: null
+    bending_modulus_z_mpa: null
+    strength_xy_mpa: 34.94
+    strength_z_mpa: 21.87
+    strength_kind: not stated
+    elongation_xy_pct: 7.34
+    density_g_cm3: 1.04
+    hdt_18_c: 101.4
+    hdt_045_c: 106.4
+    conditioned: null
+    nu: null
+    nozzle_c: [270, 290]
+    bed_c: [100, 110]
+    enclosure: required
+    chamber_c_min: null
+    hardened_nozzle: null
+    drying: "70 C, 6 h"
+    direct_drive: null
+    abrasive: false
+    soft: false
+    source_url: "https://cdn.shopify.com/s/files/1/0548/7299/7945/files/TDS_Polymaker_ABS_Pro_V1_2026_05_29_EN.pdf?v=1780300532"
+    opened: "2026-10-24"
+    tag: maker TDS
+    note: >-
+      The sheet lists the modulus in GPa (2.33 and 1.95); converted to MPa. The closed chamber is the sheet line 'closure
+      chamber: yes'. hardened_nozzle: the sheet text does not say.
+
+  - id: polymaker-abs-max
+    family: ABS
+    maker: Polymaker
+    product: ABS Max
+    aliases: []
+    sheet_version: V1.1 (2026-06-01)
+    E_xy_mpa: 2320
+    E_z_mpa: 2100
+    bending_modulus_xy_mpa: null
+    bending_modulus_z_mpa: null
+    strength_xy_mpa: 35.66
+    strength_z_mpa: 25.41
+    strength_kind: not stated
+    elongation_xy_pct: 6.72
+    density_g_cm3: 1.06
+    hdt_18_c: 113.1
+    hdt_045_c: 118.1
+    conditioned: null
+    nu: null
+    nozzle_c: [270, 300]
+    bed_c: [120, 120]
+    enclosure: required
+    chamber_c_min: 65
+    hardened_nozzle: null
+    drying: "70 C, 6 h"
+    direct_drive: null
+    abrasive: false
+    soft: false
+    source_url: "https://cdn.shopify.com/s/files/1/0548/7299/7945/files/TDS_Polymaker_ABS_Max_V1.1_2026_06_01_EN_2.pdf?v=1780566206"
+    opened: "2026-10-24"
+    tag: maker TDS
+    note: >-
+      The sheet lists the modulus in GPa (2.32 and 2.10); converted to MPa. The sheet says chamber 65 C or more and an
+      all-metal hot end. The bed value is one number (120 C). hardened_nozzle: the sheet text does not say.
+
+  - id: bambu-lab-abs
+    family: ABS
+    maker: Bambu Lab
+    product: ABS
+    aliases: []
+    sheet_version: V3.0
+    E_xy_mpa: 2200
+    E_z_mpa: 1960
+    bending_modulus_xy_mpa: null
+    bending_modulus_z_mpa: null
+    strength_xy_mpa: 33
+    strength_z_mpa: 28
+    strength_kind: not stated
+    elongation_xy_pct: 10.5
+    density_g_cm3: 1.05
+    hdt_18_c: 84
+    hdt_045_c: 87
+    conditioned: null
+    nu: null
+    nozzle_c: [240, 270]
+    bed_c: [80, 100]
+    enclosure: required
+    chamber_c_min: 45
+    hardened_nozzle: false
+    drying: "80 C, 8 h"
+    direct_drive: null
+    abrasive: false
+    soft: false
+    source_url: "https://wiki.bambulab.com/filament-acc/abs-asa-pc/bambu_abs_technical_data_sheet_v3.pdf"
+    opened: "2026-10-24"
+    tag: maker TDS
+    field_sources:
+      enclosure: "https://wiki.bambulab.com/en/filament/abs_asa_pc"
+    note: >-
+      The sheet gives chamber 45 to 60 C; the maker wiki says to print on a printer with an enclosed chamber.
+
+  - id: elegoo-abs
+    family: ABS
+    maker: Elegoo
+    product: ABS
+    aliases: []
+    sheet_version: none stated
+    E_xy_mpa: null
+    E_z_mpa: null
+    bending_modulus_xy_mpa: 2484
+    bending_modulus_z_mpa: 2133
+    strength_xy_mpa: 35
+    strength_z_mpa: 29
+    strength_kind: not stated
+    elongation_xy_pct: 7.2
+    density_g_cm3: 1.05
+    hdt_18_c: null
+    hdt_045_c: 85
+    conditioned: null
+    nu: null
+    nozzle_c: [240, 280]
+    bed_c: [90, 100]
+    enclosure: required
+    chamber_c_min: 45
+    hardened_nozzle: false
+    drying: "70 +/- 5 C, 8 h"
+    direct_drive: null
+    abrasive: false
+    soft: false
+    source_url: "https://us.elegoo.com/products/abs-filament-1-75mm-colored-1kg"
+    opened: "2026-10-24"
+    tag: maker page
+    note: >-
+      E_xy_mpa, E_z_mpa: the spec box gives no tensile modulus. Its bending modulus (2484 / 2133 MPa, XY / Z) is in
+      bending_modulus_xy_mpa and bending_modulus_z_mpa; a run takes E from it. hdt_18_c: the spec box gives HDT at 0.45
+      MPa only. The spec box has no test standard.
+
+  - id: esun-abs-plus
+    family: ABS
+    maker: eSun
+    product: ABS+
+    aliases: []
+    sheet_version: V4.0 (Nov 2021)
+    E_xy_mpa: null
+    E_z_mpa: null
+    bending_modulus_xy_mpa: null
+    bending_modulus_z_mpa: null
+    strength_xy_mpa: null
+    strength_z_mpa: null
+    strength_kind: not stated
+    elongation_xy_pct: null
+    density_g_cm3: 1.06
+    hdt_18_c: null
+    hdt_045_c: null
+    conditioned: null
+    nu: null
+    nozzle_c: [230, 270]
+    bed_c: [95, 110]
+    enclosure: required
+    chamber_c_min: null
+    hardened_nozzle: false
+    drying: null
+    direct_drive: null
+    abrasive: false
+    soft: false
+    source_url: "https://www.matterhackers.com/r/m23bZ1.pdf"
+    opened: "2026-10-24"
+    tag: third party
+    note: >-
+      E_xy_mpa, E_z_mpa, strength_xy_mpa, strength_z_mpa, elongation_xy_pct: this sheet reports injection-moulded bars
+      (tensile 40 MPa, bending modulus 1203 MPa), not printed bars. A reseller page lists printed-bar values (40.12 /
+      14.94 MPa) without a source for the table; they are not used. hdt_18_c, hdt_045_c: the sheet gives HDT 73 C and
+      does not name the load. The sheet is hosted by a reseller. The sheet says to use a closed chamber.
+      bending_modulus_xy_mpa, bending_modulus_z_mpa: the bending modulus of this sheet is of injection-moulded bars, so
+      it is not entered; the filament has no modulus for a run.
+
+  - id: polymaker-polylite-asa
+    family: ASA
+    maker: Polymaker
+    product: PolyLite ASA
+    aliases: []
+    sheet_version: V6.0
+    E_xy_mpa: 2379
+    E_z_mpa: 1965
+    bending_modulus_xy_mpa: null
+    bending_modulus_z_mpa: null
+    strength_xy_mpa: 43.8
+    strength_z_mpa: 32
+    strength_kind: not stated
+    elongation_xy_pct: 6.7
+    density_g_cm3: 1.13
+    hdt_18_c: 100
+    hdt_045_c: 103
+    conditioned: null
+    nu: null
+    nozzle_c: [230, 260]
+    bed_c: [75, 95]
+    enclosure: required
+    chamber_c_min: null
+    hardened_nozzle: false
+    drying: "70 C, 7 h"
+    direct_drive: null
+    abrasive: false
+    soft: false
+    source_url: "https://cdn.shopify.com/s/files/1/0548/7299/7945/files/PolyLite_ASA_TDS_EN_V5.4.pdf?v=1731955208"
+    opened: "2026-10-24"
+    tag: maker TDS
+    note: >-
+      The file name says V5.4 and the PDF says V6.0. The sheet says a closed chamber is needed.
+
+  - id: bambu-lab-asa
+    family: ASA
+    maker: Bambu Lab
+    product: ASA
+    aliases: []
+    sheet_version: V3.0
+    E_xy_mpa: 2450
+    E_z_mpa: 2120
+    bending_modulus_xy_mpa: null
+    bending_modulus_z_mpa: null
+    strength_xy_mpa: 37
+    strength_z_mpa: 31
+    strength_kind: not stated
+    elongation_xy_pct: 9.2
+    density_g_cm3: 1.05
+    hdt_18_c: 92
+    hdt_045_c: 100
+    conditioned: null
+    nu: null
+    nozzle_c: [240, 270]
+    bed_c: [80, 100]
+    enclosure: required
+    chamber_c_min: 45
+    hardened_nozzle: false
+    drying: "80 C, 8 h"
+    direct_drive: null
+    abrasive: false
+    soft: false
+    source_url: "https://wiki.bambulab.com/filament-acc/abs-asa-pc/6eaf4c432d1d4014a1975e55a55ed00b.pdf"
+    opened: "2026-10-24"
+    tag: maker TDS
+    field_sources:
+      enclosure: "https://wiki.bambulab.com/en/filament/abs_asa_pc"
+    note: >-
+      The sheet gives chamber 45 to 60 C and the same drying settings as the ABS sheet; the maker wiki says to print on a
+      printer with an enclosed chamber.
+
+  - id: prusament-asa
+    family: ASA
+    maker: Prusament
+    product: ASA
+    aliases: []
+    sheet_version: V1.1 (20-05-2024)
+    E_xy_mpa: 1600
+    E_z_mpa: null
+    bending_modulus_xy_mpa: null
+    bending_modulus_z_mpa: null
+    strength_xy_mpa: 42
+    strength_z_mpa: null
+    strength_kind: yield
+    elongation_xy_pct: 3.4
+    density_g_cm3: 1.07
+    hdt_18_c: 86
+    hdt_045_c: 93
+    conditioned: null
+    nu: null
+    nozzle_c: [250, 270]
+    bed_c: [105, 115]
+    enclosure: recommended
+    chamber_c_min: null
+    hardened_nozzle: false
+    drying: null
+    direct_drive: null
+    abrasive: false
+    soft: false
+    source_url: "https://storage.googleapis.com/prusa3d-content-prod-14e8-wordpress-prusament-prod/2024/05/bc8551ef-tds_prusament-asa_2024_en.pdf"
+    opened: "2026-10-24"
+    tag: maker TDS
+    note: >-
+      E_z_mpa, strength_z_mpa: the sheet has the bars 'horizontal' (used here) and 'vertical xz' (modulus 1.7 GPa, yield
+      45 MPa); both load the layer plane, so neither is a value across the layers. The sheet gives an interlayer adhesion
+      of 11 +/- 1 MPa by the maker's own method. The elongation is at yield. The sheet recommends a skirt or an enclosure.
+
+  - id: elegoo-asa
+    family: ASA
+    maker: Elegoo
+    product: ASA
+    aliases: []
+    sheet_version: none stated
+    E_xy_mpa: null
+    E_z_mpa: null
+    bending_modulus_xy_mpa: 2349
+    bending_modulus_z_mpa: 2219
+    strength_xy_mpa: 35
+    strength_z_mpa: 30
+    strength_kind: not stated
+    elongation_xy_pct: 10.6
+    density_g_cm3: 1.09
+    hdt_18_c: null
+    hdt_045_c: 99
+    conditioned: null
+    nu: null
+    nozzle_c: [240, 270]
+    bed_c: [90, 100]
+    enclosure: required
+    chamber_c_min: 45
+    hardened_nozzle: false
+    drying: "80 +/- 5 C, 8 h"
+    direct_drive: null
+    abrasive: false
+    soft: false
+    source_url: "https://us.elegoo.com/products/asa-filament-1-75mm-colored-1kg"
+    opened: "2026-10-24"
+    tag: maker page
+    note: >-
+      E_xy_mpa, E_z_mpa: the spec box gives no tensile modulus. Its bending modulus (2349 / 2219 MPa, XY / Z) is in
+      bending_modulus_xy_mpa and bending_modulus_z_mpa; a run takes E from it. hdt_18_c: the spec box gives HDT at 0.45
+      MPa only.
+
+  - id: polymaker-fiberon-asa-cf08
+    family: ASA-CF
+    maker: Polymaker
+    product: Fiberon ASA-CF08
+    aliases: []
+    sheet_version: V1.0
+    E_xy_mpa: 3611.7
+    E_z_mpa: 1903.8
+    bending_modulus_xy_mpa: null
+    bending_modulus_z_mpa: null
+    strength_xy_mpa: 43.5
+    strength_z_mpa: 25
+    strength_kind: not stated
+    elongation_xy_pct: 1.8
+    density_g_cm3: 1.09
+    hdt_18_c: 97.3
+    hdt_045_c: 103
+    conditioned: null
+    nu: null
+    nozzle_c: [260, 280]
+    bed_c: [90, 100]
+    enclosure: recommended
+    chamber_c_min: null
+    hardened_nozzle: true
+    drying: "90 C, 6 h"
+    direct_drive: null
+    abrasive: true
+    soft: false
+    source_url: "https://wiki.polymaker.com/polymaker-products/more-about-our-products/documents/technical-data-sheets/abs-asa/fiberon-tm-asa-cf08"
+    opened: "2026-10-24"
+    tag: maker TDS
+    note: >-
+      The sheet says: chamber at room temperature, an enclosed printer recommended because of the odour; a wear-resistant
+      nozzle is highly recommended (a brass nozzle lasts about 9 h).
+
+  - id: bambu-lab-asa-cf
+    family: ASA-CF
+    maker: Bambu Lab
+    product: ASA-CF
+    aliases: []
+    sheet_version: V1.0
+    E_xy_mpa: 4200
+    E_z_mpa: 2290
+    bending_modulus_xy_mpa: null
+    bending_modulus_z_mpa: null
+    strength_xy_mpa: 34
+    strength_z_mpa: 30
+    strength_kind: not stated
+    elongation_xy_pct: 9.6
+    density_g_cm3: 1.02
+    hdt_18_c: 102
+    hdt_045_c: 110
+    conditioned: null
+    nu: null
+    nozzle_c: [250, 280]
+    bed_c: [80, 100]
+    enclosure: required
+    chamber_c_min: 45
+    hardened_nozzle: true
+    drying: "80 C, 8 h"
+    direct_drive: null
+    abrasive: true
+    soft: false
+    source_url: "https://wiki.bambulab.com/filament-acc/asacf-pahtcf/bambus_asa-cf_technical_data_sheet.pdf"
+    opened: "2026-10-24"
+    tag: maker TDS
+    field_sources:
+      enclosure: "https://wiki.bambulab.com/en/filament/asacf_pahtcf"
+    note: >-
+      The sheet says hardened steel only, 0.6 mm recommended, no 0.2 mm. The sheet disagrees with itself on the
+      conditions of the test bars (the table says 220 C / 35 C / 200 mm/s, the note says 275 C / 90 C); the print needs
+      here are the recommended settings. The sheet gives a chamber temperature of 45 to 60 C and the blast drying oven
+      line for drying.
+
+  - id: elegoo-asa-cf
+    family: ASA-CF
+    maker: Elegoo
+    product: ASA-CF
+    aliases: []
+    sheet_version: none stated
+    E_xy_mpa: null
+    E_z_mpa: null
+    bending_modulus_xy_mpa: 3820
+    bending_modulus_z_mpa: 1970
+    strength_xy_mpa: 35
+    strength_z_mpa: 25
+    strength_kind: not stated
+    elongation_xy_pct: 5.4
+    density_g_cm3: 1.13
+    hdt_18_c: null
+    hdt_045_c: 108
+    conditioned: null
+    nu: null
+    nozzle_c: [250, 280]
+    bed_c: [90, 100]
+    enclosure: required
+    chamber_c_min: 45
+    hardened_nozzle: true
+    drying: null
+    direct_drive: null
+    abrasive: true
+    soft: false
+    source_url: "https://us.elegoo.com/products/asa-cf"
+    opened: "2026-10-24"
+    tag: maker page
+    note: >-
+      E_xy_mpa, E_z_mpa: the spec box gives no tensile modulus. Its bending modulus (3820 / 1970 MPa, XY / Z) is in
+      bending_modulus_xy_mpa and bending_modulus_z_mpa; a run takes E from it. hdt_18_c: the spec box gives HDT at 0.45
+      MPa only. drying: the spec box says 80 +/- 5 C for 8 h and a page note says 85 C, so the value is not entered.
+
+  - id: polymaker-polylite-pc
+    family: PC
+    maker: Polymaker
+    product: PolyLite PC
+    aliases: []
+    sheet_version: V5.4
+    E_xy_mpa: 2497
+    E_z_mpa: 2371
+    bending_modulus_xy_mpa: null
+    bending_modulus_z_mpa: null
+    strength_xy_mpa: 69.1
+    strength_z_mpa: 52.8
+    strength_kind: not stated
+    elongation_xy_pct: 4.8
+    density_g_cm3: 1.19
+    hdt_18_c: 107
+    hdt_045_c: 111
+    conditioned: null
+    nu: null
+    nozzle_c: [250, 270]
+    bed_c: [90, 105]
+    enclosure: required
+    chamber_c_min: 70
+    hardened_nozzle: false
+    drying: "75 C, 6 h"
+    direct_drive: null
+    abrasive: false
+    soft: false
+    source_url: "https://cdn.shopify.com/s/files/1/0548/7299/7945/files/PolyLite_PC_TDS_EN_V5.4.pdf?v=1731958076"
+    opened: "2026-10-24"
+    tag: maker TDS
+    note: >-
+      The sheet says chamber 70 to 100 C and to anneal the printed part (90 C, 2 h).
+
+  - id: polymaker-polymax-pc
+    family: PC
+    maker: Polymaker
+    product: PolyMax PC
+    aliases: []
+    sheet_version: V5.4
+    E_xy_mpa: 2435
+    E_z_mpa: 2149
+    bending_modulus_xy_mpa: null
+    bending_modulus_z_mpa: null
+    strength_xy_mpa: 53.44
+    strength_z_mpa: 41.43
+    strength_kind: not stated
+    elongation_xy_pct: 4.53
+    density_g_cm3: 1.19
+    hdt_18_c: 99
+    hdt_045_c: 114
+    conditioned: null
+    nu: null
+    nozzle_c: [250, 270]
+    bed_c: [90, 105]
+    enclosure: required
+    chamber_c_min: 70
+    hardened_nozzle: null
+    drying: "75 C, 6 h"
+    direct_drive: null
+    abrasive: false
+    soft: false
+    source_url: "https://cdn.shopify.com/s/files/1/0548/7299/7945/files/PolyMax_PC_TDS_EN_V5.4.pdf?v=1731958090"
+    opened: "2026-10-24"
+    tag: maker TDS
+    field_sources:
+      nozzle_c: "https://wiki.polymaker.com/polymaker-products/more-about-our-products/documents/technical-data-sheets/polycarbonate/polymax-tm-pc"
+      bed_c: "https://wiki.polymaker.com/polymaker-products/more-about-our-products/documents/technical-data-sheets/polycarbonate/polymax-tm-pc"
+      enclosure: "https://wiki.polymaker.com/polymaker-products/more-about-our-products/documents/technical-data-sheets/polycarbonate/polymax-tm-pc"
+      drying: "https://wiki.polymaker.com/polymaker-products/more-about-our-products/documents/technical-data-sheets/polycarbonate/polymax-tm-pc"
+    note: >-
+      The print needs are from the maker wiki page of the sheet: closure chamber needed (70 to 100 C). hardened_nozzle:
+      the page does not say.
+
+  - id: polymaker-pc-abs
+    family: PC-ABS
+    maker: Polymaker
+    product: PC-ABS
+    aliases: []
+    sheet_version: V5.4
+    E_xy_mpa: 1835
+    E_z_mpa: 1677
+    bending_modulus_xy_mpa: null
+    bending_modulus_z_mpa: null
+    strength_xy_mpa: 39.9
+    strength_z_mpa: 22.9
+    strength_kind: not stated
+    elongation_xy_pct: 4.2
+    density_g_cm3: 1.1
+    hdt_18_c: 106
+    hdt_045_c: 112
+    conditioned: null
+    nu: null
+    nozzle_c: [250, 270]
+    bed_c: [90, 105]
+    enclosure: required
+    chamber_c_min: 90
+    hardened_nozzle: false
+    drying: "75 C, 6 h"
+    direct_drive: null
+    abrasive: false
+    soft: false
+    source_url: "https://cdn.shopify.com/s/files/1/0548/7299/7945/files/Polymaker_PC_ABS_TDS_EN_V5.4.pdf?v=1731958089"
+    opened: "2026-10-24"
+    tag: maker TDS
+    note: >-
+      The sheet says chamber 90 to 100 C.
+
+  - id: polymaker-pc-pbt
+    family: PC-PBT
+    maker: Polymaker
+    product: PC-PBT
+    aliases: []
+    sheet_version: V5.4
+    E_xy_mpa: 1940.2
+    E_z_mpa: 1743.4
+    bending_modulus_xy_mpa: null
+    bending_modulus_z_mpa: null
+    strength_xy_mpa: 50.4
+    strength_z_mpa: 37.9
+    strength_kind: not stated
+    elongation_xy_pct: 4.6
+    density_g_cm3: 1.2
+    hdt_18_c: 91
+    hdt_045_c: 107
+    conditioned: null
+    nu: null
+    nozzle_c: [260, 280]
+    bed_c: [100, 115]
+    enclosure: required
+    chamber_c_min: 100
+    hardened_nozzle: false
+    drying: "75 C, 6 h"
+    direct_drive: null
+    abrasive: false
+    soft: false
+    source_url: "https://cdn.shopify.com/s/files/1/0548/7299/7945/files/Polymaker_PC_PBT_TDS_EN_V5.4.pdf?v=1731958091"
+    opened: "2026-10-24"
+    tag: maker TDS
+    note: >-
+      The sheet says chamber 100 to 110 C.
+
+  - id: bambu-lab-pc
+    family: PC
+    maker: Bambu Lab
+    product: PC
+    aliases: []
+    sheet_version: V2.0 (dry)
+    E_xy_mpa: 2110
+    E_z_mpa: 1450
+    bending_modulus_xy_mpa: null
+    bending_modulus_z_mpa: null
+    strength_xy_mpa: 62
+    strength_z_mpa: 56
+    strength_kind: not stated
+    elongation_xy_pct: 3.8
+    density_g_cm3: 1.2
+    hdt_18_c: null
+    hdt_045_c: null
+    conditioned: null
+    nu: null
+    nozzle_c: [260, 280]
+    bed_c: [90, 110]
+    enclosure: required
+    chamber_c_min: 45
+    hardened_nozzle: false
+    drying: "80 C, 8 h"
+    direct_drive: null
+    abrasive: false
+    soft: false
+    source_url: "https://wiki.bambulab.com/filament-acc/abs-asa-pc/a52afdccddfd448583d119587122c8c5.pdf"
+    opened: "2026-10-24"
+    tag: maker TDS
+    field_sources:
+      enclosure: "https://wiki.bambulab.com/en/filament/abs_asa_pc"
+    note: >-
+      hdt_18_c, hdt_045_c: the sheet prints 117 C at 1.8 MPa and 112 C at 0.45 MPa, which is the wrong order, so neither
+      value is used. The sheet gives chamber 45 to 60 C; the maker wiki says an enclosed printer.
+
+  - id: bambu-lab-pc-fr
+    family: PC
+    maker: Bambu Lab
+    product: PC FR
+    aliases: []
+    sheet_version: V1.0
+    E_xy_mpa: 1670
+    E_z_mpa: 1450
+    bending_modulus_xy_mpa: null
+    bending_modulus_z_mpa: null
+    strength_xy_mpa: 60
+    strength_z_mpa: 21
+    strength_kind: not stated
+    elongation_xy_pct: 2.4
+    density_g_cm3: 1.18
+    hdt_18_c: 108
+    hdt_045_c: 113
+    conditioned: null
+    nu: null
+    nozzle_c: [260, 280]
+    bed_c: [90, 110]
+    enclosure: required
+    chamber_c_min: 45
+    hardened_nozzle: false
+    drying: "80 C, 8 h"
+    direct_drive: null
+    abrasive: false
+    soft: false
+    source_url: "https://wiki.bambulab.com/filament-acc/abs-asa-pc/4adf3c9827a0475d8777e9b8cfd11fbe.pdf"
+    opened: "2026-10-24"
+    tag: maker TDS
+    field_sources:
+      enclosure: "https://wiki.bambulab.com/en/filament/abs_asa_pc"
+    note: >-
+      The print needs are the row that the research notes give for Bambu PC and PC FR together.
+
+  - id: prusament-pc-blend
+    family: PC
+    maker: Prusament
+    product: PC Blend
+    aliases: []
+    sheet_version: V1.1 (16-02-2022)
+    E_xy_mpa: 1900
+    E_z_mpa: null
+    bending_modulus_xy_mpa: null
+    bending_modulus_z_mpa: null
+    strength_xy_mpa: 63
+    strength_z_mpa: null
+    strength_kind: yield
+    elongation_xy_pct: 5.8
+    density_g_cm3: 1.22
+    hdt_18_c: 93
+    hdt_045_c: 113
+    conditioned: null
+    nu: null
+    nozzle_c: [265, 285]
+    bed_c: [100, 120]
+    enclosure: recommended
+    chamber_c_min: null
+    hardened_nozzle: false
+    drying: not needed (maker page)
+    direct_drive: null
+    abrasive: false
+    soft: false
+    source_url: "https://prusament.com/wp-content/uploads/2022/10/PCBlend_Prusament_TDS_2022_16_EN.pdf"
+    opened: "2026-10-24"
+    tag: maker TDS
+    field_sources:
+      drying: "https://prusament.com/materials/prusament-pc-blend/"
+    note: >-
+      E_z_mpa, strength_z_mpa: the sheet has the bars 'horizontal' (used here) and 'vertical xz' (modulus 2.0 GPa, yield
+      63 MPa); both load the layer plane. The sheet gives an interlayer adhesion of 21 +/- 2 MPa by the maker's own
+      method. The sheet recommends a skirt or an enclosure; the page says the filament does not need drying.
+
+  - id: prusament-pc-blend-carbon-fiber
+    family: PC-CF
+    maker: Prusament
+    product: PC Blend Carbon Fiber
+    aliases: []
+    sheet_version: V2.0-OY (19-04-2023)
+    E_xy_mpa: 2600
+    E_z_mpa: null
+    bending_modulus_xy_mpa: null
+    bending_modulus_z_mpa: null
+    strength_xy_mpa: 64
+    strength_z_mpa: null
+    strength_kind: yield
+    elongation_xy_pct: 4.6
+    density_g_cm3: 1.22
+    hdt_18_c: 106
+    hdt_045_c: 114
+    conditioned: null
+    nu: null
+    nozzle_c: [275, 295]
+    bed_c: [100, 120]
+    enclosure: "no"
+    chamber_c_min: null
+    hardened_nozzle: true
+    drying: null
+    direct_drive: null
+    abrasive: true
+    soft: false
+    source_url: "https://prusament.com/wp-content/uploads/2023/04/TDS_Prusament-PCCF_2023_EN.pdf"
+    opened: "2026-10-24"
+    tag: maker TDS
+    field_sources:
+      enclosure: "https://prusament.com/materials/prusament-pc-blend-carbon-fiber/"
+    note: >-
+      E_z_mpa, strength_z_mpa: the sheet has the bars 'horizontal' (used here) and 'vertical xz' (modulus 3.2 GPa, yield
+      70 MPa); both load the layer plane. The sheet gives an interlayer adhesion of 23 +/- 2 MPa by the maker's own
+      method. enclosure: the product page (opened 2026-10-24) says 'Enclosure not needed'; the sheet does not say. A
+      hardened nozzle is required (carbon fibre). The page says the filament needs no drying before printing.
+
+  - id: prusament-pc-space-grade
+    family: PC
+    maker: Prusament
+    product: PC Space Grade
+    aliases: []
+    sheet_version: V1.0 (24-09-2025)
+    E_xy_mpa: 3100
+    E_z_mpa: null
+    bending_modulus_xy_mpa: null
+    bending_modulus_z_mpa: null
+    strength_xy_mpa: 72
+    strength_z_mpa: null
+    strength_kind: yield
+    elongation_xy_pct: 3.8
+    density_g_cm3: 1.21
+    hdt_18_c: 128.8
+    hdt_045_c: 137.6
+    conditioned: null
+    nu: null
+    nozzle_c: [280, 300]
+    bed_c: [110, 130]
+    enclosure: "no"
+    chamber_c_min: null
+    hardened_nozzle: true
+    drying: "60 C, 6 h"
+    direct_drive: null
+    abrasive: null
+    soft: false
+    source_url: "https://storage.googleapis.com/prusa3d-content-prod-14e8-wordpress-prusament-prod/2025/09/e032493a-tds_pc_space_grade_en.pdf"
+    opened: "2026-10-24"
+    tag: maker TDS
+    note: >-
+      E_z_mpa, strength_z_mpa: the sheet has the bars 'horizontal' (used here) and 'vertical xz' (modulus 3.7 GPa, yield
+      75 MPa); both load the layer plane. The sheet gives an interlayer adhesion of 18 +/- 1 MPa by the maker's own
+      method; the page says the layer-to-layer adhesion is lower than that of pure PC. abrasive: the filler is not stated
+      in the research notes. An enclosure is not necessary (the page). A hardened nozzle is required.
+
+  - id: elegoo-pc
+    family: PC
+    maker: Elegoo
+    product: PC
+    aliases: []
+    sheet_version: none stated
+    E_xy_mpa: null
+    E_z_mpa: null
+    bending_modulus_xy_mpa: 2728
+    bending_modulus_z_mpa: 2530
+    strength_xy_mpa: 56
+    strength_z_mpa: 34
+    strength_kind: not stated
+    elongation_xy_pct: 8.8
+    density_g_cm3: 1.2
+    hdt_18_c: null
+    hdt_045_c: 109
+    conditioned: null
+    nu: null
+    nozzle_c: [250, 270]
+    bed_c: [90, 110]
+    enclosure: required
+    chamber_c_min: 45
+    hardened_nozzle: false
+    drying: "80 +/- 5 C, 8 h"
+    direct_drive: null
+    abrasive: false
+    soft: false
+    source_url: "https://us.elegoo.com/products/pc-filament-1-75mm-colored-1kg"
+    opened: "2026-10-24"
+    tag: maker page
+    note: >-
+      E_xy_mpa, E_z_mpa: the spec box gives no tensile modulus. Its bending modulus (2728 / 2530 MPa, XY / Z) is in
+      bending_modulus_xy_mpa and bending_modulus_z_mpa; a run takes E from it. hdt_18_c: the spec box gives HDT at 0.45
+      MPa only.
+
+  - id: polymaker-polymide-copa
+    family: CoPA
+    maker: Polymaker
+    product: PolyMide CoPA
+    aliases: []
+    sheet_version: V5.4
+    E_xy_mpa: 2703
+    E_z_mpa: 2209
+    bending_modulus_xy_mpa: null
+    bending_modulus_z_mpa: null
+    strength_xy_mpa: 78
+    strength_z_mpa: 45.8
+    strength_kind: not stated
+    elongation_xy_pct: 12.7
+    density_g_cm3: 1.12
+    hdt_18_c: 70
+    hdt_045_c: 111
+    conditioned:
+      condition: "annealed, then water at 60 C for 48 h; the dry bars were annealed at 80 C for 6 h"
+      strength_xy_mpa: 34.3
+      strength_z_mpa: 13.7
+      E_xy_mpa: 724
+      E_z_mpa: 660
+    nu: null
+    nozzle_c: [250, 270]
+    bed_c: [25, 50]
+    enclosure: "no"
+    chamber_c_min: null
+    hardened_nozzle: true
+    drying: "100 C, 8 h"
+    direct_drive: null
+    abrasive: false
+    soft: false
+    source_url: "https://cdn.shopify.com/s/files/1/0548/7299/7945/files/PolyMide_CoPA_TDS_V5.4.pdf?v=1731960892"
+    opened: "2026-10-24"
+    tag: maker TDS
+    note: >-
+      The sheet gives wet values; the strength falls from 78.0 to 34.3 MPa and the modulus from 2703 to 724 MPa in the
+      layer plane. The sheet says a wear-resistant nozzle is highly recommended (a brass nozzle shows abrasion quite
+      often). The chamber is at ambient temperature.
+
+  - id: polymaker-fiberon-pa6-cf20
+    family: PA6-CF
+    maker: Polymaker
+    product: Fiberon PA6-CF20
+    aliases: []
+    sheet_version: V1.1
+    E_xy_mpa: 8636.5
+    E_z_mpa: 3759.5
+    bending_modulus_xy_mpa: null
+    bending_modulus_z_mpa: null
+    strength_xy_mpa: 109.3
+    strength_z_mpa: 54
+    strength_kind: not stated
+    elongation_xy_pct: 2.1
+    density_g_cm3: 1.17
+    hdt_18_c: 173
+    hdt_045_c: 215
+    conditioned:
+      condition: "annealed, then water at 60 C for 48 h (5.30 % moisture)"
+      strength_xy_mpa: 54.7
+      strength_z_mpa: 25.5
+      E_xy_mpa: 2508.1
+      E_z_mpa: 1056.1
+    nu: null
+    nozzle_c: [280, 300]
+    bed_c: [40, 50]
+    enclosure: "no"
+    chamber_c_min: null
+    hardened_nozzle: true
+    drying: "100 C, 10 h"
+    direct_drive: null
+    abrasive: true
+    soft: false
+    source_url: "https://cdn.shopify.com/s/files/1/0548/7299/7945/files/TDS_FIBERON_PA6-CF20_V1.1_EN.pdf?v=1733846088"
+    opened: "2026-10-24"
+    tag: maker TDS
+    note: >-
+      The sheet says a wear-resistant nozzle is highly recommended (a brass nozzle lasts about 9 h), a room-temperature
+      chamber (no heated chamber) and a humidity below 20 % RH. The print needs are the row that the research notes give
+      for the three sheets PA6-CF20, PA12-CF10 and PA6-GF25.
+
+  - id: polymaker-fiberon-pa12-cf10
+    family: PA12-CF
+    maker: Polymaker
+    product: Fiberon PA12-CF10
+    aliases: []
+    sheet_version: V1.1
+    E_xy_mpa: 3311.2
+    E_z_mpa: 1806.6
+    bending_modulus_xy_mpa: null
+    bending_modulus_z_mpa: null
+    strength_xy_mpa: 77.4
+    strength_z_mpa: 52.2
+    strength_kind: not stated
+    elongation_xy_pct: 4.2
+    density_g_cm3: 1.06
+    hdt_18_c: 105
+    hdt_045_c: 131
+    conditioned:
+      condition: "annealed, then water at 60 C for 48 h (2.92 % moisture)"
+      strength_xy_mpa: 71.7
+      strength_z_mpa: 42.1
+      E_xy_mpa: 3131.7
+      E_z_mpa: 1622
+    nu: null
+    nozzle_c: [280, 300]
+    bed_c: [40, 50]
+    enclosure: "no"
+    chamber_c_min: null
+    hardened_nozzle: true
+    drying: "100 C, 10 h"
+    direct_drive: null
+    abrasive: true
+    soft: false
+    source_url: "https://cdn.shopify.com/s/files/1/0548/7299/7945/files/TDS_FIBERON_PA12-CF10_V1.1_EN.pdf?v=1740427088"
+    opened: "2026-10-24"
+    tag: maker TDS
+    note: >-
+      The print needs are the row that the research notes give for the three sheets PA6-CF20, PA12-CF10 and PA6-GF25 (a
+      wear-resistant nozzle highly recommended, a room-temperature chamber, a humidity below 20 % RH).
+
+  - id: polymaker-fiberon-pa6-gf25
+    family: PA6-GF
+    maker: Polymaker
+    product: Fiberon PA6-GF25
+    aliases: []
+    sheet_version: V1.1
+    E_xy_mpa: 5356.9
+    E_z_mpa: 3375.9
+    bending_modulus_xy_mpa: null
+    bending_modulus_z_mpa: null
+    strength_xy_mpa: 80.1
+    strength_z_mpa: 60.7
+    strength_kind: not stated
+    elongation_xy_pct: 2.4
+    density_g_cm3: 1.2
+    hdt_18_c: 157
+    hdt_045_c: 191
+    conditioned:
+      condition: "annealed, then water at 60 C for 48 h (4.57 % moisture)"
+      strength_xy_mpa: 40.2
+      strength_z_mpa: 26.3
+      E_xy_mpa: 1793.6
+      E_z_mpa: 1164.7
+    nu: null
+    nozzle_c: [280, 300]
+    bed_c: [40, 50]
+    enclosure: "no"
+    chamber_c_min: null
+    hardened_nozzle: true
+    drying: "100 C, 10 h"
+    direct_drive: null
+    abrasive: true
+    soft: false
+    source_url: "https://cdn.shopify.com/s/files/1/0548/7299/7945/files/TDS_FIBERON_PA6-GF25_V1.1_EN.pdf?v=1733846089"
+    opened: "2026-10-24"
+    tag: maker TDS
+    note: >-
+      The print needs are the row that the research notes give for the three sheets PA6-CF20, PA12-CF10 and PA6-GF25 (a
+      wear-resistant nozzle highly recommended, a room-temperature chamber, a humidity below 20 % RH).
+
+  - id: polymaker-fiberon-pa612-cf15
+    family: PA612-CF
+    maker: Polymaker
+    product: Fiberon PA612-CF15
+    aliases: []
+    sheet_version: V1.1
+    E_xy_mpa: 5136.7
+    E_z_mpa: 2786.4
+    bending_modulus_xy_mpa: null
+    bending_modulus_z_mpa: null
+    strength_xy_mpa: 91.9
+    strength_z_mpa: 48.3
+    strength_kind: not stated
+    elongation_xy_pct: 2.6
+    density_g_cm3: 1.03
+    hdt_18_c: 114
+    hdt_045_c: 175
+    conditioned:
+      condition: "annealed, then water at 60 C for 48 h (2.57 % moisture)"
+      strength_xy_mpa: 83.1
+      strength_z_mpa: 35.6
+      E_xy_mpa: 3990.8
+      E_z_mpa: 2386.8
+    nu: null
+    nozzle_c: [250, 300]
+    bed_c: [40, 50]
+    enclosure: "no"
+    chamber_c_min: null
+    hardened_nozzle: true
+    drying: "100 C, 10 h"
+    direct_drive: null
+    abrasive: true
+    soft: false
+    source_url: "https://cdn.shopify.com/s/files/1/0548/7299/7945/files/TDS_FIBERON_PA612-CF15_V1.1_EN.pdf?v=1733846094"
+    opened: "2026-10-24"
+    tag: maker TDS
+    note: >-
+      The sheet says a wear-resistant nozzle is highly recommended and a room-temperature chamber (no heated chamber).
+
+  - id: bambu-lab-paht-cf
+    family: PAHT-CF
+    maker: Bambu Lab
+    product: PAHT-CF
+    aliases: []
+    sheet_version: V3.0 (dry)
+    E_xy_mpa: 3860
+    E_z_mpa: 2180
+    bending_modulus_xy_mpa: null
+    bending_modulus_z_mpa: null
+    strength_xy_mpa: 92
+    strength_z_mpa: 47
+    strength_kind: not stated
+    elongation_xy_pct: 8.4
+    density_g_cm3: 1.06
+    hdt_18_c: 170
+    hdt_045_c: 194
+    conditioned: null
+    nu: null
+    nozzle_c: [260, 290]
+    bed_c: [80, 100]
+    enclosure: required
+    chamber_c_min: 45
+    hardened_nozzle: true
+    drying: "80 C, 8-12 h"
+    direct_drive: null
+    abrasive: true
+    soft: false
+    source_url: "https://wiki.bambulab.com/filament-acc/asacf-pahtcf/65f1b18a6d6142d794a1a6a00f1496ef.pdf"
+    opened: "2026-10-24"
+    tag: maker TDS
+    field_sources:
+      enclosure: "https://wiki.bambulab.com/en/filament/asacf_pahtcf"
+    note: >-
+      The print needs are the row that the research notes give for Bambu PAHT-CF, PA6-CF and PA6-GF together (enclosed
+      printer, chamber 45 to 60 C, not on the P1P and A1, hardened steel, 0.6 mm recommended). The sheet gives dry values
+      only; it says the filament keeps its properties when wet and publishes no wet numbers.
+
+  - id: bambu-lab-pa6-cf
+    family: PA6-CF
+    maker: Bambu Lab
+    product: PA6-CF
+    aliases: []
+    sheet_version: V3.0
+    E_xy_mpa: 4430
+    E_z_mpa: 2170
+    bending_modulus_xy_mpa: null
+    bending_modulus_z_mpa: null
+    strength_xy_mpa: 102
+    strength_z_mpa: 48
+    strength_kind: not stated
+    elongation_xy_pct: 5.8
+    density_g_cm3: 1.09
+    hdt_18_c: 164
+    hdt_045_c: 186
+    conditioned: null
+    nu: null
+    nozzle_c: [260, 290]
+    bed_c: [80, 100]
+    enclosure: required
+    chamber_c_min: 45
+    hardened_nozzle: true
+    drying: "80 C, 8-12 h"
+    direct_drive: null
+    abrasive: true
+    soft: false
+    source_url: "https://wiki.bambulab.com/filament-acc/petcf-ppacf/c750bddfb8e44af6ae9f7dd9625fa458.pdf"
+    opened: "2026-10-24"
+    tag: maker TDS
+    field_sources:
+      enclosure: "https://wiki.bambulab.com/en/filament/asacf_pahtcf"
+    note: >-
+      The print needs are the row that the research notes give for Bambu PAHT-CF, PA6-CF and PA6-GF together (enclosed
+      printer, chamber 45 to 60 C, not on the P1P and A1, hardened steel, 0.6 mm recommended). The sheet gives dry
+      values only and no wet numbers. The drying setting is the blast drying oven line of the sheet.
+
+  - id: bambu-lab-pa6-gf
+    family: PA6-GF
+    maker: Bambu Lab
+    product: PA6-GF
+    aliases: []
+    sheet_version: V1.0
+    E_xy_mpa: 2850
+    E_z_mpa: 1950
+    bending_modulus_xy_mpa: null
+    bending_modulus_z_mpa: null
+    strength_xy_mpa: 75
+    strength_z_mpa: 27
+    strength_kind: not stated
+    elongation_xy_pct: 3.9
+    density_g_cm3: 1.14
+    hdt_18_c: 158
+    hdt_045_c: 182
+    conditioned: null
+    nu: null
+    nozzle_c: [260, 290]
+    bed_c: [80, 100]
+    enclosure: required
+    chamber_c_min: 45
+    hardened_nozzle: true
+    drying: "80 C, 8-12 h"
+    direct_drive: null
+    abrasive: true
+    soft: false
+    source_url: "https://wiki.bambulab.com/filament-acc/absgf-pa6gf/bambu_pa6-gf_technical_data_sheet.pdf"
+    opened: "2026-10-24"
+    tag: maker TDS
+    field_sources:
+      enclosure: "https://wiki.bambulab.com/en/filament/absgf_pa6gf"
+    note: >-
+      The print needs are the row that the research notes give for Bambu PAHT-CF, PA6-CF and PA6-GF together (enclosed
+      printer, chamber 45 to 60 C, not on the P1P and A1, hardened steel, 0.6 mm recommended). The sheet gives dry
+      values only and no wet numbers. The drying setting is the blast drying oven line of the sheet.
+
+  - id: elegoo-paht-cf
+    family: PAHT-CF
+    maker: Elegoo
+    product: PAHT-CF
+    aliases: []
+    sheet_version: none stated
+    E_xy_mpa: null
+    E_z_mpa: null
+    bending_modulus_xy_mpa: 5089
+    bending_modulus_z_mpa: 2048
+    strength_xy_mpa: 87
+    strength_z_mpa: 41
+    strength_kind: not stated
+    elongation_xy_pct: 14.2
+    density_g_cm3: 1.08
+    hdt_18_c: null
+    hdt_045_c: 194
+    conditioned: null
+    nu: null
+    nozzle_c: [260, 290]
+    bed_c: [90, 110]
+    enclosure: required
+    chamber_c_min: 45
+    hardened_nozzle: true
+    drying: "80 +/- 5 C, 8 h"
+    direct_drive: null
+    abrasive: true
+    soft: false
+    source_url: "https://us.elegoo.com/products/paht-cf-filament-1-75mm-colored-1kg"
+    opened: "2026-10-24"
+    tag: maker page
+    note: >-
+      E_xy_mpa, E_z_mpa: the spec box gives no tensile modulus. Its bending modulus (5089 / 2048 MPa, XY / Z) is in
+      bending_modulus_xy_mpa and bending_modulus_z_mpa; a run takes E from it. hdt_18_c: the spec box gives HDT at 0.45
+      MPa only. A hardened steel nozzle is recommended.
+
+  - id: prusament-pa11
+    family: PA11
+    maker: Prusament
+    product: PA11
+    aliases: []
+    sheet_version: V1.0 (22-07-2026)
+    E_xy_mpa: 1200
+    E_z_mpa: null
+    bending_modulus_xy_mpa: null
+    bending_modulus_z_mpa: null
+    strength_xy_mpa: 38.3
+    strength_z_mpa: null
+    strength_kind: yield
+    elongation_xy_pct: 5.6
+    density_g_cm3: 1.02
+    hdt_18_c: 49.9
+    hdt_045_c: 58.7
+    conditioned: null
+    nu: null
+    nozzle_c: [265, 285]
+    bed_c: [90, 110]
+    enclosure: recommended
+    chamber_c_min: 50
+    hardened_nozzle: null
+    drying: "90 C, 6-8 h"
+    direct_drive: null
+    abrasive: false
+    soft: false
+    source_url: "https://storage.googleapis.com/prusa3d-content-prod-14e8-wordpress-prusament-prod/2026/08/2d2145fc-pa11_tds_eng.pdf"
+    opened: "2026-10-24"
+    tag: maker TDS
+    field_sources:
+      enclosure: "https://prusament.com/materials/prusament-pa11/"
+      drying: "https://prusament.com/materials/prusament-pa11/"
+    note: >-
+      E_z_mpa, strength_z_mpa: the sheet has the bars 'horizontal' (used here) and 'vertical xz' (modulus 1.2 GPa, yield
+      39.5 MPa); both load the layer plane. The sheet gives an interlayer adhesion of 32 +/- 1 MPa by the maker's own
+      method and an 'anisotropy coefficient' of 0.84. The sheet says chamber 55 +/- 5 C (the lower end, 50 C, is entered);
+      the page recommends an enclosure with active filtration. The sheet gives a water gain of 0.46 % in 7 days and no wet
+      mechanical values.
+
+  - id: prusament-pa11-carbon-fiber
+    family: PA11-CF
+    maker: Prusament
+    product: PA11 Carbon Fiber
+    aliases: []
+    sheet_version: V1.0 (29-06-2022)
+    E_xy_mpa: 2500
+    E_z_mpa: null
+    bending_modulus_xy_mpa: null
+    bending_modulus_z_mpa: null
+    strength_xy_mpa: 42
+    strength_z_mpa: null
+    strength_kind: yield
+    elongation_xy_pct: 3.3
+    density_g_cm3: 1.11
+    hdt_18_c: 152
+    hdt_045_c: 192
+    conditioned: null
+    nu: null
+    nozzle_c: [280, 290]
+    bed_c: [100, 120]
+    enclosure: required
+    chamber_c_min: null
+    hardened_nozzle: true
+    drying: null
+    direct_drive: null
+    abrasive: true
+    soft: false
+    source_url: "https://prusament.com/wp-content/uploads/2022/08/TDS_PA11CFB.pdf"
+    opened: "2026-10-24"
+    tag: maker TDS
+    field_sources:
+      enclosure: "https://prusament.com/materials/prusament-pa11-nylon-carbon-fiber/"
+    note: >-
+      E_z_mpa, strength_z_mpa: the sheet has the bars 'horizontal' (used here) and 'vertical xz' (modulus 3.3 GPa, yield
+      49 MPa); both load the layer plane. The sheet gives an interlayer adhesion of 20 +/- 5 MPa by the maker's own
+      method. The page says a special PA print sheet and an enclosure are needed.
+
+  - id: polymaker-fiberon-petg-rcf08
+    family: PETG-CF
+    maker: Polymaker
+    product: Fiberon PETG-rCF08
+    aliases: []
+    sheet_version: V1.0
+    E_xy_mpa: 3710.1
+    E_z_mpa: 2651.9
+    bending_modulus_xy_mpa: null
+    bending_modulus_z_mpa: null
+    strength_xy_mpa: 59.8
+    strength_z_mpa: 41.1
+    strength_kind: not stated
+    elongation_xy_pct: 5.7
+    density_g_cm3: 1.3
+    hdt_18_c: 65.7
+    hdt_045_c: 68.6
+    conditioned: null
+    nu: null
+    nozzle_c: [240, 270]
+    bed_c: [60, 70]
+    enclosure: "no"
+    chamber_c_min: null
+    hardened_nozzle: true
+    drying: "65 C, 3 h"
+    direct_drive: null
+    abrasive: true
+    soft: false
+    source_url: "https://fiberon.polymaker.com/wp-content/uploads/TDS_FIBERON-PETG-rCF08_V1.0_EN.pdf"
+    opened: "2026-10-24"
+    tag: maker TDS
+    note: >-
+      The sheet says a wear-resistant nozzle is highly recommended (a brass nozzle lasts about 9 h), a room-temperature
+      chamber and a humidity below 20 % RH.
+
+  - id: polymaker-fiberon-pet-cf17
+    family: PET-CF
+    maker: Polymaker
+    product: Fiberon PET-CF17
+    aliases: []
+    sheet_version: V1.0
+    E_xy_mpa: 5481
+    E_z_mpa: 3558.8
+    bending_modulus_xy_mpa: null
+    bending_modulus_z_mpa: null
+    strength_xy_mpa: 65.9
+    strength_z_mpa: 27.9
+    strength_kind: not stated
+    elongation_xy_pct: 2.4
+    density_g_cm3: 1.34
+    hdt_18_c: 105
+    hdt_045_c: 147.5
+    conditioned: null
+    nu: null
+    nozzle_c: [270, 300]
+    bed_c: [70, 80]
+    enclosure: "no"
+    chamber_c_min: null
+    hardened_nozzle: null
+    drying: "100 C, 10 h"
+    direct_drive: null
+    abrasive: true
+    soft: false
+    source_url: "https://fiberon.polymaker.com/wp-content/uploads/TDS_FIBERON-PET-CF17_V1.0_EN.pdf"
+    opened: "2026-10-24"
+    tag: maker TDS
+    note: >-
+      The sheet says a room-temperature chamber. hardened_nozzle: the sheet text does not say.
+
+  - id: bambu-lab-petg-cf
+    family: PETG-CF
+    maker: Bambu Lab
+    product: PETG-CF
+    aliases: []
+    sheet_version: V3.0
+    E_xy_mpa: 2460
+    E_z_mpa: 1340
+    bending_modulus_xy_mpa: null
+    bending_modulus_z_mpa: null
+    strength_xy_mpa: 35
+    strength_z_mpa: 29
+    strength_kind: not stated
+    elongation_xy_pct: 10.4
+    density_g_cm3: 1.25
+    hdt_18_c: 68
+    hdt_045_c: 74
+    conditioned: null
+    nu: null
+    nozzle_c: [240, 270]
+    bed_c: [65, 75]
+    enclosure: recommended
+    chamber_c_min: null
+    hardened_nozzle: true
+    drying: "65 C, 8 h"
+    direct_drive: null
+    abrasive: true
+    soft: false
+    source_url: "https://store.bblcdn.com/626e4f424bf345ae965ad0ddfcaf2459.pdf"
+    opened: "2026-10-24"
+    tag: maker TDS
+    field_sources:
+      enclosure: "https://wiki.bambulab.com/en/general/filament-guide-material-table"
+    note: >-
+      enclosure: the material table of the maker (opened 2026-10-24) says "For PETG and PETG-CF/GF, an enclosed printer
+      is recommended to prevent low ambient temperatures from reducing the model's interlayer strength"; the sheet lists
+      a chamber temperature of 35 to 50 C. The sheet says hardened steel; no 0.4 mm high-flow nozzle. chamber_c_min: not
+      entered, for the same reason as for PETG Basic (see the header of this file).
+
+  - id: bambu-lab-pet-cf
+    family: PET-CF
+    maker: Bambu Lab
+    product: PET-CF
+    aliases: []
+    sheet_version: V3.0 (dry)
+    E_xy_mpa: 4730
+    E_z_mpa: 2160
+    bending_modulus_xy_mpa: null
+    bending_modulus_z_mpa: null
+    strength_xy_mpa: 74
+    strength_z_mpa: 35
+    strength_kind: not stated
+    elongation_xy_pct: 4.5
+    density_g_cm3: 1.29
+    hdt_18_c: 182
+    hdt_045_c: 205
+    conditioned: null
+    nu: null
+    nozzle_c: [260, 290]
+    bed_c: [80, 100]
+    enclosure: "no"
+    chamber_c_min: null
+    hardened_nozzle: true
+    drying: "80 C, 8-12 h"
+    direct_drive: null
+    abrasive: true
+    soft: false
+    source_url: "https://wiki.bambulab.com/filament-acc/petcf-ppacf/07689de83afd4cc480f136c7697e6de3.pdf"
+    opened: "2026-10-24"
+    tag: maker TDS
+    field_sources:
+      enclosure: "https://wiki.bambulab.com/en/filament/petcf_ppacf"
+    note: >-
+      enclosure: the sheet lists a chamber temperature of 45 to 60 C and does not say that an enclosure is needed; the
+      maker wiki (opened 2026-10-24) says PET-CF is compatible with all Bambu Lab printers, so it is read as not needed.
+      The sheet says hardened steel, 0.6 mm recommended. chamber_c_min: not entered; the sheet lists the chamber among
+      its print conditions and the filament needs no enclosure (see the header of this file).
+
+  - id: elegoo-petg-cf
+    family: PETG-CF
+    maker: Elegoo
+    product: PETG-CF
+    aliases: []
+    sheet_version: none stated
+    E_xy_mpa: null
+    E_z_mpa: null
+    bending_modulus_xy_mpa: 3040
+    bending_modulus_z_mpa: 2222
+    strength_xy_mpa: 51
+    strength_z_mpa: 38
+    strength_kind: not stated
+    elongation_xy_pct: 9.6
+    density_g_cm3: 1.29
+    hdt_18_c: null
+    hdt_045_c: 74
+    conditioned: null
+    nu: null
+    nozzle_c: [240, 270]
+    bed_c: [65, 75]
+    enclosure: "no"
+    chamber_c_min: null
+    hardened_nozzle: true
+    drying: "60 +/- 5 C, 8 h"
+    direct_drive: null
+    abrasive: true
+    soft: false
+    source_url: "https://us.elegoo.com/products/petg-cf-filament-1-75mm-colored-1kg"
+    opened: "2026-10-24"
+    tag: maker page
+    note: >-
+      E_xy_mpa, E_z_mpa: the spec box gives no tensile modulus. Its bending modulus (3040 / 2222 MPa, XY / Z) is in
+      bending_modulus_xy_mpa and bending_modulus_z_mpa; a run takes E from it. hdt_18_c: the spec box gives HDT at 0.45
+      MPa only. The spec box says enclosed printing is not required and a hardened steel nozzle.
+
+  - id: elegoo-pet-cf
+    family: PET-CF
+    maker: Elegoo
+    product: PET-CF
+    aliases: []
+    sheet_version: none stated
+    E_xy_mpa: null
+    E_z_mpa: null
+    bending_modulus_xy_mpa: 5589
+    bending_modulus_z_mpa: 2448
+    strength_xy_mpa: 84
+    strength_z_mpa: 40
+    strength_kind: not stated
+    elongation_xy_pct: 6.3
+    density_g_cm3: 1.32
+    hdt_18_c: null
+    hdt_045_c: 194
+    conditioned: null
+    nu: null
+    nozzle_c: [260, 290]
+    bed_c: [90, 110]
+    enclosure: required
+    chamber_c_min: 45
+    hardened_nozzle: true
+    drying: "80 +/- 5 C, 8 h"
+    direct_drive: null
+    abrasive: true
+    soft: false
+    source_url: "https://us.elegoo.com/products/pet-cf"
+    opened: "2026-10-24"
+    tag: maker page
+    note: >-
+      E_xy_mpa, E_z_mpa: the spec box gives no tensile modulus. Its bending modulus (5589 / 2448 MPa, XY / Z) is in
+      bending_modulus_xy_mpa and bending_modulus_z_mpa; a run takes E from it. hdt_18_c: the spec box gives HDT at 0.45
+      MPa only, after annealing at 100 C for 8 h. The spec box says enclosed printing is required (chamber 45 to 60 C),
+      drying required, and a hardened steel nozzle.
+
+  - id: prusament-petg-carbon-fiber
+    family: PETG-CF
+    maker: Prusament
+    product: PETG Carbon Fiber
+    aliases: []
+    sheet_version: "V1.0 (20-12-2022)"
+    E_xy_mpa: 1700
+    E_z_mpa: null
+    bending_modulus_xy_mpa: null
+    bending_modulus_z_mpa: null
+    strength_xy_mpa: 47
+    strength_z_mpa: null
+    strength_kind: yield
+    elongation_xy_pct: 4.3
+    density_g_cm3: 1.27
+    hdt_18_c: 80
+    hdt_045_c: 96
+    conditioned: null
+    nu: null
+    nozzle_c: [255, 275]
+    bed_c: [80, 100]
+    enclosure: null
+    chamber_c_min: null
+    hardened_nozzle: true
+    drying: null
+    direct_drive: null
+    abrasive: true
+    soft: false
+    source_url: "https://prusament.com/wp-content/uploads/2023/02/TDS_Prusament-PETG-CF-Black.zip"
+    opened: "2026-10-25"
+    tag: maker TDS
+    field_sources:
+      hardened_nozzle: "https://prusament.com/materials/prusament-petg-carbon-fiber/"
+    note: >-
+      The tech sheet is a zip file on the page of the maker (opened 2026-10-25); its English file is used. E_z_mpa,
+      strength_z_mpa: the sheet has the bars 'horizontal' (used here) and 'vertical xz' (modulus 1.8 GPa, yield 52 MPa);
+      both load the layer plane. The elongation is at yield. hardened_nozzle: the product page says it is required.
+      enclosure: neither the sheet nor the page says. drying: neither gives a setting.
+
+  - id: polymaker-polylite-pla-cf
+    family: PLA-CF
+    maker: Polymaker
+    product: PolyLite PLA-CF
+    aliases: []
+    sheet_version: V5.4
+    E_xy_mpa: 3280.7
+    E_z_mpa: 2213.1
+    bending_modulus_xy_mpa: null
+    bending_modulus_z_mpa: null
+    strength_xy_mpa: 31.2
+    strength_z_mpa: 15.1
+    strength_kind: not stated
+    elongation_xy_pct: 13.2
+    density_g_cm3: 1.29
+    hdt_18_c: 50
+    hdt_045_c: 54
+    conditioned: null
+    nu: null
+    nozzle_c: [190, 230]
+    bed_c: [25, 60]
+    enclosure: "no"
+    chamber_c_min: null
+    hardened_nozzle: null
+    drying: "55 C, 6 h"
+    direct_drive: null
+    abrasive: true
+    soft: false
+    source_url: "https://cdn.shopify.com/s/files/1/0548/7299/7945/files/PolyLite_PLA-CF_TDS_EN_V5.4.pdf?v=1731948953"
+    opened: "2026-10-24"
+    tag: maker TDS
+    note: >-
+      hardened_nozzle: the sheet text does not say.
+
+  - id: polymaker-polylite-pla-pro
+    family: PLA
+    maker: Polymaker
+    product: PLA Pro
+    aliases: [PolyLite PLA Pro]
+    sheet_version: V5.5
+    E_xy_mpa: 2932.2
+    E_z_mpa: 2633
+    bending_modulus_xy_mpa: null
+    bending_modulus_z_mpa: null
+    strength_xy_mpa: 49.8
+    strength_z_mpa: 36.5
+    strength_kind: not stated
+    elongation_xy_pct: 6.3
+    density_g_cm3: 1.23
+    hdt_18_c: 58
+    hdt_045_c: 59
+    conditioned: null
+    nu: null
+    nozzle_c: [190, 230]
+    bed_c: [30, 60]
+    enclosure: "no"
+    chamber_c_min: null
+    hardened_nozzle: false
+    drying: "55 C, 6 h"
+    direct_drive: null
+    abrasive: false
+    soft: false
+    source_url: "https://cdn.shopify.com/s/files/1/0548/7299/7945/files/Polylite_PLA_Pro_TDS_EN_V5.4.pdf?v=1731948983"
+    opened: "2026-10-24"
+    tag: maker TDS
+    note: >-
+      density_g_cm3: the PDF says 1.23; the wiki page says 1.22 (the PDF is used). The file name says V5.4 and the PDF
+      says V5.5.
+
+  - id: polymaker-polymax-pla
+    family: PLA
+    maker: Polymaker
+    product: PolyMax PLA
+    aliases: []
+    sheet_version: V5.4
+    E_xy_mpa: 2150.8
+    E_z_mpa: 1983.6
+    bending_modulus_xy_mpa: null
+    bending_modulus_z_mpa: null
+    strength_xy_mpa: 41.3
+    strength_z_mpa: 32.4
+    strength_kind: not stated
+    elongation_xy_pct: 5.7
+    density_g_cm3: null
+    density_range_g_cm3: [1.17, 1.24]
+    hdt_18_c: 52
+    hdt_045_c: 55
+    conditioned: null
+    nu: null
+    nozzle_c: [190, 230]
+    bed_c: [25, 60]
+    enclosure: "no"
+    chamber_c_min: null
+    hardened_nozzle: null
+    drying: "55 C, 6 h"
+    direct_drive: null
+    abrasive: false
+    soft: false
+    source_url: "https://cdn.shopify.com/s/files/1/0548/7299/7945/files/PolyMax_PLA_TDS_EN_V5.4.pdf?v=1731948970"
+    opened: "2026-10-24"
+    tag: maker TDS
+    field_sources:
+      nozzle_c: "https://wiki.polymaker.com/polymaker-products/more-about-our-products/documents/technical-data-sheets/pla/polymax-tm-pla"
+      bed_c: "https://wiki.polymaker.com/polymaker-products/more-about-our-products/documents/technical-data-sheets/pla/polymax-tm-pla"
+      enclosure: "https://wiki.polymaker.com/polymaker-products/more-about-our-products/documents/technical-data-sheets/pla/polymax-tm-pla"
+      drying: "https://wiki.polymaker.com/polymaker-products/more-about-our-products/documents/technical-data-sheets/pla/polymax-tm-pla"
+    note: >-
+      density_g_cm3: the sheet gives a range, 1.17 to 1.24 g/cm3, and no single value; density_range_g_cm3 holds the
+      range, and a run takes the middle of it, 1.205 g/cm3. The print needs are from the maker wiki page of the sheet
+      (closure chamber not needed). hardened_nozzle: the page does not say.
+
+  - id: bambu-lab-pla-cf
+    family: PLA-CF
+    maker: Bambu Lab
+    product: PLA-CF
+    aliases: []
+    sheet_version: V2.0
+    E_xy_mpa: 2790
+    E_z_mpa: 2160
+    bending_modulus_xy_mpa: null
+    bending_modulus_z_mpa: null
+    strength_xy_mpa: 38
+    strength_z_mpa: 26
+    strength_kind: not stated
+    elongation_xy_pct: 8.4
+    density_g_cm3: 1.22
+    hdt_18_c: 54
+    hdt_045_c: 55
+    conditioned: null
+    nu: null
+    nozzle_c: [210, 240]
+    bed_c: [35, 45]
+    enclosure: "no"
+    chamber_c_min: null
+    hardened_nozzle: true
+    drying: "55 C, 8 h"
+    direct_drive: null
+    abrasive: true
+    soft: false
+    source_url: "https://store.bblcdn.com/842f399d4e274507953a5231126ec8c1.pdf"
+    opened: "2026-10-24"
+    tag: maker TDS
+    note: >-
+      enclosure: the sheet lists a chamber temperature of 25 to 45 C, which includes room temperature, and does not name
+      an enclosure; it is read as not needed. The sheet says hardened steel; no 0.4 mm high-flow nozzle.
+
+  - id: bambu-lab-pla-tough-plus
+    family: PLA
+    maker: Bambu Lab
+    product: PLA Tough+
+    aliases: []
+    sheet_version: V3.0 (copy of a reseller)
+    E_xy_mpa: 1860
+    E_z_mpa: 1920
+    bending_modulus_xy_mpa: null
+    bending_modulus_z_mpa: null
+    strength_xy_mpa: 34.9
+    strength_z_mpa: 20.9
+    strength_kind: not stated
+    elongation_xy_pct: 9.4
+    density_g_cm3: 1.21
+    hdt_18_c: 58
+    hdt_045_c: 61
+    conditioned: null
+    nu: null
+    nozzle_c: [220, 250]
+    bed_c: [35, 65]
+    enclosure: "no"
+    chamber_c_min: null
+    hardened_nozzle: false
+    drying: "55 C, 8 h"
+    direct_drive: null
+    abrasive: false
+    soft: false
+    source_url: "https://cdn.kspelectronics.in/wp-content/uploads/2026/07/19233822/Bambu-PLA-Tough-Technical-Data-Sheet.pdf"
+    opened: "2026-10-24"
+    tag: third party
+    note: >-
+      The official PDF is not linked on the maker's store page; this is a reseller copy. enclosure: the sheet lists a
+      chamber temperature of 25 to 45 C, which includes room temperature, and does not name an enclosure; it is read as
+      not needed. The Z modulus is not lower than the XY modulus.
+
+  - id: elegoo-pla-cf
+    family: PLA-CF
+    maker: Elegoo
+    product: PLA-CF
+    aliases: []
+    sheet_version: none stated
+    E_xy_mpa: null
+    E_z_mpa: null
+    bending_modulus_xy_mpa: 3341
+    bending_modulus_z_mpa: 2474
+    strength_xy_mpa: 39
+    strength_z_mpa: 23
+    strength_kind: not stated
+    elongation_xy_pct: 7.5
+    density_g_cm3: 1.24
+    hdt_18_c: null
+    hdt_045_c: 56
+    conditioned: null
+    nu: null
+    nozzle_c: [210, 240]
+    bed_c: [35, 65]
+    enclosure: "no"
+    chamber_c_min: null
+    hardened_nozzle: true
+    drying: "50 +/- 5 C, 8 h"
+    direct_drive: null
+    abrasive: true
+    soft: false
+    source_url: "https://us.elegoo.com/products/pla-cf-filament-1-75mm-black-1kg"
+    opened: "2026-10-24"
+    tag: maker page
+    note: >-
+      E_xy_mpa, E_z_mpa: the spec box gives no tensile modulus. Its bending modulus (3341 / 2474 MPa, XY / Z) is in
+      bending_modulus_xy_mpa and bending_modulus_z_mpa; a run takes E from it. hdt_18_c: the spec box gives HDT at 0.45
+      MPa only. The spec box says enclosed printing is not required and a hardened steel nozzle; drying is required.
+
+  - id: elegoo-pla-pro
+    family: PLA
+    maker: Elegoo
+    product: PLA Pro
+    aliases: []
+    sheet_version: none stated
+    E_xy_mpa: null
+    E_z_mpa: null
+    bending_modulus_xy_mpa: 2964
+    bending_modulus_z_mpa: 2419
+    strength_xy_mpa: 32
+    strength_z_mpa: 18
+    strength_kind: not stated
+    elongation_xy_pct: 14.1
+    density_g_cm3: 1.24
+    hdt_18_c: null
+    hdt_045_c: 56
+    conditioned: null
+    nu: null
+    nozzle_c: [180, 210]
+    bed_c: [35, 65]
+    enclosure: "no"
+    chamber_c_min: null
+    hardened_nozzle: null
+    drying: "50 +/- 5 C, 8 h"
+    direct_drive: null
+    abrasive: false
+    soft: false
+    source_url: "https://us.elegoo.com/products/pla-pro-filament-1-75mm-colored-1kg"
+    opened: "2026-10-24"
+    tag: maker page
+    note: >-
+      E_xy_mpa, E_z_mpa: the spec box gives no tensile modulus. Its bending modulus (2964 / 2419 MPa, XY / Z) is in
+      bending_modulus_xy_mpa and bending_modulus_z_mpa; a run takes E from it. hdt_18_c: the spec box gives HDT at 0.45
+      MPa only. The spec box says enclosed printing is not required; drying is recommended.
+
+  - id: elegoo-pla-plus
+    family: PLA
+    maker: Elegoo
+    product: PLA Plus
+    aliases: []
+    sheet_version: none stated
+    E_xy_mpa: null
+    E_z_mpa: null
+    bending_modulus_xy_mpa: 2979
+    bending_modulus_z_mpa: 2582
+    strength_xy_mpa: 38
+    strength_z_mpa: 24
+    strength_kind: not stated
+    elongation_xy_pct: 7.9
+    density_g_cm3: 1.3
+    hdt_18_c: null
+    hdt_045_c: 56
+    conditioned: null
+    nu: null
+    nozzle_c: [200, 230]
+    bed_c: [35, 65]
+    enclosure: "no"
+    chamber_c_min: null
+    hardened_nozzle: null
+    drying: "50 +/- 5 C, 8 h"
+    direct_drive: null
+    abrasive: false
+    soft: false
+    source_url: "https://us.elegoo.com/products/elegoo-pla-plus-3d-printer-filament-1-75mm-colored-1kg"
+    opened: "2026-10-24"
+    tag: maker page
+    note: >-
+      E_xy_mpa, E_z_mpa: the spec box gives no tensile modulus. Its bending modulus (2979 / 2582 MPa, XY / Z) is in
+      bending_modulus_xy_mpa and bending_modulus_z_mpa; a run takes E from it. hdt_18_c: the spec box gives HDT at 0.45
+      MPa only. The spec box says enclosed printing is not required; drying is recommended.
+
+  - id: polymaker-polylite-pla
+    family: PLA
+    maker: Polymaker
+    product: PolyLite PLA
+    aliases: []
+    sheet_version: V5.4
+    E_xy_mpa: 3426.9
+    E_z_mpa: 3064.9
+    bending_modulus_xy_mpa: null
+    bending_modulus_z_mpa: null
+    strength_xy_mpa: 52.3
+    strength_z_mpa: 40.5
+    strength_kind: not stated
+    elongation_xy_pct: 6.3
+    density_g_cm3: 1.17
+    hdt_18_c: 58
+    hdt_045_c: 60
+    conditioned: null
+    nu: null
+    nozzle_c: [190, 230]
+    bed_c: [25, 60]
+    enclosure: "no"
+    chamber_c_min: null
+    hardened_nozzle: null
+    drying: "55 C, 6 h"
+    direct_drive: null
+    abrasive: false
+    soft: false
+    source_url: "https://cdn.shopify.com/s/files/1/0548/7299/7945/files/PolyLite_PLA_TDS_EN_V5.4.pdf?v=1731949179"
+    opened: "2026-10-25"
+    tag: maker TDS
+    note: >-
+      The elongation is at break (X-Y). enclosure: the sheet says a closure chamber is not needed. hardened_nozzle: the
+      sheet does not say.
+
+  - id: polymaker-polylite-petg
+    family: PETG
+    maker: Polymaker
+    product: PolyLite PETG
+    aliases: []
+    sheet_version: V5.4
+    E_xy_mpa: 2116.8
+    E_z_mpa: 1898.7
+    bending_modulus_xy_mpa: null
+    bending_modulus_z_mpa: null
+    strength_xy_mpa: 50.8
+    strength_z_mpa: 42.8
+    strength_kind: not stated
+    elongation_xy_pct: 8.4
+    density_g_cm3: 1.25
+    hdt_18_c: 75
+    hdt_045_c: 78
+    conditioned: null
+    nu: null
+    nozzle_c: [230, 260]
+    bed_c: [70, 80]
+    enclosure: "no"
+    chamber_c_min: null
+    hardened_nozzle: null
+    drying: "65 C, 6 h"
+    direct_drive: null
+    abrasive: false
+    soft: false
+    source_url: "https://cdn.shopify.com/s/files/1/0548/7299/7945/files/PolyLite_PETG_TDS_EN_V5.4.pdf?v=1731954068"
+    opened: "2026-10-22"
+    tag: maker TDS
+    field_sources:
+      nozzle_c: "https://wiki.polymaker.com/polymaker-products/more-about-our-products/documents/technical-data-sheets/petg-pet/polylite-tm-petg"
+      bed_c: "https://wiki.polymaker.com/polymaker-products/more-about-our-products/documents/technical-data-sheets/petg-pet/polylite-tm-petg"
+      enclosure: "https://wiki.polymaker.com/polymaker-products/more-about-our-products/documents/technical-data-sheets/petg-pet/polylite-tm-petg"
+      drying: "https://wiki.polymaker.com/polymaker-products/more-about-our-products/documents/technical-data-sheets/petg-pet/polylite-tm-petg"
+    note: >-
+      The elongation is at break (X-Y). The print needs are from the maker wiki page of the sheet (closure chamber not
+      needed). hardened_nozzle: the page does not say.
+
+  - id: polymaker-petg
+    family: PETG
+    maker: Polymaker
+    product: PETG
+    aliases: []
+    sheet_version: V3.0
+    E_xy_mpa: 2311.11
+    E_z_mpa: 2202.91
+    bending_modulus_xy_mpa: null
+    bending_modulus_z_mpa: null
+    strength_xy_mpa: 47.96
+    strength_z_mpa: 45.71
+    strength_kind: not stated
+    elongation_xy_pct: 9.33
+    density_g_cm3: 1.3
+    hdt_18_c: 65
+    hdt_045_c: 69
+    conditioned: null
+    nu: null
+    nozzle_c: [240, 260]
+    bed_c: [60, 70]
+    enclosure: "no"
+    chamber_c_min: null
+    hardened_nozzle: null
+    drying: "60 C, 6 h"
+    direct_drive: null
+    abrasive: false
+    soft: false
+    source_url: "https://cdn.shopify.com/s/files/1/0548/7299/7945/files/PETG_TDS_Polymaker_297e875c-5d38-4d2b-ba68-eef8916de183.pdf?v=1772830046"
+    opened: "2026-10-25"
+    tag: maker TDS
+    note: >-
+      The sheet is not the one of PolyLite PETG: the maker lists this PETG as a newer product. The elongation is at
+      break (X-Y). enclosure: the sheet says a closure chamber is not needed. hardened_nozzle: the sheet does not say.
+
+  - id: prusament-petg
+    family: PETG
+    maker: Prusament
+    product: PETG
+    aliases: []
+    sheet_version: V1.1 (16-02-2022)
+    E_xy_mpa: 1500
+    E_z_mpa: null
+    bending_modulus_xy_mpa: null
+    bending_modulus_z_mpa: null
+    strength_xy_mpa: 47
+    strength_z_mpa: null
+    strength_kind: yield
+    elongation_xy_pct: 5.1
+    density_g_cm3: 1.27
+    hdt_18_c: 68
+    hdt_045_c: 68
+    conditioned: null
+    nu: null
+    nozzle_c: [240, 260]
+    bed_c: [70, 90]
+    enclosure: "no"
+    chamber_c_min: null
+    hardened_nozzle: false
+    drying: null
+    direct_drive: null
+    abrasive: false
+    soft: false
+    source_url: "https://storage.googleapis.com/prusa3d-content-prod-14e8-wordpress-prusament-prod/2023/10/9f8d2165-tds_prusament-petg_n_en.pdf"
+    opened: "2026-10-25"
+    tag: maker TDS
+    field_sources:
+      enclosure: "https://prusament.com/materials/prusament-petg/"
+      hardened_nozzle: "https://prusament.com/materials/prusament-petg/"
+    note: >-
+      E_z_mpa, strength_z_mpa: the sheet has the bars 'horizontal' (used here) and 'vertical xz' (modulus 1.6 GPa, yield
+      50 MPa); both load the layer plane. The sheet gives an interlayer adhesion of 18 +/- 4 MPa by the maker's own
+      method. The elongation is at yield. enclosure, hardened_nozzle: the product page (opened 2026-10-25) says
+      'Enclosure not required' and 'No special hot-end required'; its print temperatures are the ones of the sheet. The
+      file is the maker's own copy of the sheet (V1.1); the reseller copy that this row used before has the same version
+      and the same numbers. drying: the sheet and the page give no setting.
+
+  - id: azurefilm-petg
+    family: PETG
+    maker: AzureFilm
+    product: PETG
+    aliases: []
+    sheet_version: none stated
+    E_xy_mpa: null
+    E_z_mpa: null
+    bending_modulus_xy_mpa: null
+    bending_modulus_z_mpa: null
+    strength_xy_mpa: null
+    strength_z_mpa: null
+    strength_kind: not stated
+    elongation_xy_pct: null
+    density_g_cm3: 1.29
+    hdt_18_c: null
+    hdt_045_c: null
+    conditioned: null
+    nu: null
+    nozzle_c: [220, 240]
+    bed_c: [80, 90]
+    enclosure: null
+    chamber_c_min: null
+    hardened_nozzle: null
+    drying: null
+    direct_drive: null
+    abrasive: false
+    soft: false
+    source_url: "https://azurefilm.com/wp-content/uploads/2023/10/PETG_TDS1-2.pdf"
+    opened: "2026-10-25"
+    tag: maker TDS
+    note: >-
+      E_xy_mpa, E_z_mpa, strength_xy_mpa, strength_z_mpa: the sheet gives one tensile yield stress (51 MPa) and one
+      modulus (2980 MPa) and does not say how the bar was printed, so neither is entered. elongation_xy_pct: the sheet
+      gives an elongation at yield (4 %) and at break (29 %), also without a print direction. density_g_cm3: the sheet's
+      'specific density' by ASTM D-792 (printed 1,29). nozzle_c, bed_c: the printing recommendations of the sheet
+      (nozzle 220 to 240 C; heated bed recommended, 80 to 90 C). hdt_18_c, hdt_045_c, enclosure, hardened_nozzle: the
+      sheet does not say. bending_modulus_xy_mpa, bending_modulus_z_mpa: the sheet gives a bending modulus of 2040 MPa
+      and, like the tensile modulus, does not say how the bar was printed, so it is not entered; the filament has no
+      modulus for a run.
+
+  - id: bambu-lab-petg-basic
+    family: PETG
+    maker: Bambu Lab
+    product: PETG Basic
+    aliases: []
+    sheet_version: V2.0
+    E_xy_mpa: 1460
+    E_z_mpa: 1120
+    bending_modulus_xy_mpa: null
+    bending_modulus_z_mpa: null
+    strength_xy_mpa: 48
+    strength_z_mpa: 39
+    strength_kind: not stated
+    elongation_xy_pct: 11.2
+    density_g_cm3: 1.25
+    hdt_18_c: 65
+    hdt_045_c: 69
+    conditioned: null
+    nu: null
+    nozzle_c: [240, 270]
+    bed_c: [65, 75]
+    enclosure: recommended
+    chamber_c_min: null
+    hardened_nozzle: false
+    drying: "65 C, 8 h"
+    direct_drive: null
+    abrasive: false
+    soft: false
+    source_url: "https://www.additive-x.com/shop/media/mageplaza/product_attachments/attachment_file/b/a/bambu_petg_basic_technical_data_sheet_12.pdf"
+    opened: "2026-10-25"
+    tag: third party
+    field_sources:
+      enclosure: "https://wiki.bambulab.com/en/general/filament-guide-material-table"
+      hardened_nozzle: "https://wiki.bambulab.com/en/filament/petg"
+    note: >-
+      The sheet is a copy hosted by a reseller. The elongation is at break (X-Y). The bars were annealed and dried at 65
+      C for 8 h. enclosure: the material table of the maker (opened 2026-10-24) says "For PETG and PETG-CF/GF, an
+      enclosed printer is recommended to prevent low ambient temperatures from reducing the model's interlayer
+      strength"; the sheet lists a chamber temperature of 35 to 50 C. hardened_nozzle: the wiki page of the filament
+      says PETG Basic works with all standard nozzles. chamber_c_min: not entered; the sheet lists the chamber among its
+      print conditions and the enclosure is only recommended (see the header of this file).
+
+  - id: prusament-pla
+    family: PLA
+    maker: Prusament
+    product: PLA
+    aliases: []
+    sheet_version: V1.1 (27-07-2022)
+    E_xy_mpa: 2300
+    E_z_mpa: null
+    bending_modulus_xy_mpa: null
+    bending_modulus_z_mpa: null
+    strength_xy_mpa: 51
+    strength_z_mpa: null
+    strength_kind: yield
+    elongation_xy_pct: 2.9
+    density_g_cm3: 1.24
+    hdt_18_c: 55
+    hdt_045_c: 55
+    conditioned: null
+    nu: null
+    nozzle_c: [200, 220]
+    bed_c: [40, 60]
+    enclosure: "no"
+    chamber_c_min: null
+    hardened_nozzle: false
+    drying: null
+    direct_drive: null
+    abrasive: false
+    soft: false
+    source_url: "https://www.matterhackers.com/r/xFvGl8"
+    opened: "2026-10-25"
+    tag: third party
+    field_sources:
+      enclosure: "https://prusament.com/materials/pla/"
+      hardened_nozzle: "https://prusament.com/materials/pla/"
+    note: >-
+      E_z_mpa, strength_z_mpa: the sheet has the bars 'horizontal' (used here) and 'vertical xz' (modulus 2.4 GPa, yield
+      59 MPa); both load the layer plane. The sheet gives an interlayer adhesion of 17 +/- 3 MPa by the maker's own
+      method. The elongation is at yield. enclosure, hardened_nozzle: the product page (opened 2026-10-25) says
+      'Enclosure not required' and 'No special hot-end required'; its print temperatures are the ones of the sheet. The
+      sheet is a copy hosted by a reseller; the page of the maker links the safety data sheet only. drying: the sheet
+      and the page give no setting.
+
+  - id: azurefilm-pla-prime
+    family: PLA
+    maker: AzureFilm
+    product: PLA Prime
+    aliases: []
+    sheet_version: TDS 04.24
+    E_xy_mpa: 2400
+    E_z_mpa: 1900
+    bending_modulus_xy_mpa: null
+    bending_modulus_z_mpa: null
+    strength_xy_mpa: 27.8
+    strength_z_mpa: 14.2
+    strength_kind: peak
+    elongation_xy_pct: 4.3
+    density_g_cm3: 1.27
+    hdt_18_c: null
+    hdt_045_c: null
+    conditioned: null
+    nu: null
+    nozzle_c: [230, 230]
+    bed_c: [60, 60]
+    enclosure: null
+    chamber_c_min: null
+    hardened_nozzle: null
+    drying: null
+    direct_drive: null
+    abrasive: false
+    soft: false
+    source_url: "https://azurefilm.com/wp-content/uploads/2024/04/TDS-PLA-Prime.pptx.pdf"
+    opened: "2026-10-25"
+    tag: maker TDS
+    note: >-
+      The XY and Z values are the sheet's XY and ZX bars; the XZ bar (modulus 2600, tensile strength 31.4 MPa) stands on
+      its edge and loads the layer plane. The sheet also gives a yield strength (26.1 XY, 14.5 ZX MPa). nozzle_c, bed_c:
+      the sheet recommends 230 C and 60 C (one number each). density_g_cm3: the sheet's 'specific gravity' (it names ISO
+      1133, the melt flow method; the value is entered as the density). The elongation is the strain at yield of the XY
+      bar. hdt_18_c, hdt_045_c: the sheet gives HDT 95 C with an asterisk and no note, so the load is not known.
+      enclosure, hardened_nozzle: the sheet does not say.
+
+  - id: bambu-lab-pla-basic-v2
+    family: PLA
+    maker: Bambu Lab
+    product: PLA Basic (sheet 2.0)
+    aliases: [PLA Basic 2.0]
+    sheet_version: V2.0
+    E_xy_mpa: 2680
+    E_z_mpa: 2160
+    bending_modulus_xy_mpa: null
+    bending_modulus_z_mpa: null
+    strength_xy_mpa: 39
+    strength_z_mpa: 35
+    strength_kind: not stated
+    elongation_xy_pct: 12.2
+    density_g_cm3: 1.24
+    hdt_18_c: 54
+    hdt_045_c: 57
+    conditioned: null
+    nu: null
+    nozzle_c: [190, 230]
+    bed_c: [35, 45]
+    enclosure: "no"
+    chamber_c_min: null
+    hardened_nozzle: false
+    drying: "55 C, 8 h"
+    direct_drive: null
+    abrasive: false
+    soft: false
+    source_url: "https://www.additive-x.com/shop/media/mageplaza/product_attachments/attachment_file/b/a/bambu_pla_basic_technical_data_sheet_ax_1.pdf"
+    opened: "2026-10-25"
+    tag: third party
+    superseded_by: bambu-lab-pla-basic
+    field_sources:
+      hardened_nozzle: "https://wiki.bambulab.com/en/filament/pla"
+    note: >-
+      This is the older sheet of Bambu PLA Basic (a copy hosted by a reseller). The maker's wiki now holds version 3.0,
+      which gives other numbers (see bambu-lab-pla-basic). The elongation is at break. The bars were annealed and dried
+      at 55 C for 8 h. enclosure: the sheet lists a chamber temperature of 25 to 45 C, which includes room temperature,
+      and does not name an enclosure; it is read as not needed. hardened_nozzle: the maker wiki (opened 2026-10-24) says
+      PLA Basic works with all standard nozzles.
+
+  - id: bambu-lab-pla-basic
+    family: PLA
+    maker: Bambu Lab
+    product: PLA Basic
+    aliases: []
+    sheet_version: V3.0
+    E_xy_mpa: 2580
+    E_z_mpa: 2060
+    bending_modulus_xy_mpa: null
+    bending_modulus_z_mpa: null
+    strength_xy_mpa: 35
+    strength_z_mpa: 31
+    strength_kind: not stated
+    elongation_xy_pct: 12.2
+    density_g_cm3: 1.24
+    hdt_18_c: 54
+    hdt_045_c: 57
+    conditioned: null
+    nu: null
+    nozzle_c: [190, 230]
+    bed_c: [35, 45]
+    enclosure: "no"
+    chamber_c_min: null
+    hardened_nozzle: false
+    drying: "50 C, 8 h"
+    direct_drive: null
+    abrasive: false
+    soft: false
+    source_url: "https://wiki.bambulab.com/filament-acc/abs-asa-pc/bambu_pla_basic_technical_data_sheet.pdf"
+    opened: "2026-10-24"
+    tag: maker TDS
+    note: >-
+      This sheet is the current one on the maker's wiki (opened 2026-10-24). The older version 2.0
+      (bambu-lab-pla-basic-v2) gives 39 and 35 MPa. The elongation is at break. enclosure: the sheet lists a chamber
+      temperature of 25 to 45 C, which includes room temperature, and does not name an enclosure; it is read as not
+      needed. The bars were annealed and dried at 55 C for 8 h.
+
+  - id: polymaker-polyflex-tpu95
+    family: TPU
+    maker: Polymaker
+    product: PolyFlex TPU95
+    aliases: []
+    sheet_version: V5.4
+    E_xy_mpa: null
+    E_z_mpa: null
+    bending_modulus_xy_mpa: null
+    bending_modulus_z_mpa: null
+    strength_xy_mpa: null
+    strength_z_mpa: null
+    strength_kind: not stated
+    elongation_xy_pct: null
+    density_g_cm3: null
+    density_range_g_cm3: [1.20, 1.24]
+    hdt_18_c: null
+    hdt_045_c: null
+    conditioned: null
+    nu: null
+    nozzle_c: [210, 230]
+    bed_c: [25, 60]
+    enclosure: "no"
+    chamber_c_min: null
+    hardened_nozzle: false
+    drying: "70 C, 8 h"
+    direct_drive: null
+    abrasive: false
+    soft: true
+    source_url: "https://cdn.shopify.com/s/files/1/0548/7299/7945/files/PolyFlex_TPU95_TDS_EN_V5.4.pdf?v=1731956391"
+    opened: "2026-10-24"
+    tag: maker TDS
+    note: >-
+      E_xy_mpa, E_z_mpa, strength_xy_mpa, strength_z_mpa, elongation_xy_pct: the sheet gives one value for each and does
+      not say how the bar was printed (Young's modulus 33.6 MPa, stress at 100 % strain 11.1 MPa, at 300 % strain 21.0
+      MPa, elongation 551 %), and no plain tensile strength. density_g_cm3: the sheet gives a range, 1.20 to 1.24 g/cm3,
+      and no single value; density_range_g_cm3 holds the range, and a run takes the middle of it, 1.22 g/cm3. hdt_18_c,
+      hdt_045_c: the sheet gives no HDT. TPU is hyperelastic; a linear model does not fit.
+
+  - id: polymaker-polyflex-tpu95-hf
+    family: TPU
+    maker: Polymaker
+    product: PolyFlex TPU95-HF
+    aliases: []
+    sheet_version: V5.4
+    E_xy_mpa: null
+    E_z_mpa: null
+    bending_modulus_xy_mpa: null
+    bending_modulus_z_mpa: null
+    strength_xy_mpa: null
+    strength_z_mpa: null
+    strength_kind: not stated
+    elongation_xy_pct: null
+    density_g_cm3: 1.16
+    hdt_18_c: null
+    hdt_045_c: null
+    conditioned: null
+    nu: null
+    nozzle_c: [200, 230]
+    bed_c: [25, 50]
+    enclosure: "no"
+    chamber_c_min: null
+    hardened_nozzle: false
+    drying: "70 C, 8 h"
+    direct_drive: null
+    abrasive: false
+    soft: true
+    source_url: "https://cdn.shopify.com/s/files/1/0548/7299/7945/files/PolyFlex_TPU95_HF_TDS_EN_V5.4.pdf?v=1731956391"
+    opened: "2026-10-24"
+    tag: maker TDS
+    field_sources:
+      nozzle_c: "https://wiki.polymaker.com/polymaker-products/more-about-our-products/documents/technical-data-sheets/tpu/polyflex-tm-tpu95-hf"
+      bed_c: "https://wiki.polymaker.com/polymaker-products/more-about-our-products/documents/technical-data-sheets/tpu/polyflex-tm-tpu95-hf"
+      enclosure: "https://wiki.polymaker.com/polymaker-products/more-about-our-products/documents/technical-data-sheets/tpu/polyflex-tm-tpu95-hf"
+      drying: "https://wiki.polymaker.com/polymaker-products/more-about-our-products/documents/technical-data-sheets/tpu/polyflex-tm-tpu95-hf"
+    note: >-
+      E_xy_mpa, E_z_mpa, strength_xy_mpa, strength_z_mpa, elongation_xy_pct: the sheet gives one value for each and does
+      not say how the bar was printed (tensile strength 26.6 MPa, elongation 496 %), and no modulus. hdt_18_c, hdt_045_c:
+      the sheet gives no HDT. The print needs are from the maker wiki page of the sheet. TPU is hyperelastic; a linear
+      model does not fit.
+
+  - id: bambu-lab-tpu-95a-hf
+    family: TPU
+    maker: Bambu Lab
+    product: TPU 95A HF
+    aliases: []
+    sheet_version: V1.0
+    E_xy_mpa: 9.8
+    E_z_mpa: 7.4
+    bending_modulus_xy_mpa: null
+    bending_modulus_z_mpa: null
+    strength_xy_mpa: 27.3
+    strength_z_mpa: 22.3
+    strength_kind: not stated
+    elongation_xy_pct: null
+    density_g_cm3: 1.22
+    hdt_18_c: null
+    hdt_045_c: null
+    conditioned: null
+    nu: null
+    nozzle_c: [220, 240]
+    bed_c: [30, 35]
+    enclosure: "no"
+    chamber_c_min: null
+    hardened_nozzle: false
+    drying: "70 C, 8 h"
+    direct_drive: null
+    abrasive: false
+    soft: true
+    source_url: "https://store.bblcdn.com/58df32731eab4c90a7dac9b12e13ba88.pdf"
+    opened: "2026-10-24"
+    tag: maker TDS
+    note: >-
+      elongation_xy_pct: the sheet gives a lower bound only (more than 650 % in the layer plane, more than 480 % across).
+      hdt_18_c, hdt_045_c: the sheet gives no HDT. enclosure: the sheet lists a chamber temperature of 25 to 45 C, which
+      includes room temperature, and does not name an enclosure; it is read as not needed. The AMS is not compatible. TPU
+      is hyperelastic; a linear model does not fit.
+
+  - id: prusament-tpu-95a
+    family: TPU
+    maker: Prusament
+    product: TPU 95A
+    aliases: []
+    sheet_version: V1.0 (29-05-2025)
+    E_xy_mpa: null
+    E_z_mpa: null
+    bending_modulus_xy_mpa: null
+    bending_modulus_z_mpa: null
+    strength_xy_mpa: null
+    strength_z_mpa: null
+    strength_kind: not stated
+    elongation_xy_pct: null
+    density_g_cm3: 1.25
+    hdt_18_c: 78.6
+    hdt_045_c: null
+    conditioned: null
+    nu: null
+    nozzle_c: [220, 240]
+    bed_c: [55, 75]
+    enclosure: "no"
+    chamber_c_min: null
+    hardened_nozzle: false
+    drying: "60 C, 4 h"
+    direct_drive: null
+    abrasive: false
+    soft: true
+    source_url: "https://storage.googleapis.com/prusa3d-content-prod-14e8-wordpress-prusament-prod/2025/05/80316f6d-tds-prusament_tpu_95a_en-1.pdf"
+    opened: "2026-10-24"
+    tag: maker TDS
+    enclosed_note: "If you print with a high flow nozzle in an enclosure, leave the enclosure door open. Opening the ventilation grill on the Core One is sufficient."
+    field_sources:
+      drying: "https://prusament.com/materials/prusament-tpu-95a/"
+      enclosed_note: "https://prusament.com/materials/prusament-tpu-95a/"
+    note: >-
+      E_xy_mpa, E_z_mpa, strength_xy_mpa, strength_z_mpa, elongation_xy_pct: the sheet gives a tensile strength of 41.4
+      MPa (ISO 37) and an elongation of 563 % without a print direction, stress at 100 / 200 / 300 % strain of 8.9 /
+      14.7 / 21.3 MPa, and no modulus. The sheet prints the unprinted filament 'maximum elongation' as 7264, which looks
+      like a typo. hdt_045_c: the sheet gives HDT at 1.8 MPa only. enclosed_note: the words of the product page (opened
+      2026-10-24); the page ties them to a high flow nozzle. The page also says the speed is up to 30 mm/s. The page
+      says drying is usually not necessary; after poor storage it recommends at least 4 hours at 60 C. TPU is
+      hyperelastic; a linear model does not fit.
+
+  - id: elegoo-tpu-95a
+    family: TPU
+    maker: Elegoo
+    product: TPU 95A
+    aliases: []
+    sheet_version: none stated
+    E_xy_mpa: null
+    E_z_mpa: null
+    bending_modulus_xy_mpa: null
+    bending_modulus_z_mpa: null
+    strength_xy_mpa: 16
+    strength_z_mpa: 6
+    strength_kind: not stated
+    elongation_xy_pct: null
+    density_g_cm3: 1.16
+    hdt_18_c: null
+    hdt_045_c: null
+    conditioned: null
+    nu: null
+    nozzle_c: [220, 240]
+    bed_c: [30, 45]
+    enclosure: "no"
+    chamber_c_min: null
+    hardened_nozzle: false
+    drying: "70 +/- 5 C, 8 h"
+    direct_drive: null
+    abrasive: false
+    soft: true
+    source_url: "https://us.elegoo.com/products/tpu-filament-1-75mm-colored-1kg"
+    opened: "2026-10-24"
+    tag: maker page
+    note: >-
+      E_xy_mpa, E_z_mpa: the spec box gives no modulus. elongation_xy_pct: the spec box gives a lower bound only (more
+      than 500 % in the layer plane, more than 160 % across). hdt_18_c, hdt_045_c: the spec box gives none. The spec box
+      says enclosed printing is not required; drying is required. TPU is hyperelastic; a linear model does not fit.
+
+  - id: prusament-pp-carbon-fiber
+    family: PP-CF
+    maker: Prusament
+    product: PP Carbon Fiber
+    aliases: []
+    sheet_version: V1.0 (15-11-2024)
+    E_xy_mpa: 2100
+    E_z_mpa: null
+    bending_modulus_xy_mpa: null
+    bending_modulus_z_mpa: null
+    strength_xy_mpa: 27.3
+    strength_z_mpa: null
+    strength_kind: yield
+    elongation_xy_pct: 3.4
+    density_g_cm3: 0.91
+    hdt_18_c: 115
+    hdt_045_c: 158
+    conditioned: null
+    nu: null
+    nozzle_c: [260, 280]
+    bed_c: [75, 95]
+    enclosure: "no"
+    chamber_c_min: null
+    hardened_nozzle: true
+    drying: null
+    direct_drive: null
+    abrasive: true
+    soft: false
+    source_url: "https://storage.googleapis.com/prusa3d-content-prod-14e8-wordpress-prusament-prod/2025/01/b4ef2bf6-technical-data-sheet-1.pdf"
+    opened: "2026-10-24"
+    tag: maker TDS
+    field_sources:
+      enclosure: "https://prusament.com/materials/prusament-pp/"
+    note: >-
+      E_z_mpa, strength_z_mpa: the sheet has the bars 'horizontal' (used here) and 'vertical xz' (modulus 2.5 GPa, yield
+      30.7 MPa); both load the layer plane. The sheet gives an interlayer adhesion of 13 +/- 1 MPa by the maker's own
+      method. enclosure: the product page (opened 2026-10-24) says 'Enclosure not required'; the sheet does not say. A
+      hardened nozzle and a special PP print sheet are required; the speed is up to 40 mm/s. The page says drying is not
+      necessary.
+
+  - id: prusament-pp-glass-fiber
+    family: PP-GF
+    maker: Prusament
+    product: PP Glass Fiber
+    aliases: []
+    sheet_version: V1.0 (15-11-2024)
+    E_xy_mpa: 2100
+    E_z_mpa: null
+    bending_modulus_xy_mpa: null
+    bending_modulus_z_mpa: null
+    strength_xy_mpa: 40.3
+    strength_z_mpa: null
+    strength_kind: yield
+    elongation_xy_pct: 4.5
+    density_g_cm3: 1.12
+    hdt_18_c: 112.6
+    hdt_045_c: 138.3
+    conditioned: null
+    nu: null
+    nozzle_c: [235, 255]
+    bed_c: [85, 105]
+    enclosure: "no"
+    chamber_c_min: null
+    hardened_nozzle: true
+    drying: not needed (maker page)
+    direct_drive: null
+    abrasive: true
+    soft: false
+    source_url: "https://storage.googleapis.com/prusa3d-content-prod-14e8-wordpress-prusament-prod/2025/07/512923fd-tds_pp_glass_fiber_en.pdf"
+    opened: "2026-10-24"
+    tag: maker TDS
+    field_sources:
+      enclosure: "https://prusament.com/materials/prusament-pp-glass-fiber/"
+      drying: "https://prusament.com/materials/prusament-pp-glass-fiber/"
+    note: >-
+      E_z_mpa, strength_z_mpa: the sheet has the bars 'horizontal' (used here) and 'vertical xz' (modulus 2.5 GPa, yield
+      48.8 MPa); both load the layer plane. The sheet gives an interlayer adhesion of 18 +/- 1 MPa by the maker's own
+      method. The page says large models print without an enclosure, drying is not necessary, and a special print sheet is
+      required. A hardened nozzle is required.
+
+  - id: polymaker-fiberon-pps-cf10
+    family: PPS-CF
+    maker: Polymaker
+    product: Fiberon PPS-CF10
+    aliases: []
+    sheet_version: V1.1
+    E_xy_mpa: 5446.7
+    E_z_mpa: 2790
+    bending_modulus_xy_mpa: null
+    bending_modulus_z_mpa: null
+    strength_xy_mpa: 59.4
+    strength_z_mpa: 32
+    strength_kind: not stated
+    elongation_xy_pct: 1.4
+    density_g_cm3: 1.29
+    hdt_18_c: 133
+    hdt_045_c: 252.5
+    conditioned: null
+    nu: null
+    nozzle_c: [310, 350]
+    bed_c: [80, 90]
+    enclosure: "no"
+    chamber_c_min: null
+    hardened_nozzle: true
+    drying: "100 C, 10 h"
+    direct_drive: null
+    abrasive: true
+    soft: false
+    source_url: "https://fiberon.polymaker.com/wp-content/uploads/TDS_FIBERON-PPS-CF10_V1.1_EN.pdf"
+    opened: "2026-10-24"
+    tag: maker TDS
+    note: >-
+      The sheet says a wear-resistant nozzle is highly recommended, a room-temperature chamber and a humidity below 20 %
+      RH.
+
+  - id: polymaker-fiberon-pps-gf20
+    family: PPS-GF
+    maker: Polymaker
+    product: Fiberon PPS-GF20
+    aliases: []
+    sheet_version: V1.1
+    E_xy_mpa: 4552
+    E_z_mpa: 2557.2
+    bending_modulus_xy_mpa: null
+    bending_modulus_z_mpa: null
+    strength_xy_mpa: 64.1
+    strength_z_mpa: 22.9
+    strength_kind: not stated
+    elongation_xy_pct: 2
+    density_g_cm3: 1.36
+    hdt_18_c: 125.8
+    hdt_045_c: 236.3
+    conditioned: null
+    nu: null
+    nozzle_c: [310, 350]
+    bed_c: [80, 90]
+    enclosure: "no"
+    chamber_c_min: null
+    hardened_nozzle: null
+    drying: "100 C, 10 h"
+    direct_drive: null
+    abrasive: true
+    soft: false
+    source_url: "https://cdn.shopify.com/s/files/1/0548/7299/7945/files/TDS_FIBERON_PPS-GF20_V1.1.pdf?v=1752777698"
+    opened: "2026-10-24"
+    tag: maker TDS
+    note: >-
+      The print needs are the row that the research notes give for the two PPS sheets together (a room-temperature
+      chamber, a humidity below 20 % RH). hardened_nozzle: only the CF10 sheet says a wear-resistant nozzle is highly
+      recommended.
+
+  - id: bambu-lab-pps-cf
+    family: PPS-CF
+    maker: Bambu Lab
+    product: PPS-CF
+    aliases: []
+    sheet_version: V1.0
+    E_xy_mpa: 8230
+    E_z_mpa: 2850
+    bending_modulus_xy_mpa: null
+    bending_modulus_z_mpa: null
+    strength_xy_mpa: 87
+    strength_z_mpa: 24
+    strength_kind: not stated
+    elongation_xy_pct: 1.2
+    density_g_cm3: 1.26
+    hdt_18_c: 235
+    hdt_045_c: 264
+    conditioned: null
+    nu: null
+    nozzle_c: [310, 340]
+    bed_c: [100, 120]
+    enclosure: required
+    chamber_c_min: 60
+    hardened_nozzle: true
+    drying: "100-140 C, 8-12 h"
+    direct_drive: null
+    abrasive: true
+    soft: false
+    source_url: "https://wiki.bambulab.com/filament-acc/petcf-ppacf/26f4f40359484040a8660c9150a90fc0.pdf"
+    opened: "2026-10-24"
+    tag: maker TDS
+    field_sources:
+      enclosure: "https://wiki.bambulab.com/en/filament/petcf_ppacf"
+    note: >-
+      The sheet gives chamber 60 to 90 C. The maker wiki says PPS-CF is supported only on the X1E, H2D, H2S and H2C. The
+      bars were not annealed.

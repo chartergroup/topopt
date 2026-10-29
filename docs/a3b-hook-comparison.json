@@ -1,0 +1,374 @@
+{
+ "what": "topopt hook at 1.2 mm, 1 thread (OMP/MKL/OPENBLAS/NUMBA_NUM_THREADS=1), PARDISO, through the CLI (topopt run), default against robust (settings.robust: eroded, eta_e 0.55), and the same pair with settings.min_member_mm 3.6 (3 voxels, filter radius 6.76 mm). Shared host: load average and peak RSS (of the process tree, ru_maxrss) are in each row.",
+ "runs": {
+  "hook_default, hook_robust": "run on code HEAD 1d2a889 (A3a base 2146498): commit 3ac3bc5 differs only in docs",
+  "hook_mm, hook_mm_robust": "run on 5e4187e (A3b before the rebase onto 2146498, before the fix that adds the nominal solve to run_time_s); the optimizer path is the same",
+  "hook_default_run1, hook_robust_run1": "first pair, run on 5e4187e: the repeat of hook_default and hook_robust"
+ },
+ "reading": "wall_s is the wall time of the whole command (wrapper); t_iter_sum_s is the sum of the pass times of history.jsonl; run_time_s is metrics.json; robust_s is the measured time of the robust part (second projection and the solve of the nominal design); the thickness is the local thickness of the design material of the nominal final design (snapshot), min / p1 / p5 / median in mm, request_mm only for the share below",
+ "default_bit_equal_to_base": {
+  "compliance_final": 1.3891411615538347,
+  "snapshots": "81 of 81",
+  "final.stl": true,
+  "preview.bin": true,
+  "labels.bin": true,
+  "base": "the base run of origin/main at 1 thread"
+ },
+ "machine": {
+  "platform": "Linux x86_64",
+  "python": "3.12.15"
+ },
+ "rows": [
+  {
+   "name": "hook_default",
+   "wall_s": 518.1,
+   "load_before": [
+    "7.01",
+    "8.57",
+    "10.11"
+   ],
+   "load_after": [
+    "12.76",
+    "10.14",
+    "10.08"
+   ],
+   "peak_rss_mib": 1763.3,
+   "run_time_s": 503.9,
+   "passes": 81,
+   "t_iter_sum_s": 501.4,
+   "t_iter_mean_s": 6.19,
+   "t_iter_median_s": 5.988,
+   "compliance_final": 1.3891411615538347,
+   "compliance_nominal": null,
+   "compliance_eroded": null,
+   "robust_s": null,
+   "mass_final_g": 26.49,
+   "volume_fraction_final": 0.19999803495268564,
+   "filter_radius_mm": 1.7999999999999998,
+   "stiffness_cases": [
+    {
+     "name": "hang",
+     "N_per_mm": 1260.501
+    },
+    {
+     "name": "pull_off",
+     "N_per_mm": 1331.285
+    }
+   ],
+   "stiffness_cases_nominal": null,
+   "thickness_design_material": {
+    "voxels": 6728,
+    "min_mm": 0.9,
+    "p1_mm": 1.36,
+    "p5_mm": 2.1,
+    "p10_mm": 2.239,
+    "median_mm": 3.3,
+    "share_below_request": 0.5963
+   },
+   "request_mm": 3.6,
+   "grayness_final": 0.03502051610079182,
+   "solver": "pardiso",
+   "iterations": 80,
+   "triangles": 85610,
+   "wall_ratio_to_first": 1.0,
+   "t_iter_sum_ratio_to_first": 1.0
+  },
+  {
+   "name": "hook_robust",
+   "wall_s": 519.6,
+   "load_before": [
+    "12.76",
+    "10.14",
+    "10.08"
+   ],
+   "load_after": [
+    "2.41",
+    "4.61",
+    "7.49"
+   ],
+   "peak_rss_mib": 1768.9,
+   "run_time_s": 513.4,
+   "passes": 81,
+   "t_iter_sum_s": 504.1,
+   "t_iter_mean_s": 6.224,
+   "t_iter_median_s": 6.265,
+   "compliance_final": 1.4236936717021784,
+   "compliance_nominal": 1.3985258196615904,
+   "compliance_eroded": 1.4236936717021784,
+   "robust_s": 6.363,
+   "mass_final_g": 26.56,
+   "volume_fraction_final": 0.1999980167879159,
+   "filter_radius_mm": 1.7999999999999998,
+   "stiffness_cases": [
+    {
+     "name": "hang",
+     "N_per_mm": 1227.889
+    },
+    {
+     "name": "pull_off",
+     "N_per_mm": 1301.234
+    }
+   ],
+   "stiffness_cases_nominal": [
+    {
+     "name": "hang",
+     "N_per_mm": 1253.988
+    },
+    {
+     "name": "pull_off",
+     "N_per_mm": 1320.19
+    }
+   ],
+   "thickness_design_material": {
+    "voxels": 6614,
+    "min_mm": 0.9,
+    "p1_mm": 1.43,
+    "p5_mm": 2.1,
+    "p10_mm": 2.325,
+    "median_mm": 3.3,
+    "share_below_request": 0.6135
+   },
+   "request_mm": 3.6,
+   "grayness_final": 0.03661763907428063,
+   "solver": "pardiso",
+   "iterations": 80,
+   "triangles": 85742,
+   "wall_ratio_to_first": 1.003,
+   "t_iter_sum_ratio_to_first": 1.005
+  },
+  {
+   "name": "hook_mm",
+   "wall_s": 554.7,
+   "load_before": [
+    "9.54",
+    "8.23",
+    "9.10"
+   ],
+   "load_after": [
+    "9.89",
+    "12.36",
+    "11.30"
+   ],
+   "peak_rss_mib": 2184.1,
+   "run_time_s": 545.7,
+   "passes": 81,
+   "t_iter_sum_s": 542.7,
+   "t_iter_mean_s": 6.701,
+   "t_iter_median_s": 6.553,
+   "compliance_final": 1.7872570522678395,
+   "compliance_nominal": null,
+   "compliance_eroded": null,
+   "robust_s": null,
+   "mass_final_g": 26.27,
+   "volume_fraction_final": 0.1999982971798417,
+   "filter_radius_mm": 6.7572,
+   "stiffness_cases": [
+    {
+     "name": "hang",
+     "N_per_mm": 978.831
+    },
+    {
+     "name": "pull_off",
+     "N_per_mm": 1035.732
+    }
+   ],
+   "stiffness_cases_nominal": null,
+   "thickness_design_material": {
+    "voxels": 6571,
+    "min_mm": 0.9,
+    "p1_mm": 1.35,
+    "p5_mm": 2.812,
+    "p10_mm": 3.6,
+    "median_mm": 5.7,
+    "share_below_request": 0.1026
+   },
+   "request_mm": 3.6,
+   "grayness_final": 0.12734563161913756,
+   "solver": "pardiso",
+   "iterations": 80,
+   "triangles": 71096,
+   "wall_ratio_to_first": 1.071,
+   "t_iter_sum_ratio_to_first": 1.082
+  },
+  {
+   "name": "hook_mm_robust",
+   "wall_s": 553.3,
+   "load_before": [
+    "9.89",
+    "12.36",
+    "11.30"
+   ],
+   "load_after": [
+    "8.55",
+    "12.47",
+    "12.14"
+   ],
+   "peak_rss_mib": 2196.2,
+   "run_time_s": 540.3,
+   "passes": 81,
+   "t_iter_sum_s": 537.5,
+   "t_iter_mean_s": 6.636,
+   "t_iter_median_s": 6.279,
+   "compliance_final": 1.959668651973612,
+   "compliance_nominal": 1.781243220225736,
+   "compliance_eroded": 1.959668651973612,
+   "robust_s": 6.053,
+   "mass_final_g": 26.11,
+   "volume_fraction_final": 0.19999870082265,
+   "filter_radius_mm": 6.7572,
+   "stiffness_cases": [
+    {
+     "name": "hang",
+     "N_per_mm": 892.68
+    },
+    {
+     "name": "pull_off",
+     "N_per_mm": 944.645
+    }
+   ],
+   "stiffness_cases_nominal": [
+    {
+     "name": "hang",
+     "N_per_mm": 992.047
+    },
+    {
+     "name": "pull_off",
+     "N_per_mm": 1028.369
+    }
+   ],
+   "thickness_design_material": {
+    "voxels": 6555,
+    "min_mm": 0.9,
+    "p1_mm": 1.425,
+    "p5_mm": 3.026,
+    "p10_mm": 3.75,
+    "median_mm": 5.85,
+    "share_below_request": 0.0905
+   },
+   "request_mm": 3.6,
+   "grayness_final": 0.1194877252967459,
+   "solver": "pardiso",
+   "iterations": 80,
+   "triangles": 70798,
+   "wall_ratio_to_first": 1.068,
+   "t_iter_sum_ratio_to_first": 1.072
+  },
+  {
+   "name": "hook_default_run1",
+   "wall_s": 496.2,
+   "load_before": [
+    "10.72",
+    "9.64",
+    "11.35"
+   ],
+   "load_after": [
+    "7.16",
+    "8.37",
+    "10.13"
+   ],
+   "peak_rss_mib": 1651.0,
+   "run_time_s": 488.6,
+   "passes": 81,
+   "t_iter_sum_s": 486.3,
+   "t_iter_mean_s": 6.003,
+   "t_iter_median_s": 5.683,
+   "compliance_final": 1.3891411615538347,
+   "compliance_nominal": null,
+   "compliance_eroded": null,
+   "robust_s": null,
+   "mass_final_g": 26.49,
+   "volume_fraction_final": 0.19999803495268564,
+   "filter_radius_mm": 1.7999999999999998,
+   "stiffness_cases": [
+    {
+     "name": "hang",
+     "N_per_mm": 1260.501
+    },
+    {
+     "name": "pull_off",
+     "N_per_mm": 1331.285
+    }
+   ],
+   "stiffness_cases_nominal": null,
+   "thickness_design_material": {
+    "voxels": 6728,
+    "min_mm": 0.9,
+    "p1_mm": 1.36,
+    "p5_mm": 2.1,
+    "p10_mm": 2.239,
+    "median_mm": 3.3,
+    "share_below_request": 0.5963
+   },
+   "request_mm": 3.6,
+   "grayness_final": 0.03502051610079182,
+   "solver": "pardiso",
+   "iterations": 80,
+   "triangles": 85610,
+   "wall_ratio_to_first": 0.958,
+   "t_iter_sum_ratio_to_first": 0.97
+  },
+  {
+   "name": "hook_robust_run1",
+   "wall_s": 490.3,
+   "load_before": [
+    "7.16",
+    "8.37",
+    "10.13"
+   ],
+   "load_after": [
+    "9.54",
+    "8.23",
+    "9.10"
+   ],
+   "peak_rss_mib": 1742.6,
+   "run_time_s": 476.2,
+   "passes": 81,
+   "t_iter_sum_s": 474.6,
+   "t_iter_mean_s": 5.86,
+   "t_iter_median_s": 5.808,
+   "compliance_final": 1.4236936717021784,
+   "compliance_nominal": 1.3985258196615904,
+   "compliance_eroded": 1.4236936717021784,
+   "robust_s": 5.532,
+   "mass_final_g": 26.56,
+   "volume_fraction_final": 0.1999980167879159,
+   "filter_radius_mm": 1.7999999999999998,
+   "stiffness_cases": [
+    {
+     "name": "hang",
+     "N_per_mm": 1227.889
+    },
+    {
+     "name": "pull_off",
+     "N_per_mm": 1301.234
+    }
+   ],
+   "stiffness_cases_nominal": [
+    {
+     "name": "hang",
+     "N_per_mm": 1253.988
+    },
+    {
+     "name": "pull_off",
+     "N_per_mm": 1320.19
+    }
+   ],
+   "thickness_design_material": {
+    "voxels": 6614,
+    "min_mm": 0.9,
+    "p1_mm": 1.43,
+    "p5_mm": 2.1,
+    "p10_mm": 2.325,
+    "median_mm": 3.3,
+    "share_below_request": 0.6135
+   },
+   "request_mm": 3.6,
+   "grayness_final": 0.03661763907428063,
+   "solver": "pardiso",
+   "iterations": 80,
+   "triangles": 85742,
+   "wall_ratio_to_first": 0.946,
+   "t_iter_sum_ratio_to_first": 0.947
+  }
+ ]
+}

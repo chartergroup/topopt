@@ -1,0 +1,24 @@
+name: ladle
+regions:
+  design: design.stl
+  fixed: [grip.stl]
+  keep_out: [gravy_space.stl, over_opening.stl]
+  load: {bowl: bowl.stl}
+load_cases:
+- name: full_scoop
+  weight: 1.0
+  forces:
+  - region: bowl
+    force: [0, 0, -4.9]
+- name: scrape
+  weight: 1.0
+  forces:
+  - region: bowl
+    force: [-30, 0, -40]
+- name: side_stir
+  weight: 1.0
+  forces:
+  - region: bowl
+    force: [0, 18, -5]
+material: {E: 3500.0, nu: 0.35, density: 1.24}
+settings: {voxel_size: 3.25, volume_fraction: 0.10628, iterations: 80}

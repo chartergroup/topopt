@@ -1,0 +1,41 @@
+# The hook of hook.yaml with a mirror plane at y = 0 (CONTRACTS.md section 26.1).
+# The design is then symmetric about y = 0. The case pull_off has a side force (Fy = 5.21 N), so it is
+# not symmetric about this plane: the result is the best symmetric design for these loads.
+# The engine moves the grid origin along y by less than one voxel, so that the plane is a grid plane.
+name: tshirt_hook
+
+regions:
+  design: design.stl
+  fixed:
+    - wall_plate.stl
+  keep_out:
+    - screw_hole_top.stl
+    - screw_hole_bottom.stl
+  load:
+    tip: hook_tip.stl
+
+load_cases:
+  - name: hang
+    weight: 234.0
+    forces:
+      - region: tip
+        force: [0.0, 0.0, -1.96]
+  - name: pull_off
+    weight: 1.0
+    forces:
+      - region: tip
+        force: [20.89, 5.21, -20.89]
+
+material:
+  E: 3500.0
+  nu: 0.35
+  density: 1.24
+
+settings:
+  voxel_size: 1.2
+  volume_fraction: 0.2
+  iterations: 80
+
+mirror:
+  - normal: y
+    at_mm: 0.0

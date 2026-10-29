@@ -1,0 +1,155 @@
+# Release of topopt with python-semantic-release. See RELEASING.md.
+# MANUAL ONLY, like tests.yml: the only event is workflow_dispatch.
+# Start it from the Actions tab (workflow "release"), or:
+#   gh workflow run release.yml --repo chartergroup/topopt -f dry_run=true
+# dry_run=true (default) prints the next version and the short release notes (one line per PR) and changes nothing.
+# dry_run=false runs NO tests (run tests.yml by hand first), it bumps the version in pyproject.toml, .claude-plugin/plugin.json and packaging/mcpb/manifest.json, writes CHANGELOG.md,
+# commits to main, makes the tag vX.Y.Z and a GitHub release, attaches the wheel, the sdist and the .mcpb, the .mcpb also as topopt.mcpb
+# (scripts/ci/release_assets.py; the run fails when the release does not list them; the build checks the manifest with the mcpb CLI), then moves the branch `latest`
+# to the release commit (fast-forward only).
+# The notes come from scripts/ci/release_notes.py.
+# attach_to_tag=vX.Y.Z (any dry_run) makes no release: it attaches the files that the release of that existing tag does not list yet, built
+# from the tag when needed; topopt.mcpb is copied from the listed .mcpb (job `attach`).
+# The push to main needs a token that may push there; see RELEASING.md (branch protection).
+name: release
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "true: show the next version and the changelog, change nothing. false: make the release. Not used when attach_to_tag is set (that run attaches the files)."
+        type: choice
+        options:
+          - "true"
+          - "false"
+        default: "true"
+      attach_to_tag:
+        description: "Empty: the normal run. A tag vX.Y.Z (v0.3.0 or later): no release; attach the files that its release does not list yet (the wheel, the sdist, the .mcpb and topopt.mcpb), built from the tag when needed."
+        type: string
+        default: ""
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: release
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    if: ${{ github.ref_name == 'main' && inputs.attach_to_tag == '' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.RELEASE_TOKEN || github.token }}
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          version: "0.12.1"
+      - name: Install the mcpb CLI (the build checks the manifest of the .mcpb with it)
+        if: ${{ inputs.dry_run == 'false' }}
+        run: npm install -g @anthropic-ai/mcpb@2.1.2
+      - name: Show the next version
+        id: next
+        run: |
+          version=$(uv tool run --from 'python-semantic-release>=9.21,<10' semantic-release version --print)
+          echo "$version"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+      - name: Show the short notes of the next release
+        env:
+          NEXT: ${{ steps.next.outputs.version }}
+        run: |
+          if git rev-parse -q --verify "refs/tags/v${NEXT}" >/dev/null; then
+            echo "No release: no commit since v${NEXT} makes a new version."
+          else
+            python3 -P scripts/ci/release_notes.py --version "$NEXT"
+          fi
+      - name: Release
+        id: release
+        if: ${{ inputs.dry_run == 'false' }}
+        env:
+          GH_TOKEN: ${{ secrets.RELEASE_TOKEN || github.token }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # The build step (pyproject.toml, build_command) writes the short entry into CHANGELOG.md and dist/release-notes.md.
+          # The tool writes no entry of its own (--no-changelog).
+          uv tool run --from 'python-semantic-release>=9.21,<10' semantic-release -v version --no-changelog
+          # (The tool also writes released= and tag= to the step output; the last write wins, so the lines below decide.)
+          # A release tag on HEAD: the run just made it, or an earlier run made it and failed later (a re-run repairs it).
+          tag=$(git tag --points-at HEAD --list 'v*' | sort -V | tail -n 1)
+          if [ -n "$tag" ]; then
+            echo "released=true" >> "$GITHUB_OUTPUT"
+            echo "tag=$tag" >> "$GITHUB_OUTPUT"
+            if [ ! -f dist/release-notes.md ]; then
+              # A re-run: no build step ran. --head "${tag}^" lets the script find the previous release tag.
+              python3 -P scripts/ci/release_notes.py --version "${tag#v}" --head "${tag}^" --date "$(git log -1 --format=%cs "$tag")" --notes-file dist/release-notes.md
+            fi
+            gh release view "$tag" >/dev/null 2>&1 || gh release create "$tag" --verify-tag --title "$tag" --notes-file dist/release-notes.md
+            gh release edit "$tag" --notes-file dist/release-notes.md
+          else
+            echo "No release was made."
+            echo "released=false" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Attach the files to the release
+        if: ${{ inputs.dry_run == 'false' && steps.release.outputs.released == 'true' }}
+        env:
+          GH_TOKEN: ${{ secrets.RELEASE_TOKEN || github.token }}
+          TAG: ${{ steps.release.outputs.tag }}
+        run: |
+          # semantic-release uploads only the `assets` (install.md, CHANGELOG.md). The wheel, the sdist and the .mcpb of the build step
+          # go up here (only the files that the release does not list yet); a new run after a failed one builds them first.
+          # The .mcpb goes up twice: topopt-X.Y.Z.mcpb and topopt.mcpb (the same bytes; releases/latest/download/topopt.mcpb, #409).
+          # The step fails when the release does not list all four, or when the two .mcpb differ in size.
+          python3 -P scripts/ci/release_assets.py --tag "$TAG"
+      - name: Show where latest would move
+        if: ${{ inputs.dry_run == 'true' }}
+        env:
+          NEXT: ${{ steps.next.outputs.version }}
+        run: |
+          current=$(git ls-remote origin refs/heads/latest | cut -f1)
+          if [ -n "$current" ]; then now="at ${current}"; else now="not created yet (the first real release creates it)"; fi
+          if git rev-parse -q --verify "refs/tags/v${NEXT}" >/dev/null; then
+            echo "No release is due: latest stays where it is (${now})."
+          else
+            echo "A real run would push the commit of the tag v${NEXT} to refs/heads/latest, fast-forward only. latest is now ${now}."
+          fi
+      - name: Move the branch latest
+        if: ${{ inputs.dry_run == 'false' && steps.release.outputs.released == 'true' }}
+        env:
+          TAG: ${{ steps.release.outputs.tag }}
+        run: |
+          # A plain push of the tagged commit. No force: if latest is not an ancestor of the new release, the push fails.
+          sha=$(git rev-parse "refs/tags/${TAG}^{commit}")
+          git push origin "${sha}:refs/heads/latest"
+
+  attach:
+    name: attach the files to an existing release
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    if: ${{ github.ref_name == 'main' && inputs.attach_to_tag != '' }}
+    steps:
+      - name: Check out main and the tags
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Install uv for the build
+        uses: astral-sh/setup-uv@v7
+        with:
+          version: "0.12.1"
+      - name: Install the mcpb CLI for the build
+        run: npm install -g @anthropic-ai/mcpb@2.1.2
+      - name: Build and attach the files of the tag
+        env:
+          GH_TOKEN: ${{ secrets.RELEASE_TOKEN || github.token }}
+          TAG: ${{ inputs.attach_to_tag }}
+        run: |
+          # The script of main does the work; the files come from a checkout of the tag (its own build.py and version).
+          case "$TAG" in v[0-9]*.[0-9]*.[0-9]*) ;; *) echo "attach_to_tag must be a tag vX.Y.Z, not '$TAG'"; exit 1 ;; esac
+          git worktree add --detach "$RUNNER_TEMP/release-tag" "refs/tags/$TAG"
+          python3 -P scripts/ci/release_assets.py --tag "$TAG" --source "$RUNNER_TEMP/release-tag" --dist "$RUNNER_TEMP/release-dist"

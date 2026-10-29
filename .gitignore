@@ -1,0 +1,23 @@
+.venv/
+__pycache__/
+*.pyc
+runs/
+.DS_Store
+topopt/native/*.dylib
+*.nbi
+*.nbc
+*.egg-info/
+build/
+.plugin-env/
+artifacts/
+dist/
+*.case.json
+*.case-log.jsonl
+*.case.json.bad*
+evals/results/
+# `claude plugin eval` writes each resumed session beside its history file (<session id>.jsonl and a folder).
+evals/*/[0-9a-f]*-*-*-*-*.jsonl
+evals/*/[0-9a-f]*-*-*-*-*/
+
+# The copy that the ratchet section of the README asks for (a problem YAML with an `acceptance` block): yours, not shipped.
+examples/*/*_ratchet.yaml

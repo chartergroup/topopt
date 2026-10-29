@@ -1,0 +1,22 @@
+{
+ "mass_design_space_g": 85.59,
+ "mass_final_g": 26.49,
+ "mass_saved_pct": 69.0,
+ "volume_final_mm3": 21362.8,
+ "compliance_initial": 64.43259563715543,
+ "compliance_final": 1.3891411615543197,
+ "stiffness_cases": [
+  {
+   "name": "hang",
+   "N_per_mm": 1260.501
+  },
+  {
+   "name": "pull_off",
+   "N_per_mm": 1331.285
+  }
+ ],
+ "run_time_s": 147.6,
+ "iterations": 80,
+ "watertight": true,
+ "triangles": 85610
+}

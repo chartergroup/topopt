@@ -1,0 +1,71 @@
+# The licence policy of the CI licence step (scripts/ci/license_check.py, CONTRACTS.md section 27.7).
+#
+# A package passes when its licence is permissive (MIT, BSD, Apache-2.0, ISC, PSF-2.0, MIT-CMU, Zlib and
+# similar). Any other package needs an `allow` entry. Each entry records the rule that accepts it.
+# A new copyleft or proprietary package fails the step until a maintainer adds an entry here, with the rule.
+# Every package of `allow` must also be named in THIRD_PARTY_NOTICES.md.
+#
+# The rule: this repository is MIT; optional packages are installed on the user's machine, never vendored. Not legal advice.
+
+[[allow]]
+package = "gmsh"
+scope = "extras tet and verify"
+decision = "GPL-2.0-or-later. Optional extra, run in a child process, never imported by the core, never vendored."
+
+[[allow]]
+package = "cholespy"
+scope = "extra verify"
+decision = "GPL-2.0-or-later in effect (bundled CHOLMOD Supernodal). Optional extra under the same rule as gmsh."
+
+[[allow]]
+package = "cadquery-ocp-novtk"
+scope = "extra step"
+decision = "Metadata: Apache-2.0 (the wrapper). The wheel bundles native libraries: OpenCASCADE 7.9.3 (LGPL-2.1 with the Open CASCADE exception), LibRaw (LGPL-2.1 or CDDL-1.0), FreeImage (GPL-2.0 or GPL-3.0 or FIPL-1.0), FreeType (GPL-2+ or FTL), zstd (BSD-3-Clause or GPL-2.0), and on Linux only libjbig (GPL-2+, no other option) and libgomp (GPL-3.0 with the GCC Runtime Library Exception). Optional extra, installed from PyPI on the user's machine, never vendored, never imported by the core (the module topopt/step.py imports it inside one function). Accepted under the rule for gmsh and cholespy."
+
+[[allow]]
+package = "mkl"
+scope = "extra pardiso, Linux x86_64 (pulled in by pypardiso)"
+decision = "Intel Simplified Software License, binary only. Optional, installed from PyPI on the user's machine, never vendored."
+
+[[allow]]
+package = "tbb"
+scope = "extra pardiso (pulled in by mkl)"
+decision = "Intel Simplified Software License, binary only. Same rule as mkl."
+
+[[allow]]
+package = "tcmlib"
+scope = "extra pardiso (pulled in by tbb)"
+decision = "Intel Simplified Software License, binary only. Same rule as mkl."
+
+[[allow]]
+package = "intel-openmp"
+scope = "extra pardiso (pulled in by mkl)"
+decision = "Intel End User License Agreement for Developer Tools. Same rule as mkl; the terms limit use in a hosted service."
+
+[[allow]]
+package = "intel-cmplr-lib-ur"
+scope = "extra pardiso (pulled in by intel-openmp)"
+decision = "Intel End User License Agreement for Developer Tools. Same rule as mkl."
+
+# The metadata of these packages does not match their files. The category below is the one that the
+# files give.
+
+[[override]]
+package = "cholespy"
+category = "copyleft"
+why = "the metadata says BSD-3-Clause; the compiled module holds CHOLMOD Supernodal (GPL-2.0-or-later), see THIRD_PARTY_NOTICES.md"
+
+[[override]]
+package = "cadquery-ocp-novtk"
+category = "copyleft"
+why = "the metadata says Apache-2.0; the bundled libraries do not (LGPL OpenCASCADE, GPL options of FreeImage, FreeType and zstd, GPL libjbig and libgomp on Linux), see THIRD_PARTY_NOTICES.md"
+
+[[override]]
+package = "umf"
+category = "permissive"
+why = "the classifier says Other/Proprietary; the wheel LICENSE.txt is the Apache-2.0 text (THIRD_PARTY_NOTICES.md)"
+
+[[override]]
+package = "pocl-binary-distribution"
+category = "permissive"
+why = "the metadata has no licence field (the checker would say unknown); the wheel holds pocl (MIT, POCL.COPYING), hwloc (BSD, HWLOC.COPYING) and LLVM (Apache-2.0 with the LLVM exception, LLVM_LICENSE.txt) under .libs/share/pocl/licenses/, see THIRD_PARTY_NOTICES.md. Extra gpu-test only; no CI leg installs it"

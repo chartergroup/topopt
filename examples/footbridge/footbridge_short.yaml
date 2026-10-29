@@ -1,0 +1,59 @@
+# A footbridge: our own parametric bridge (make_footbridge.py, named round dimensions only).
+# The short run of footbridge.yaml: 2.1 mm voxels, a member of 4.4 mm (about 2.1 voxels across, as there) and 80 passes (README.md).
+# Run: topopt run examples/footbridge/footbridge_short.yaml --out runs/footbridge_short
+name: footbridge_short
+
+regions:
+  design: design.stl
+  fixed:
+    - feet_a.stl
+    - feet_b.stl
+  keep_out:
+    - clearance.stl
+  solid:
+    - deck_skin.stl
+  load:
+    walk_left: walk_left.stl
+    walk_right: walk_right.stl
+
+load_cases:
+  - name: uniform
+    forces:
+      - {region: walk_left, force: [0.0, 0.0, -30.0]}
+      - {region: walk_right, force: [0.0, 0.0, -30.0]}
+  - name: half_left
+    forces:
+      - {region: walk_left, force: [0.0, 0.0, -60.0]}
+  - name: half_right
+    forces:
+      - {region: walk_right, force: [0.0, 0.0, -60.0]}
+
+material:
+  E: 3500.0
+  nu: 0.35
+  density: 1.24
+
+settings:
+  voxel_size: 2.1
+  volume_fraction: 0.10
+  iterations: 80
+  penal: 4.0
+  min_member_mm: 4.4
+  # The filter does not pull the design voxels next to the feet, the skin and the walking surface to solid (README.md, "Settings").
+  filter_solid_neighbours: ignore
+
+# A large-bed FDM printer: the print facts of the run get a build direction and a bed that fit the part (the deck on the bed).
+print:
+  build_direction: "-z"
+  bed_mm: 350
+  printer_type: fdm
+
+assumptions:
+  - 'Own parametric footbridge (make_footbridge.py): 280 mm span, 36 mm wide; x along the span, y across, z up, the ground at z = 0'
+  - 'Deck: a solid skin 2.5 mm thick (z 85.5..88) under a walking surface 3 mm thick (z 88..91), split at mid-span into two halves'
+  - 'Feet: the full width, 24 mm of the span at each end, 30 mm high from the ground, fixed'
+  - 'Clearance: a half ellipse under the span, 200 mm wide at the ground and 56 mm high at mid-span, kept free'
+  - 'Design space: the box under the skin down to the ground, 2.5 mm inside the side faces of the skin (y -15.5..15.5)'
+  - 'Loads: 60 N on the walking surface, down: spread over the whole length (uniform), or on one half only (half_left, half_right)'
+  - 'Material: the default printed polymer of the tool (E 3500 MPa, nu 0.35, 1.24 g/cm3); the shape does not depend on E'
+  - 'Not modelled: self weight, fatigue, vibration and the weaker bond between printed layers; this is a model on a printer bed, not a footbridge at full scale'

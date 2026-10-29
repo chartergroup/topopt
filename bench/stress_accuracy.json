@@ -1,0 +1,467 @@
+{
+ "format": 1,
+ "script": "bench/stress_accuracy.py",
+ "platform": {
+  "system": "Linux",
+  "machine": "x86_64",
+  "python": "3.12.13"
+ },
+ "measure": "von Mises of D0 * strain, full E, hex8 centre strain, design voxels, rho = 1 (compute_stress)",
+ "guard_active_voxels": 100000,
+ "beam": {
+  "geometry_mm": {
+   "L": 36.0,
+   "b": 6.0,
+   "t": 6.0,
+   "P": 10.0,
+   "x0": 12.0,
+   "x1": 24.0
+  },
+  "reference": "Euler-Bernoulli My/I and parabolic shear, load at the force centroid",
+  "window": "x from 12 to 24 mm, design voxels",
+  "sizes": [
+   {
+    "whole_design": {
+     "peak_MPa": 0.481125224324919,
+     "peak_reference_MPa": 10.833333333333334,
+     "peak_error_pct": -95.5588440831546,
+     "peak_at_x_mm": 9.0,
+     "p99_9_MPa": 0.481125224324919,
+     "p99_9_reference_MPa": 10.416310949525297,
+     "p99_9_error_pct": -95.38104011433293,
+     "voxels": 6,
+     "p99_9_equals_peak": true
+    },
+    "voxels_through_thickness": 1,
+    "voxel_size_mm": 6.0,
+    "active_voxels": 8,
+    "window_voxels": 2,
+    "solve_s": 0.21,
+    "load_centroid_x_mm": 39.0,
+    "peak_MPa": 0.48112522432490884,
+    "peak_reference_MPa": 7.5,
+    "peak_error_pct": -93.58499700900121,
+    "peak_error_at_voxel_centres_pct": -33.33333333330276,
+    "p99_9_MPa": 0.48112522432490884,
+    "p99_9_reference_MPa": 7.308042223504313,
+    "p99_9_error_pct": -93.4164963801454,
+    "p99_9_error_at_voxel_centres_pct": -33.33333333330276,
+    "window_p99_9_equals_peak": true
+   },
+   {
+    "whole_design": {
+     "peak_MPa": 4.306933687125286,
+     "peak_reference_MPa": 10.833333333333334,
+     "peak_error_pct": -60.24368904192043,
+     "peak_at_x_mm": 4.5,
+     "p99_9_MPa": 4.306933687125286,
+     "p99_9_reference_MPa": 10.416310949525297,
+     "p99_9_error_pct": -58.652024617971236,
+     "voxels": 48,
+     "p99_9_equals_peak": true
+    },
+    "voxels_through_thickness": 2,
+    "voxel_size_mm": 3.0,
+    "active_voxels": 64,
+    "window_voxels": 16,
+    "solve_s": 0.05,
+    "load_centroid_x_mm": 39.0,
+    "peak_MPa": 3.1303542905743127,
+    "peak_reference_MPa": 7.5,
+    "peak_error_pct": -58.261942792342495,
+    "peak_error_at_voxel_centres_pct": -12.627984509359248,
+    "p99_9_MPa": 3.1303542905743127,
+    "p99_9_reference_MPa": 7.308042223504313,
+    "p99_9_error_pct": -57.16562391352383,
+    "p99_9_error_at_voxel_centres_pct": -12.627984509359248,
+    "window_p99_9_equals_peak": true
+   },
+   {
+    "whole_design": {
+     "peak_MPa": 7.301837156039587,
+     "peak_reference_MPa": 10.833333333333327,
+     "peak_error_pct": -32.59842625194223,
+     "peak_at_x_mm": 2.25,
+     "p99_9_MPa": 7.301837156039587,
+     "p99_9_reference_MPa": 10.416310949525291,
+     "p99_9_error_pct": -29.899969466902686,
+     "voxels": 384,
+     "p99_9_equals_peak": true
+    },
+    "voxels_through_thickness": 4,
+    "voxel_size_mm": 1.5,
+    "active_voxels": 512,
+    "window_voxels": 128,
+    "solve_s": 0.07,
+    "load_centroid_x_mm": 38.99999999999998,
+    "peak_MPa": 5.2866411203722805,
+    "peak_reference_MPa": 7.499999999999994,
+    "peak_error_pct": -29.51145172836953,
+    "peak_error_at_voxel_centres_pct": -3.4907059474354907,
+    "p99_9_MPa": 5.2866411203722805,
+    "p99_9_reference_MPa": 7.308042223504306,
+    "p99_9_error_pct": -27.659953805832505,
+    "p99_9_error_at_voxel_centres_pct": -3.4907059474354907,
+    "window_p99_9_equals_peak": true
+   },
+   {
+    "whole_design": {
+     "peak_MPa": 8.831138915962493,
+     "peak_reference_MPa": 10.833333333333375,
+     "peak_error_pct": -18.481794621884994,
+     "peak_at_x_mm": 1.125,
+     "p99_9_MPa": 8.83113891592016,
+     "p99_9_reference_MPa": 10.416310949525338,
+     "p99_9_error_pct": -15.218171205588026,
+     "voxels": 3072,
+     "p99_9_equals_peak": true
+    },
+    "voxels_through_thickness": 8,
+    "voxel_size_mm": 0.75,
+    "active_voxels": 4096,
+    "window_voxels": 1024,
+    "solve_s": 0.15,
+    "load_centroid_x_mm": 39.00000000000015,
+    "peak_MPa": 6.417109165616196,
+    "peak_reference_MPa": 7.500000000000041,
+    "peak_error_pct": -14.438544458451187,
+    "peak_error_at_voxel_centres_pct": -0.8720876113970988,
+    "p99_9_MPa": 6.417109165615915,
+    "p99_9_reference_MPa": 7.308042223504353,
+    "p99_9_error_pct": -12.191131778398756,
+    "p99_9_error_at_voxel_centres_pct": -0.8720876114014509,
+    "window_p99_9_equals_peak": true
+   },
+   {
+    "whole_design": {
+     "peak_MPa": 10.311102932571304,
+     "peak_reference_MPa": 10.83333333333436,
+     "peak_error_pct": -4.820588314735453,
+     "peak_at_x_mm": 0.1875,
+     "p99_9_MPa": 9.387148525870924,
+     "p99_9_reference_MPa": 10.416310949526297,
+     "p99_9_error_pct": -9.880296667815747,
+     "voxels": 24576,
+     "p99_9_equals_peak": false
+    },
+    "voxels_through_thickness": 16,
+    "voxel_size_mm": 0.375,
+    "active_voxels": 32768,
+    "window_voxels": 8192,
+    "solve_s": 1.09,
+    "load_centroid_x_mm": 39.000000000003695,
+    "peak_MPa": 6.968645681878076,
+    "peak_reference_MPa": 7.500000000001027,
+    "peak_error_pct": -7.084724241638374,
+    "peak_error_at_voxel_centres_pct": -0.20511432859591228,
+    "p99_9_MPa": 6.968015779505526,
+    "p99_9_reference_MPa": 7.308042223505331,
+    "p99_9_error_pct": -4.652770654583193,
+    "p99_9_error_at_voxel_centres_pct": -0.21413488124306657,
+    "window_p99_9_equals_peak": false
+   }
+  ]
+ },
+ "hole": {
+  "geometry_mm": {
+   "L": 30.0,
+   "W": 10.0,
+   "t": 0.5,
+   "d": 2.0,
+   "sigma_gross": 10.0
+  },
+  "reference": "Peterson Kt(net) for the peak; Kirsch field scaled to the peak for p99.9",
+  "reference_values": {
+   "kt_net": 2.50816,
+   "sigma_net_MPa": 12.5,
+   "peak_MPa": 31.352000000000004,
+   "p99_9_matched_MPa": 20.574229852828523,
+   "p99_9_gross_MPa": 19.687002283262803
+  },
+  "sizes": [
+   {
+    "voxels_across_hole": 4,
+    "voxel_size_mm": 0.5,
+    "active_voxels": 1268,
+    "design_voxels": 1188,
+    "solve_s": 0.13,
+    "peak_MPa": 19.616012840120707,
+    "peak_reference_MPa": 31.352000000000004,
+    "peak_error_pct": -37.43297767249074,
+    "p99_9_MPa": 19.616012840120465,
+    "p99_9_reference_MPa": 20.574229852828523,
+    "p99_9_error_pct": -4.657365158075766,
+    "p99_9_error_vs_gross_scaling_pct": -0.3605904145330019,
+    "p99_9_equals_peak": true
+   },
+   {
+    "voxels_across_hole": 8,
+    "voxel_size_mm": 0.25,
+    "active_voxels": 10136,
+    "design_voxels": 9496,
+    "solve_s": 0.29,
+    "peak_MPa": 22.638957532812395,
+    "peak_reference_MPa": 31.352000000000004,
+    "peak_error_pct": -27.79102598618145,
+    "p99_9_MPa": 22.237394217137727,
+    "p99_9_reference_MPa": 20.574229852828523,
+    "p99_9_error_pct": 8.083725982484612,
+    "p99_9_error_vs_gross_scaling_pct": 12.954699233428624,
+    "p99_9_equals_peak": false
+   },
+   {
+    "voxels_across_hole": 16,
+    "voxel_size_mm": 0.125,
+    "active_voxels": 81088,
+    "design_voxels": 75968,
+    "solve_s": 2.6,
+    "peak_MPa": 26.839140586912173,
+    "peak_reference_MPa": 31.352000000000004,
+    "peak_error_pct": -14.394167558968585,
+    "p99_9_MPa": 20.6029158200989,
+    "p99_9_reference_MPa": 20.574229852828523,
+    "p99_9_error_pct": 0.13942668802464642,
+    "p99_9_error_vs_gross_scaling_pct": 4.652376850765005,
+    "p99_9_equals_peak": false
+   }
+  ]
+ },
+ "cross_check": {
+  "run": "tshirt_hook",
+  "voxel_size_mm": 1.2,
+  "verify_json_sha256": "af6e4767b1e1c8591f2235bd7c1d2b42d2511b9f44373b3271b66b3a0b365913",
+  "reference": "B2 P2 check (quadratic tets on final.stl): p99.9 by volume, peak at the quadrature points",
+  "cases": {
+   "hang": {
+    "voxel_p99_9_MPa": 0.053769535351531395,
+    "p2_p99_9_MPa": 0.07531975902548145,
+    "p99_9_error_pct": -28.611647133203643,
+    "voxel_peak_MPa": 0.06186552848599954,
+    "p2_peak_qp_MPa": 0.13913805625747963,
+    "peak_error_pct": -55.53658707757473,
+    "design_voxels": 6728,
+    "p99_9_equals_peak": false,
+    "member_voxels_p10": 4.0,
+    "member_voxels_median": 4.0
+   },
+   "pull_off": {
+    "voxel_p99_9_MPa": 0.962881877551186,
+    "p2_p99_9_MPa": 2.0628132802826538,
+    "p99_9_error_pct": -53.32190815548519,
+    "voxel_peak_MPa": 1.0853558434219934,
+    "p2_peak_qp_MPa": 3.8031162281249227,
+    "peak_error_pct": -71.46140747959433,
+    "design_voxels": 6728,
+    "p99_9_equals_peak": false,
+    "member_voxels_p10": 3.8392304845413263,
+    "member_voxels_median": 4.0
+   }
+  },
+  "split": {
+   "what": "the hook against P2 (B2) split into effects: the grey voxels, the load patch, the load model",
+   "near_mm": 2.0,
+   "cases": {
+    "hang": {
+     "voxel": {
+      "grey_simp_as_reported": {
+       "p99_9_MPa": 0.053769535351531395,
+       "peak_MPa": 0.06186552848599954,
+       "p99_9_far_from_regions_MPa": 0.053769535351531395,
+       "stiffness_N_per_mm": 1260.8625441241904
+      },
+      "thresholded": {
+       "p99_9_MPa": 0.052594372612873905,
+       "peak_MPa": 0.060379957760961056,
+       "p99_9_far_from_regions_MPa": 0.052594372612873905,
+       "stiffness_N_per_mm": 1300.2416125927905
+      }
+     },
+     "p2_p99_9_surface_traction_MPa": 0.07531975902548145,
+     "p2_stiffness_surface_traction_N_per_mm": 962.4452271577276,
+     "p2_element_max_proxy": {
+      "element_max_p99_9_all_MPa": 0.0840572789311409,
+      "element_max_p99_9_far_MPa": 0.0874469131231308,
+      "far_over_all": 1.0403252905053786,
+      "share_of_top_0_1_percent_volume_near_regions": 0.0
+     },
+     "error_pct": {
+      "grey_vs_p2": -28.611647133203643,
+      "thresholded_vs_p2": -30.17187880927674
+     }
+    },
+    "pull_off": {
+     "voxel": {
+      "grey_simp_as_reported": {
+       "p99_9_MPa": 0.962881877551186,
+       "peak_MPa": 1.0853558434219934,
+       "p99_9_far_from_regions_MPa": 0.9434276207705892,
+       "stiffness_N_per_mm": 1331.5023751680235
+      },
+      "thresholded": {
+       "p99_9_MPa": 0.9386852068147434,
+       "peak_MPa": 1.0503652913275803,
+       "p99_9_far_from_regions_MPa": 0.92081603922489,
+       "stiffness_N_per_mm": 1360.129975823014
+      }
+     },
+     "p2_p99_9_surface_traction_MPa": 2.0628132802826538,
+     "p2_stiffness_surface_traction_N_per_mm": 776.2666520069184,
+     "p2_element_max_proxy": {
+      "element_max_p99_9_all_MPa": 2.513387680053711,
+      "element_max_p99_9_far_MPa": 2.3182151317596436,
+      "far_over_all": 0.9223468190590094,
+      "share_of_top_0_1_percent_volume_near_regions": 0.7651073818035307
+     },
+     "error_pct": {
+      "grey_vs_p2": -53.32190815548519,
+      "thresholded_vs_p2": -54.494901899888795
+     },
+     "load_patch_left_out": {
+      "voxel_grey_far_MPa": 0.9434276207705892,
+      "p2_far_MPa": 1.95,
+      "error_pct": -51.619096370739015
+     },
+     "load_model_like_for_like": {
+      "voxel_grey_MPa": 0.962881877551186,
+      "p2_nodal_spread_MPa": 1.63,
+      "error_pct": -40.92749217477386,
+      "stiffness_ratio_voxel_over_p2_traction": 1.715264170791864,
+      "stiffness_ratio_voxel_over_p2_nodal": 1.2204421403923222
+     },
+     "stored_values": {
+      "source": "stored values of an earlier P2 run (fix round of the load patch)",
+      "p2_p99_9_near_region_left_out_MPa": 1.95,
+      "p2_p99_9_nodal_spread_like_the_voxel_model_MPa": 1.63,
+      "p2_stiffness_nodal_spread_N_per_mm": 1091
+     }
+    }
+   },
+   "reading": "About 12 points of the pull_off error of -53 % come from the load model (surface traction in P2, nodal spread in the voxel model); about -41 % is a voxel error of this part (hex8 at about 4 voxels through the member, stair steps). The grey voxels and the load patch do not explain it."
+  }
+ },
+ "verdict_rule": {
+  "p99_9": {
+   "verdict": false,
+   "under_pct": 59,
+   "over_pct": 57,
+   "measured_min_pct": -58.32,
+   "measured_max_pct": 56.91,
+   "min_voxels": 4,
+   "min_voxels_hole_diameter": 4,
+   "data": "bench/stress_accuracy.json and bench/stress_public_parts.json",
+   "cases": [
+    "beam",
+    "hole",
+    "hook_vs_B2",
+    "public_parts"
+   ],
+   "sources": {
+    "bench": {
+     "data": "bench/stress_accuracy.json",
+     "under_pct": 54,
+     "over_pct": 13,
+     "measured_min_pct": -53.32,
+     "measured_min_from": "the hook, pull_off, voxel 1.2 mm, against P2",
+     "measured_max_pct": 12.95,
+     "measured_max_from": "plate with a hole, 8 voxels across the hole, gross scaling of the reference"
+    },
+    "public": {
+     "data": "bench/stress_public_parts.json",
+     "parts": 5,
+     "cells": 51,
+     "under_pct": 59,
+     "over_pct": 57,
+     "measured_min_pct": -58.32,
+     "measured_min_from": "hook, pull_off, run type MS, voxel 2.4 mm",
+     "measured_max_pct": 56.91,
+     "measured_max_from": "phone_stand, poke, run type MS, voxel 2.45 mm"
+    },
+    "lower_end": "public",
+    "upper_end": "public"
+   },
+   "valid_when": "the members at the high-stress voxels have an estimated 3.5 voxels or more through them (the report checks this with `member_thickness`), and a hole or fillet has at least 4 voxels across its diameter (the report does not check this). It is the condition of the bench and not a guarantee: on public parts 6 of the 18 cells that met the member gate had an error outside the bench band (-54 % to +13 %, bench/stress_accuracy.json; cells in bench/stress_public_parts.json)",
+   "data_base": {
+    "rows": 62,
+    "rows_where_p99_9_is_a_true_percentile": 27,
+    "rows_where_p99_9_equals_the_peak": 35,
+    "bench": {
+     "shapes": 3,
+     "real_parts": 1,
+     "rows": 11,
+     "rows_where_p99_9_is_a_true_percentile": 7,
+     "rows_where_p99_9_equals_the_peak": 4
+    },
+    "public": {
+     "parts": 5,
+     "cells": 51,
+     "cells_where_p99_9_is_a_true_percentile": 20,
+     "cells_where_p99_9_equals_the_peak": 31
+    },
+    "note": "bench shapes: beam, plate with a hole, and the hook against B2 (the only real part of the bench); public parts: bracket, hook, ladle, phone_stand, shelf_bracket (a cell is a part, a load case and a run type); the hook is in both sets, with other runs (bench 1.2 mm, public 2.4 mm)"
+   },
+   "reason": "no verdict for now (no verdict without data). The band of the error of the voxel p99.9 (voxel value / reference - 1) is -59 % to +57 % of the reference, the union of the bench and the public parts: lower end -59 % (measured -58.32 %) from the 5 public parts: hook, pull_off, run type MS, voxel 2.4 mm; upper end +57 % (measured +56.91 %) from the 5 public parts: phone_stand, poke, run type MS, voxel 2.45 mm; data: bench/stress_public_parts.json. Each end is set by one row or cell, with no margin. The bench alone gave -54 % to +13 % (lower end, measured -53.32 %: the hook, pull_off, voxel 1.2 mm, against P2; upper end, measured +12.95 %: plate with a hole, 8 voxels across the hole, gross scaling of the reference; data: bench/stress_accuracy.json). The member gate does not predict the error: the hook at 1.2 mm passes it (p10 3.84 voxels) and has -53 %, while the beam at 4 voxels has -28 %. The data base is 11 rows of the bench (3 shapes, 1 real part) and 51 cells of 5 public parts; 4 of the 11 rows and 31 of the 51 cells have fewer than 5000 voxels, so their p99.9 is the peak. The band is the largest error measured, not a bound for other parts: on 5 public parts (51 cells) the error of the voxel p99.9 against the P2 p99.9 of `topopt verify` (voxel / P2 - 1) was -58 % (hook, pull_off, run type MS, voxel 2.4 mm) to +57 % (phone_stand, poke, run type MS, voxel 2.45 mm), in both directions: the voxel value was above P2 in 23 cells, mostly grey mass-objective designs, and up to 2.4 times below P2 on a coarse part with thin members; 15 of the 51 cells were outside the bench band (-54 % to +13 %, bench/stress_accuracy.json), and the member gate did not keep the error inside the bench band (6 of the 18 cells that met it were above +13 %); source bench/stress_public_parts.json. For the stress of the part, run `topopt verify`"
+  },
+  "peak": {
+   "verdict": false,
+   "under_pct": 88,
+   "over_pct": 0,
+   "measured_min_pct": -87.14,
+   "measured_max_pct": -4.82,
+   "min_voxels": 4,
+   "min_voxels_hole_diameter": 4,
+   "data": "bench/stress_accuracy.json and bench/stress_public_parts.json",
+   "cases": [
+    "beam",
+    "hole",
+    "hook_vs_B2",
+    "public_parts"
+   ],
+   "sources": {
+    "bench": {
+     "data": "bench/stress_accuracy.json",
+     "under_pct": 72,
+     "over_pct": 0,
+     "measured_min_pct": -71.46,
+     "measured_min_from": "the hook, pull_off, voxel 1.2 mm, against P2",
+     "measured_max_pct": -4.82,
+     "measured_max_from": "beam, 16 voxels through the thickness"
+    },
+    "public": {
+     "data": "bench/stress_public_parts.json",
+     "parts": 5,
+     "cells": 51,
+     "under_pct": 88,
+     "over_pct": 0,
+     "measured_min_pct": -87.14,
+     "measured_min_from": "ladle, full_scoop, run type MF, voxel 3.25 mm, variant S2",
+     "measured_max_pct": -5.39,
+     "measured_max_from": "shelf_bracket, lean, run type MS, voxel 1.6 mm"
+    },
+    "lower_end": "public",
+    "upper_end": "bench"
+   },
+   "valid_when": "the members at the high-stress voxels have an estimated 3.5 voxels or more through them (the report checks this with `member_thickness`), and a hole or fillet has at least 4 voxels across its diameter (the report does not check this). It is the condition of the bench and not a guarantee: on public parts 3 of the 18 cells that met the member gate had a voxel peak more than 72 % below the P2 peak (72 % is the lower end of the bench band, bench/stress_accuracy.json; cells in bench/stress_public_parts.json)",
+   "data_base": {
+    "rows": 62,
+    "rows_where_p99_9_is_a_true_percentile": 27,
+    "rows_where_p99_9_equals_the_peak": 35,
+    "bench": {
+     "shapes": 3,
+     "real_parts": 1,
+     "rows": 11,
+     "rows_where_p99_9_is_a_true_percentile": 7,
+     "rows_where_p99_9_equals_the_peak": 4
+    },
+    "public": {
+     "parts": 5,
+     "cells": 51,
+     "cells_where_p99_9_is_a_true_percentile": 20,
+     "cells_where_p99_9_equals_the_peak": 31
+    },
+    "note": "bench shapes: beam, plate with a hole, and the hook against B2 (the only real part of the bench); public parts: bracket, hook, ladle, phone_stand, shelf_bracket (a cell is a part, a load case and a run type); the hook is in both sets, with other runs (bench 1.2 mm, public 2.4 mm)"
+   },
+   "reason": "the voxel peak is below the reference in every measured case (the centre of a voxel lies half a voxel below the surface), the sign is not known for other shapes, and the peak of a corner or load point depends on the voxel size. The band of the error (voxel value / reference - 1) is -88 % to 0 % of the reference: lower end -88 % (measured -87.14 %) from the 5 public parts: ladle, full_scoop, run type MF, voxel 3.25 mm, variant S2; upper end 0 % (measured -4.82 %) from the bench: beam, 16 voxels through the thickness; data: bench/stress_accuracy.json, bench/stress_public_parts.json. The reference of the public cells is the P2 peak at the quadrature points; the P2 peak depends on the mesh of `topopt verify` (`limits` in bench/stress_public_parts.json). For the stress of the part, run `topopt verify`"
+  },
+  "error_definition": "error = voxel value / reference - 1. The reference lies between value / (1 + over) and value / (1 - under)"
+ }
+}

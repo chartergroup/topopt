@@ -1,0 +1,169 @@
+{
+ "run_dir": "/Users/me/topopt-work/runs/tshirt_hook_petg_run",
+ "run_dir_rel": "runs/tshirt_hook_petg_run",
+ "dashboard_url": "http://127.0.0.1:8765/",
+ "state": "done",
+ "process_alive": false,
+ "status": {
+  "state": "done",
+  "iteration": 80,
+  "step": "done",
+  "elapsed_s": 15.62,
+  "message": ""
+ },
+ "last_history": {
+  "iteration": 80,
+  "elapsed_s": 15.41,
+  "compliance": 0.9214083517260442,
+  "compliance_cases": [
+   0.0019874302613758,
+   0.4568723801461277
+  ],
+  "volume_fraction": 0.2001127634819203,
+  "beta": 8.0,
+  "change": 0.0,
+  "grayness": 0.0231457190384216,
+  "t_iter_s": 0.19,
+  "objective": {
+   "name": "weighted_compliance",
+   "form": "sum",
+   "value": 0.9214083517260442
+  },
+  "constraints": [
+   {
+    "name": "volume",
+    "value": 0.2001127634819203,
+    "limit": 0.2,
+    "g": 5.63527509571e-05,
+    "violation": 5.63527509571e-05
+   }
+  ],
+  "stage_end": {
+   "beta": 8.0,
+   "next_beta": null,
+   "volume": {
+    "limit": 0.2,
+    "projected": 0.2001127634819203,
+    "thresholded": 0.1994031187625518,
+    "used_projected": 1.000563527509571,
+    "used_thresholded": 0.997015593812759
+   },
+   "load_path": {
+    "regions": {
+     "hook_tip": true
+    },
+    "not_joined": [],
+    "bodies": 1,
+    "bodies_with_a_support": 1
+   }
+  }
+ },
+ "job": {
+  "format": 1,
+  "state": "finished",
+  "pid": 48213,
+  "process_start": 1792760590.0,
+  "started_at": "2026-10-23T19:13:10+06:00",
+  "run_dir": "/Users/me/topopt-work/runs/tshirt_hook_petg_run",
+  "success_codes": [
+   0
+  ],
+  "platform": "darwin",
+  "notes": [],
+  "peak_rss_start_bytes": 48758784,
+  "peak_rss_source": "ru_maxrss",
+  "marker": null,
+  "holder": null,
+  "exit_code": 0,
+  "summary": "job: finished (pid 48213, exit 0, started 2026-10-23T19:13:10+06:00)"
+ },
+ "history_facts": [],
+ "verdict": {
+  "format": 1,
+  "state": "iteration_limit",
+  "text": "iteration limit reached at pass 80. Tests: objective change 0.00094 (relative) in the last 5 passes (threshold 0.0001: not met); grayness 0.023 (threshold 0.1: met); largest g +0.0000564 (row volume, threshold 0.005: met); the beta schedule has reached its last stage (beta 8 from pass 52). Facts: volume: 1.00 of the allowed volume used (projected design), 1.00 (thresholded part at 0.5).",
+  "final_iteration": 80,
+  "iterations": 80,
+  "converged": false,
+  "feasible": true,
+  "measures": {
+   "objective_change": {
+    "value": 0.00094,
+    "threshold": 0.0001,
+    "window": 5,
+    "met": false,
+    "passes_at_beta": 29,
+    "passes_needed": 6,
+    "beta": 8.0
+   },
+   "grayness": {
+    "value": 0.0231457190384216,
+    "threshold": 0.1,
+    "met": true
+   },
+   "max_g": {
+    "value": 5.63527509571e-05,
+    "threshold": 0.005,
+    "met": true,
+    "row": "volume"
+   },
+   "last_beta_stage": {
+    "value": true,
+    "met": true,
+    "beta": 8.0,
+    "last_beta": 8.0,
+    "from_iteration": 52
+   },
+   "last_step_change": {
+    "value": 0.19960112338,
+    "threshold": null,
+    "met": null
+   }
+  },
+  "stop_rules": {
+   "enabled": false,
+   "objective_change": 0.0001,
+   "window": 5,
+   "grayness_max": 0.1,
+   "time_budget_s": null
+  },
+  "stop": null,
+  "resume_points": [],
+  "notes": [],
+  "facts": {
+   "iteration": 80,
+   "beta": 8.0,
+   "next_beta": null,
+   "volume": {
+    "limit": 0.2,
+    "projected": 0.2001127634819203,
+    "thresholded": 0.1994031187625518,
+    "used_projected": 1.000563527509571,
+    "used_thresholded": 0.997015593812759
+   },
+   "load_path": {
+    "regions": {
+     "hook_tip": true
+    },
+    "not_joined": [],
+    "bodies": 1,
+    "bodies_with_a_support": 1
+   }
+  }
+ },
+ "checkpoint": {
+  "file": "checkpoint.npz",
+  "iteration": 80,
+  "iterations": 80,
+  "complete": true,
+  "written_at": "2026-10-23T19:13:26+06:00",
+  "elapsed_s": 15.62,
+  "topopt_version": "0.1.0",
+  "format": 1,
+  "stop_rule": null,
+  "resume_points": 0,
+  "yaml_path": "/Users/me/topopt-work/runs/tshirt_hook_petg/tshirt_hook_petg.yaml"
+ },
+ "stop_request": null,
+ "summary": "done: iteration 80/80, 00:15, volume 20.0%; job: finished (pid 48213, exit 0, started 2026-10-23T19:13:10+06:00); verdict: iteration limit reached at pass 80. Tests: objective change 0.00094 (relative) in the last 5 passes (threshold 0.0001: not met); grayness 0.023 (threshold 0.1: met); largest g +0.0000564 (row volume, threshold 0.005: met); the beta schedule has reached its last stage (beta 8 from pass 52). Facts: volume: 1.00 of the allowed volume used (projected design), 1.00 (thresholded part at 0.5)."
+}

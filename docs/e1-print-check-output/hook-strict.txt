@@ -1,0 +1,17 @@
+### topopt printcheck <hook-run> --strict   (exit/time below)
+print check: <hook-run>/result/final.stl
+  run, 85,610 triangles, area 12,148 mm2, sha256 ef2e4248d088
+  settings from: defaults, run.json; build direction +z, bed 220 x 220 mm, printer fdm, angle 45 deg (default of printer_type fdm); assumed: build_direction, bed_mm, printer_type
+  pass     mesh_closed     after the float32 reload every edge joins 2 faces, the winding agrees and the volume is positive
+  pass     bodies          1 body; the limit is 1 (assumed)
+  pass     closed_voids    no closed void
+  pass     bed_fit         with build direction +z (assumed) the part fits on a 220 x 220 mm bed (assumed)
+  unknown  overhang        2,452 mm2 of overhang (20.19 % of the area) below 45 degrees from the plate (default of printer_type fdm). No max_overhang_area_mm2 in the print block, so there is no limit
+  unknown  support_volume  the support estimate is 53,274 mm3 (a solid-column upper bound; real supports use less). No max_support_volume_mm3 in the print block, so there is no limit
+  unknown  plate_contact   62 mm2 rests on the plate. No min_plate_contact_mm2 in the print block, so there is no limit
+  unknown  wall_thickness  no min_wall_mm in the print block, so there is no limit. p1 of the chords is 2.136 mm; the area with a chord under 0.8 / 1.2 / 2.0 mm is 3.44 / 19.03 / 100.83 mm2. The rule of this check: a pass needs a limit of at least 3 x the resolution (1.2 mm, voxel size of the run (run.json), or the median mesh edge if that is larger), here 3.6 mm (see pitfalls/mesh-coarser-than-members). A member under 3.6 mm (3 x the voxel size 1.2 mm of this run) was under-resolved in the analysis of the run. This is the printed shape, not the stress
+summary: 4 pass, 0 fail, 4 unknown
+gate: pass (strict)
+time 2.53 s (mesh health 0.41 s, V2 numbers 0.65 s, thickness 1.46 s)
+exit 0
+TIMED wall_s=2.65 peak_rss_mb=188 load_before=3.18 2.31 1.57 load_after=3.08 2.31 1.57 rc=0

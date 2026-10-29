@@ -1,0 +1,25 @@
+name: tshirt_hook_three_screws
+regions:
+  design: design.stl
+  fixed: [wall_plate.stl]
+  keep_out: [screw_hole_top.stl, screw_hole_bottom_left.stl, screw_hole_bottom_right.stl]
+  load: {hook_tip: hook_tip.stl}
+load_cases:
+- name: hang
+  weight: 234.0
+  forces:
+  - region: hook_tip
+    force: [0, 0, -1.96]
+- name: pull_off
+  weight: 1.0
+  forces:
+  - region: hook_tip
+    force: [20.89, 5.21, -20.89]
+material: {E: 3500.0, nu: 0.35, density: 1.24}
+settings: {voxel_size: 1.5, volume_fraction: 0.2, iterations: 80}
+assumptions: ['Three screws instead of two: one at the top (y = 0, z = 30) and two
+    at the bottom (y = -10 and y = +10, z = -20).', 'Each screw has the same clearance
+    as the plain hook: a 4.5 mm shaft hole and a 9 mm channel for the head and the
+    screwdriver, through the full part depth.', 'The shirt is 0.2 kg x 9.81 = 1.96
+    N down. The abuse case is a 30 N pull, 45 degrees down and out of the wall (as
+    the plain hook).']

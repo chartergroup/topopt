@@ -1,0 +1,163 @@
+{
+ "case": {
+  "design_mm": [
+   [
+    0,
+    0,
+    0
+   ],
+   [
+    48,
+    24,
+    16
+   ]
+  ],
+  "plate_mm": [
+   [
+    -2,
+    0,
+    0
+   ],
+   [
+    0,
+    24,
+    16
+   ]
+  ],
+  "tip_mm": [
+   [
+    46,
+    10,
+    12
+   ],
+   [
+    48,
+    14,
+    16
+   ]
+  ],
+  "voxel_mm": 1.0,
+  "volume_fraction": 0.45,
+  "iterations": 150,
+  "beta_schedule": [
+   [
+    0,
+    1
+   ],
+   [
+    40,
+    2
+   ],
+   [
+    70,
+    4
+   ],
+   [
+    100,
+    8
+   ],
+   [
+    130,
+    16
+   ]
+  ],
+  "load_cases": [
+   {
+    "name": "down",
+    "weight": 1.0,
+    "force_n": [
+     0,
+     0,
+     -1.0
+    ]
+   },
+   {
+    "name": "side",
+    "weight": 1.0,
+    "force_n": [
+     0,
+     1.0,
+     -0.5
+    ]
+   }
+  ]
+ },
+ "rule": "filter_radius = 1.877 * min_member_mm",
+ "radius_per_member": 1.877,
+ "explicit_factor": null,
+ "measure": {
+  "kind": "local thickness of the design material (density > 0.5), voxel level, grid refined by 2",
+  "interior_margin_voxels": 2,
+  "bias_mm": 0.25
+ },
+ "machine": {
+  "platform": "Linux x86_64",
+  "python": "3.12.13"
+ },
+ "rows": [
+  {
+   "requested_mm": 2.5,
+   "filter_radius_mm": 4.6925,
+   "radius_source": "min_member_mm",
+   "radius_voxels": 4.692,
+   "thickness": {
+    "all": {
+     "voxels": 8290,
+     "min_mm": 0.875,
+     "p1_mm": 1.75,
+     "p5_mm": 1.75,
+     "p10_mm": 1.938,
+     "median_mm": 3.5,
+     "share_below_request": 0.1376
+    },
+    "interior": {
+     "voxels": 3354,
+     "min_mm": 1.812,
+     "p1_mm": 2.469,
+     "p5_mm": 2.75,
+     "p10_mm": 2.75,
+     "median_mm": 3.5,
+     "share_below_request": 0.0107
+    },
+    "face_layer": {
+     "voxels": 4936,
+     "min_mm": 0.875,
+     "p1_mm": 1.75,
+     "p5_mm": 1.75,
+     "p10_mm": 1.75,
+     "median_mm": 3.25,
+     "share_below_request": 0.2239
+    },
+    "face_layer_share_of_material": 0.595
+   },
+   "error_p5_interior": 0.1,
+   "error_median_interior": 0.4,
+   "error_p5_all": -0.3,
+   "compliance_final": 0.003967401467608988,
+   "mass_final_g": 26.03,
+   "grayness": 0.1221,
+   "metrics_filter": {
+    "radius_mm": 4.6925,
+    "radius_source": "min_member_mm",
+    "solid_neighbours": "density_one",
+    "min_member_mm": 2.5,
+    "min_member_radius_mm": 4.6925,
+    "min_feature_mm": 4.6925,
+    "min_member_rule": "filter_radius = 1.877 * min_member_mm",
+    "min_member_note": "estimate, not a guarantee: a filter and a projection do not set a minimum member size. Measure the thickness of the final part",
+    "size": {
+     "radius_voxels": 4.692,
+     "entries_per_row": 461,
+     "entries": 8482400,
+     "build_peak_bytes_estimate": 508944000,
+     "build_peak_gib_estimate": 0.47
+    },
+    "facts": []
+   },
+   "solver": "pardiso",
+   "n_free_dofs": 61200,
+   "seconds": 216.8,
+   "peak_rss_mib_so_far": 1177.6
+  }
+ ]
+}

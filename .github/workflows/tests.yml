@@ -1,0 +1,246 @@
+# Tests for topopt on Linux x86_64 and macOS arm64. See CONTRACTS.md section 27.
+# MANUAL ONLY: the only event is workflow_dispatch (and workflow_call, so that release.yml can run it). A push or a pull request never starts this file
+# (scripts/ci/check_workflow.py checks that). A macOS runner minute counts more than a Linux runner minute.
+# Start it from the Actions tab (workflow "tests", Run workflow; pick the branch and the choice), or:
+#   gh workflow run tests.yml --repo chartergroup/topopt -f legs=linux -f tier=fast
+# GitHub starts a manual run only when the workflow file is on the default branch.
+# The input `legs` chooses what runs (scripts/ci/plan_legs.py --legs):
+#   linux (default)  the jobs plan and wheel, and the leg linux-x86_64 (Python 3.13).
+#   all              the same, plus the macos-arm64 leg and the leg linux-x86_64-intel-pins (both on Python 3.13).
+# Each leg runs once for each Python in its `pythons` list in scripts/ci/legs.toml (the versions come from SUPPORTED_PYTHONS in scripts/ci/_common.py;
+# pyproject.toml `requires-python` allows exactly those). The matrix entry carries it as `matrix.python`. The wheel job checks every supported Python in one job.
+# The input `tier` chooses how many tests run (scripts/ci/run_pytest.py --tier, CONTRACTS.md section 27.3):
+#   fast (default)   Linux: the tests under 5 s. macOS: only the files that can differ on macOS, under 5 s. intel-pins: no pytest.
+#   full             every test. The intel-pins leg skips the slow tests.
+# Run time: the fast tier of the leg linux-x86_64 takes about 12 to 14 min wall with 2 shards (MEASURED). A macOS runner minute counts more than a Linux minute.
+# Shards (key `shards` in legs.toml; 2 for linux-x86_64): a leg runs as N parallel jobs for each Python, and each one runs a part of the test files, split by measured times
+# (scripts/ci/shards.py). The job `report` checks that the shards together ran every test once. Each shard pays about 1.1 to 2.2 min of setup.
+# The steps hold no logic. Each step calls a script in scripts/ci/. The facts that differ between the legs
+# (extras, lock file, expected solver, allowed skips, tolerance tier) are in scripts/ci/legs.toml.
+# The leg linux-x86_64-intel-pins is the Linux leg with the pins of requirements-macos-x86_64.lock; it runs with legs=all only.
+# The manual Intel Mac workflow is a second file: .github/workflows/intel-mac.yml.
+name: tests
+
+on:
+  workflow_dispatch:
+    inputs:
+      legs:
+        description: "linux: the leg linux-x86_64 and the wheel job. all: also macos-arm64 (a macOS minute counts more than a Linux minute) and linux-x86_64-intel-pins."
+        type: choice
+        options:
+          - linux
+          - all
+        default: linux
+      tier:
+        description: "fast: tests under 5 s (macOS: only the platform tests; intel-pins: no pytest). full: every test (about 40 minutes on Linux, 20 on macOS)."
+        type: choice
+        options:
+          - fast
+          - full
+        default: fast
+  # release.yml may call this file (RELEASING.md); it passes no tier now. A reusable workflow
+  # has no `choice` type, so this input is a string; plan_legs.py refuses a value other than linux and all.
+  workflow_call:
+    inputs:
+      legs:
+        description: "linux or all, as in the manual run."
+        type: string
+        default: linux
+      tier:
+        description: "fast or full, as in the manual run."
+        type: string
+        default: fast
+
+permissions:
+  contents: read
+
+# One run at a time, for tests.yml and intel-mac.yml together (the group is ci-tests). A run that is going is never cancelled
+# (GitHub keeps one waiting run for the group and drops an older waiting run).
+# The legs run in order: the Linux leg first; the legs of stage 2 (macOS, Intel pins) and the wheel job start only when it has passed.
+concurrency:
+  group: ci-tests
+  cancel-in-progress: false
+
+env:
+  PYTHONUNBUFFERED: "1"
+
+jobs:
+  plan:
+    name: plan
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    outputs:
+      matrix: ${{ steps.legs.outputs.matrix }}
+      first: ${{ steps.legs.outputs.first }}
+      after: ${{ steps.legs.outputs.after }}
+      has_after: ${{ steps.legs.outputs.has_after }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Choose the test legs for this run (the input legs)
+        id: legs
+        run: python3 scripts/ci/plan_legs.py --event "${{ github.event_name }}" --legs "${{ inputs.legs }}" --tier "${{ inputs.tier }}"
+
+  test:
+    name: test (${{ matrix.label }}, Python ${{ matrix.python }}${{ matrix.part }})
+    needs: plan
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 75
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.plan.outputs.first) }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          version: "0.12.1"
+          enable-cache: true
+          cache-dependency-glob: requirements*.lock
+      - name: Create the venv (a uv-managed Python of the matrix entry, 3.13)
+        run: uv venv --python ${{ matrix.python }} --managed-python .venv
+      - name: Install the system packages, the pinned Python packages and the native shim
+        id: install
+        run: .venv/bin/python scripts/ci/install_env.py --leg ${{ matrix.label }}
+      # The licence check, the lock check and the short run run once for each leg and Python: on shard 1 only (the other shards run the install and pytest).
+      - name: Licence check
+        if: ${{ !cancelled() && steps.install.outcome == 'success' && matrix.shard == 1 }}
+        run: .venv/bin/python scripts/ci/license_check.py --leg ${{ matrix.label }}
+      - name: topopt check reports the expected solver
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: .venv/bin/python scripts/ci/check_solver.py --leg ${{ matrix.label }}
+      - name: Lock files resolve for their platforms, for every supported Python (the legs with check_locks)
+        if: ${{ !cancelled() && steps.install.outcome == 'success' && matrix.shard == 1 }}
+        run: .venv/bin/python scripts/ci/check_locks.py --leg ${{ matrix.label }}
+      - name: Short hook run (1 thread) and the golden compare
+        if: ${{ !cancelled() && steps.install.outcome == 'success' && matrix.shard == 1 }}
+        timeout-minutes: 15
+        run: .venv/bin/python scripts/ci/short_run.py run --leg ${{ matrix.label }}
+      # In parallel with pytest-xdist: run_pytest.py takes the workers (`auto`) and the thread cap of each worker (1) from legs.toml.
+      # The shards of a leg and Python (`matrix.shard` of `matrix.shards`) split the test files by their measured times (scripts/ci/shards.py); together they run every test once.
+      # The tests that read the thread variables clear them themselves, so none needs a serial step.
+      # The short hook run above is a step of its own: it is not a pytest run and it sets its own thread variables to 1.
+      - name: Pytest (the files of this shard)
+        id: pytest
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        timeout-minutes: 55
+        run: .venv/bin/python scripts/ci/run_pytest.py --leg ${{ matrix.label }} --tier "${{ inputs.tier }}" --shard ${{ matrix.shard }}/${{ matrix.shards }}
+      - name: No skipped test that this leg expects to run
+        if: ${{ !cancelled() && steps.pytest.outcome != 'skipped' }}
+        run: .venv/bin/python scripts/ci/check_skips.py --leg ${{ matrix.label }}
+      - name: Upload the junit XML, the pytest log, the topopt check output and the short run
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v6
+        with:
+          name: ci-${{ matrix.label }}-py${{ matrix.python }}${{ matrix.suffix }}
+          path: artifacts/
+          retention-days: 14
+          if-no-files-found: warn
+
+  # Stage 2: the legs with `stage = 2` in legs.toml (macOS and the Intel pins). They start only when the stage 1 leg (Linux) has passed.
+  # The steps are the same as in the job `test` (a test checks that).
+  test-after:
+    name: test (${{ matrix.label }}, Python ${{ matrix.python }}${{ matrix.part }})
+    needs: [plan, test]
+    if: ${{ needs.plan.outputs.has_after == 'true' }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 75
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.plan.outputs.after) }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          version: "0.12.1"
+          enable-cache: true
+          cache-dependency-glob: requirements*.lock
+      - name: Create the venv (a uv-managed Python of the matrix entry, 3.13)
+        run: uv venv --python ${{ matrix.python }} --managed-python .venv
+      - name: Install the system packages, the pinned Python packages and the native shim
+        id: install
+        run: .venv/bin/python scripts/ci/install_env.py --leg ${{ matrix.label }}
+      # The licence check, the lock check and the short run run once for each leg and Python: on shard 1 only (the other shards run the install and pytest).
+      - name: Licence check
+        if: ${{ !cancelled() && steps.install.outcome == 'success' && matrix.shard == 1 }}
+        run: .venv/bin/python scripts/ci/license_check.py --leg ${{ matrix.label }}
+      - name: topopt check reports the expected solver
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: .venv/bin/python scripts/ci/check_solver.py --leg ${{ matrix.label }}
+      - name: Lock files resolve for their platforms, for every supported Python (the legs with check_locks)
+        if: ${{ !cancelled() && steps.install.outcome == 'success' && matrix.shard == 1 }}
+        run: .venv/bin/python scripts/ci/check_locks.py --leg ${{ matrix.label }}
+      - name: Short hook run (1 thread) and the golden compare
+        if: ${{ !cancelled() && steps.install.outcome == 'success' && matrix.shard == 1 }}
+        timeout-minutes: 15
+        run: .venv/bin/python scripts/ci/short_run.py run --leg ${{ matrix.label }}
+      # In parallel with pytest-xdist: run_pytest.py takes the workers (`auto`) and the thread cap of each worker (1) from legs.toml.
+      # The shards of a leg and Python (`matrix.shard` of `matrix.shards`) split the test files by their measured times (scripts/ci/shards.py); together they run every test once.
+      # The tests that read the thread variables clear them themselves, so none needs a serial step.
+      # The short hook run above is a step of its own: it is not a pytest run and it sets its own thread variables to 1.
+      - name: Pytest (the files of this shard)
+        id: pytest
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        timeout-minutes: 55
+        run: .venv/bin/python scripts/ci/run_pytest.py --leg ${{ matrix.label }} --tier "${{ inputs.tier }}" --shard ${{ matrix.shard }}/${{ matrix.shards }}
+      - name: No skipped test that this leg expects to run
+        if: ${{ !cancelled() && steps.pytest.outcome != 'skipped' }}
+        run: .venv/bin/python scripts/ci/check_skips.py --leg ${{ matrix.label }}
+      - name: Upload the junit XML, the pytest log, the topopt check output and the short run
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v6
+        with:
+          name: ci-${{ matrix.label }}-py${{ matrix.python }}${{ matrix.suffix }}
+          path: artifacts/
+          retention-days: 14
+          if-no-files-found: warn
+
+  wheel:
+    name: wheel (linux-x86_64)
+    needs: test
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          version: "0.12.1"
+          enable-cache: true
+          cache-dependency-glob: requirements.lock
+      - name: Build the wheel, install it in a clean venv of each supported Python, run the packaging test outside the source tree
+        run: python3 scripts/ci/wheel_check.py
+      - name: Upload the wheel and the log
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v6
+        with:
+          name: wheel-linux-x86_64
+          path: |
+            dist/*.whl
+            artifacts/
+          retention-days: 14
+          if-no-files-found: warn
+
+  # The final check of the shards (scripts/ci/report_shards.py). It runs also when a test job failed, so a failed run still lists what ran.
+  # It fails when the shards of a leg and Python together did not run the tests of the tier exactly once, or when the skip check fails on all shards together.
+  # It writes the 30 slowest tests to the job summary.
+  report:
+    name: report (same tests, skips, slowest tests)
+    needs: [plan, test, test-after]
+    if: ${{ always() && needs.plan.result == 'success' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Download the artifacts of the test jobs
+        uses: actions/download-artifact@v6
+        with:
+          pattern: ci-*
+          path: ci-artifacts
+      - name: Every test ran once, the skips of each leg together, the slowest tests
+        run: python3 scripts/ci/report_shards.py --artifacts ci-artifacts --slowest 30

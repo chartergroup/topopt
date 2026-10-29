@@ -1,0 +1,147 @@
+[project]
+name = "topopt"
+version = "0.5.0"
+description = "General 3D topology optimization: YAML + STL regions in, printable STL out."
+license = "MIT"
+license-files = ["LICENSE", "THIRD_PARTY_NOTICES.md"]
+authors = [{ name = "chartergroup" }]
+requires-python = ">=3.13,<3.14"
+dependencies = [
+  # macOS x86_64 (an Intel Mac, or Rosetta): numba 0.67.0 and llvmlite 0.49.0 have no wheel there. The last numba with
+  # one is 0.62.1, and it needs numpy below 2.4. Same pins as requirements-macos-x86_64.lock. Best effort, V5.
+  "numpy==2.5.3; platform_system != 'Darwin' or platform_machine != 'x86_64'",
+  "numpy==2.3.5; platform_system == 'Darwin' and platform_machine == 'x86_64'",
+  "scipy==1.18.1",
+  "scikit-image==0.26.0",
+  "trimesh==5.1.0",
+  "manifold3d==3.5.4",
+  "pyamg==5.3.0",
+  "PyYAML==6.0.3",
+  "numba==0.67.0; platform_system != 'Darwin' or platform_machine != 'x86_64'",
+  "numba==0.62.1; platform_system == 'Darwin' and platform_machine == 'x86_64'",
+  "rtree==1.4.1",
+  "networkx==3.7",
+  "Pillow==12.3.0",   # topopt render (PNG, text). License MIT-CMU. Same pin as requirements.lock.
+  # OpenCL for the solver gpu-mg, the main solver when the machine has a GPU that passes the self-test (CONTRACTS.md section 20).
+  # pyopencl is MIT licensed. The marker names the platforms with a wheel and an OpenCL driver: an Apple silicon Mac and Linux x86_64.
+  # The `gpu` extra has the same pin. Pins of pyopencl and of what it needs: requirements.lock (not the Intel Mac lock).
+  "pyopencl==2026.1.4; (platform_system == 'Darwin' and platform_machine == 'arm64') or (platform_system == 'Linux' and platform_machine == 'x86_64')",
+]
+
+[project.urls]
+Homepage = "https://github.com/chartergroup/topopt"
+Repository = "https://github.com/chartergroup/topopt"
+Issues = "https://github.com/chartergroup/topopt/issues"
+
+[project.optional-dependencies]
+# pytest-xdist: `pytest -n auto` runs the tests in parallel (pure Python; macOS and Linux). Not pinned, like pytest; the lock pins it.
+dev = ["pytest", "pytest-xdist"]
+# cryptography (under mcp, through pyjwt): 50.0.2 has no macOS x86_64 wheel. The last one that has is 48.0.1.
+mcp = ["mcp==2.3.0", "cryptography==48.0.1; platform_system == 'Darwin' and platform_machine == 'x86_64'"]
+# Faster solver on Linux x86_64 (Intel MKL PARDISO). Optional: never a main dependency.
+pardiso = ["pypardiso==0.4.7; platform_system == 'Linux' and platform_machine == 'x86_64'"]
+# Tet mesher for a verification step (topopt.tet). gmsh is GPL-2.0-or-later. Optional: never a main
+# dependency, never vendored, and the core never imports it. PyPI has no wheel for Linux arm64.
+tet = ["gmsh==4.15.2; platform_system == 'Darwin' or (platform_system == 'Linux' and platform_machine == 'x86_64')"]
+
+# The OpenCL binding of the solver gpu-mg. It is a main dependency now (on an Apple silicon Mac and on Linux x86_64, see
+# `dependencies`). This extra stays, with the same pin and no marker, so an old command `pip install '.[gpu]'` still works
+# and an Intel Mac or a Linux arm64 machine can ask for it. pyopencl is MIT licensed. It needs an OpenCL driver (macOS has
+# one; deprecated by Apple).
+gpu = ["pyopencl==2026.1.4"]
+# Tests of gpu-mg on a CPU OpenCL device (pocl). Test extra only: pocl is never a runtime dependency. The wheel
+# is for Linux x86_64 only. On Linux, pytest stops (exit code 3) if a GPU is visible. On a Mac (pyopencl is installed there),
+# the tests that make an OpenCL context are skipped with one reason line (the rest of pytest runs), unless the
+# environment variable TOPOPT_TEST_REAL_GPU is 1: then they run on the Apple GPU (case C).
+gpu-test = [
+  "pyopencl==2026.1.4",
+  "pocl-binary-distribution==3.0; platform_system == 'Linux' and platform_machine == 'x86_64'",
+]
+
+# Independent P2 stress check (`topopt verify`, topopt.verify). It holds the `tet` extra (gmsh, GPL-2.0-or-later), scikit-fem
+# (BSD-3-Clause) and cholespy. cholespy: GPL-2.0-or-later in effect: the wheel bundles CHOLMOD Supernodal, SuiteSparse 5.4.0
+# (its own code is BSD-3-Clause). The same rule as gmsh. Optional: never a main dependency, and the core never
+# imports them. pypardiso (extra `pardiso`, Linux x86_64) is a faster solver for it.
+verify = [
+  "gmsh==4.15.2; platform_system == 'Darwin' or (platform_system == 'Linux' and platform_machine == 'x86_64')",
+  "scikit-fem==12.0.2",
+  "cholespy==2.2.0",
+]
+
+# STEP output of a finished run (`topopt step`, topopt.step): OpenCASCADE (OCP) without VTK. Apache-2.0 for the wrapper; the wheel bundles
+# OCCT 7.9.3 (LGPL-2.1 with the Open CASCADE exception) and image libraries, some of them under GPL options (THIRD_PARTY_NOTICES.md,
+# "Components whose licences matter"). Optional: never a main dependency, never vendored, and the core never imports it (the rule of gmsh
+# and cholespy of 2026-10-19; this package was accepted under it on 2026-10-23).
+# The wheel of this pin is for macOS arm64 and x86_64 and Linux x86_64 and arm64 (glibc 2.31 or newer). Do not install the full `cadquery-ocp` next to
+# it: both unpack into site-packages/OCP/.
+step = ["cadquery-ocp-novtk==7.9.3.1.1"]
+
+[project.scripts]
+topopt = "topopt.cli:main"
+topopt-mcp = "topopt_mcp.server:main"
+
+[build-system]
+requires = ["setuptools>=77"]  # 77: PEP 639 license expression
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["topopt*", "topopt_mcp*"]
+
+[tool.setuptools.package-data]
+topopt = [
+  "dashboard/**/*",
+  "refine/template.html",
+  "refine/vendor/*.js",   # three.js r128 and OrbitControls: the refine page holds them inline (topopt/refine/build.py)
+  "native/*.c",
+  "native/*.sh",
+  "data/*.yaml",   # the printer catalog (topopt/printers.py) and the filament catalog (topopt/materials_catalog.py)
+]
+topopt_mcp = [
+  "roles/*.md",   # role playbooks: the one source of team_guide, the MCP prompts and resources, and agents/*.md
+  "materials/*.md",   # the material reference: the source of the MCP resource topopt://materials/reference
+  "problem_view.html",   # the page of the problem view (tool show_problem, MCP resource ui://topopt/problem-view.html)
+  "launcher/*.json",   # the snapshot of the lists that scripts/topopt-env.sh serves before the Python setup is ready (python -P -m topopt_mcp.snapshot)
+]
+
+# Releases: python-semantic-release, started by hand (.github/workflows/release.yml, RELEASING.md).
+# It reads the Conventional Commits since the last tag, picks the next version, writes it in the three files below,
+# runs build_command (it writes the new tag into the pinned install steps of the install doc, docs/reference/install.md, and the short
+# entry, one line per PR, into CHANGELOG.md after the line `<!-- version list -->` and into dist/release-notes.md), commits these
+# files, docs/reference/install.md and CHANGELOG.md, tags and makes a GitHub release. The workflow runs the tool with --no-changelog and sets the text of the
+# GitHub release from dist/release-notes.md. While the major version is 0, a breaking change
+# raises the minor number (major_on_zero = false), so 1.0.0 is a decision of a person.
+[tool.semantic_release]
+tag_format = "v{version}"
+commit_message = "chore(release): {version}\n\n[skip ci]"
+allow_zero_version = true
+major_on_zero = false
+version_toml = ["pyproject.toml:project.version"]
+version_variables = [
+  ".claude-plugin/plugin.json:version",
+  "packaging/mcpb/manifest.json:version",
+]
+build_command = "python3 scripts/ci/release_pin.py && python3 -P scripts/ci/release_notes.py --write-changelog CHANGELOG.md --notes-file dist/release-notes.md && uv build --wheel --sdist && python3 packaging/mcpb/build.py --out dist/mcpb"
+# Files that build_command changes and that the release commit must carry: release_pin.py writes the install doc (the README
+# names `#latest` and does not change). Each entry is also uploaded to the GitHub release (RELEASING.md, "What the workflow does").
+assets = ["docs/reference/install.md", "CHANGELOG.md"]
+
+[tool.semantic_release.branches.main]
+# Anchored: the branch `latest` (moved by the release workflow) is not a release branch.
+match = "^main$"
+prerelease = false
+
+[tool.semantic_release.changelog]
+mode = "update"
+
+[tool.semantic_release.changelog.default_templates]
+changelog_file = "CHANGELOG.md"
+
+[tool.semantic_release.commit_parser_options]
+# feat -> minor; fix and perf -> patch; the other types (docs, test, chore, ci, ...) make no release.
+minor_tags = ["feat"]
+patch_tags = ["fix", "perf"]
+
+[tool.semantic_release.publish]
+# Not used for the upload: the workflow does not run `semantic-release publish`. scripts/ci/release_assets.py uploads the same files
+# (a test checks its file names against these patterns; RELEASING.md, "The Desktop extension file").
+dist_glob_patterns = ["dist/*.whl", "dist/*.tar.gz", "dist/mcpb/*.mcpb"]

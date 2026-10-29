@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: print-after-run
+context:
+  history_file: history.jsonl

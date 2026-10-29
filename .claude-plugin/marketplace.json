@@ -1,0 +1,15 @@
+{
+  "name": "topopt",
+  "owner": {
+    "name": "chartergroup"
+  },
+  "description": "Marketplace of the topopt repository. It has one plugin: topopt.",
+  "plugins": [
+    {
+      "name": "topopt",
+      "source": "./",
+      "description": "Topology optimization for 3D printing. Skills, a local MCP server and five role sub-agents. The first start sets up Python for 1 to 3 minutes. Meanwhile topopt connects at once with all its tools, and a tool call answers with the setup status. After the setup the tools work in the same session.",
+      "category": "engineering"
+    }
+  ]
+}

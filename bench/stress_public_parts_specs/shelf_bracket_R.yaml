@@ -1,0 +1,26 @@
+name: shelf_bracket
+regions:
+  design:
+    - prism: {plane: xz, extent: [0, 30], points: [[0, 5], [90, 70], [90, 80], [0, 80]]}
+  fixed:
+    wall_plate:
+      - box: {min: [-4, -3, 0], max: [0, 33, 85]}
+  keep_out:
+    screw_hole_top:
+      - cylinder: {p0: [-1, 15, 62], p1: [4, 15, 62], radius: 2.25}
+      - cylinder: {p0: [3.5, 15, 62], p1: [14, 15, 62], radius: 4.5}
+    screw_hole_bottom:
+      - cylinder: {p0: [-1, 15, 15], p1: [4, 15, 15], radius: 2.25}
+      - cylinder: {p0: [3.5, 15, 15], p1: [14, 15, 15], radius: 4.5}
+  load:
+    shelf_seat:
+      - box: {min: [25, 0, 80], max: [88, 30, 88]}
+load_cases:
+  - {name: static, weight: 1.0, forces: [{region: shelf_seat, force: [0, 0, -29.4]}]}
+  - {name: lean, weight: 1.0, forces: [{region: shelf_seat, force: [25, 0, -90]}]}
+material: {E: 3500, nu: 0.35, density: 1.24}
+assumptions:
+  - "Shelf load 3 kg x 9.81 = 29.4 N down on the seat"
+  - "Abuse case: a person leans on the shelf, 90 N down and 25 N outward"
+  - "Two M4 screws, clearance 2.25 mm radius, head recess 4.5 mm radius"
+settings: {volume_fraction: 0.25, iterations: 80, voxel_size: auto}

@@ -1,0 +1,92 @@
+{
+ "assumptions": [
+  "shirt on a hanger: about 200 g, 1.96 N down",
+  "pull-off at an angle: about 30 N",
+  "two M4 screws into the wall, plate 3.5 mm",
+  "PETG, E 3500 MPa"
+ ],
+ "derived": {
+  "load_cases": [
+   {
+    "name": "hang",
+    "weight": 234.0,
+    "forces": [
+     {
+      "region": "hook_tip",
+      "force_n": [
+       0.0,
+       0.0,
+       -1.96
+      ],
+      "magnitude_n": 1.96
+     }
+    ],
+    "total_magnitude_n": 1.96,
+    "compliance_limit": null,
+    "stress_limit_mpa": null,
+    "stress_limit_from": null,
+    "allowable_mpa": null,
+    "safety_factor": null,
+    "allowable_source": null
+   },
+   {
+    "name": "pull_off",
+    "weight": 1.0,
+    "forces": [
+     {
+      "region": "hook_tip",
+      "force_n": [
+       20.89,
+       5.21,
+       -20.89
+      ],
+      "magnitude_n": 29.9988
+     }
+    ],
+    "total_magnitude_n": 29.9988,
+    "compliance_limit": null,
+    "stress_limit_mpa": null,
+    "stress_limit_from": null,
+    "allowable_mpa": null,
+    "safety_factor": null,
+    "allowable_source": null
+   }
+  ],
+  "voxel_size_mm": 2.0,
+  "filter_radius_mm": 3.0,
+  "min_feature_mm": 3.0,
+  "filter": {
+   "radius_mm": 3.0,
+   "radius_source": "default",
+   "solid_neighbours": "density_one",
+   "min_member_mm": null,
+   "min_member_radius_mm": null,
+   "min_feature_mm": 3.0,
+   "min_feature_note": "walls survive from about 1.6 mm and rods from about 2.81 mm (continuum values, interior of the design space; thinner ones vanish). The grid sets a floor of about one voxel (2 mm). A skin at a free face of the design space can be about half as thin (0.799 mm for a wall)",
+   "facts": []
+  },
+  "volume_fraction": 0.2,
+  "density_g_cm3": 1.24,
+  "iterations": 40,
+  "case_combine": "sum",
+  "objective": "compliance",
+  "robust": {
+   "mode": "off",
+   "on": false,
+   "facts": []
+  },
+  "min_feature_note": "walls survive from about 1.6 mm and rods from about 2.81 mm (continuum values, interior of the design space; thinner ones vanish). The grid sets a floor of about one voxel (2 mm). A skin at a free face of the design space can be about half as thin (0.799 mm for a wall)"
+ },
+ "brief_stated": true,
+ "brief_facts": [],
+ "run_dir": "/Users/me/topopt-work/runs/tshirt_hook/run",
+ "dashboard_url": "http://127.0.0.1:8770/",
+ "pid": 85175,
+ "log_file": "/Users/me/topopt-work/runs/tshirt_hook/run.stdout",
+ "yaml": "/Users/me/topopt-work/runs/tshirt_hook/tshirt_hook.yaml",
+ "workspace": "/Users/me/topopt-work",
+ "run_dir_rel": "runs/tshirt_hook/run",
+ "log_file_rel": "runs/tshirt_hook/run.stdout",
+ "yaml_rel": "runs/tshirt_hook/tshirt_hook.yaml",
+ "message": "Nothing calls you back when the job ends. A promise of a later report cannot be kept. You can call run_status again in this turn until the state is done, error or stopped, or process_alive is false. Or you can end the turn and tell the user what to ask for the result, for example \"what is the result?\"."
+}

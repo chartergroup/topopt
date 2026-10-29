@@ -1,0 +1,285 @@
+{
+ "case": {
+  "design_mm": [
+   [
+    0,
+    0,
+    0
+   ],
+   [
+    48,
+    24,
+    16
+   ]
+  ],
+  "plate_mm": [
+   [
+    -2,
+    0,
+    0
+   ],
+   [
+    0,
+    24,
+    16
+   ]
+  ],
+  "tip_mm": [
+   [
+    46,
+    10,
+    12
+   ],
+   [
+    48,
+    14,
+    16
+   ]
+  ],
+  "voxel_mm": 1.0,
+  "volume_fraction": 0.3,
+  "iterations": 150,
+  "beta_schedule": [
+   [
+    0,
+    1
+   ],
+   [
+    40,
+    2
+   ],
+   [
+    70,
+    4
+   ],
+   [
+    100,
+    8
+   ],
+   [
+    130,
+    16
+   ]
+  ],
+  "load_cases": [
+   {
+    "name": "down",
+    "weight": 1.0,
+    "force_n": [
+     0,
+     0,
+     -1.0
+    ]
+   },
+   {
+    "name": "side",
+    "weight": 1.0,
+    "force_n": [
+     0,
+     1.0,
+     -0.5
+    ]
+   }
+  ]
+ },
+ "rule": "filter_radius = 1.068 * request, set in the YAML (exploration, not the engine rule)",
+ "radius_per_member": 1.877,
+ "explicit_factor": 1.068,
+ "measure": {
+  "kind": "local thickness of the design material (density > 0.5), voxel level, grid refined by 2",
+  "interior_margin_voxels": 2,
+  "bias_mm": 0.25
+ },
+ "machine": {
+  "platform": "Linux x86_64",
+  "python": "3.12.13"
+ },
+ "rows": [
+  {
+   "requested_mm": 2.0,
+   "filter_radius_mm": 2.136,
+   "radius_source": "settings",
+   "radius_voxels": 2.136,
+   "thickness": {
+    "all": {
+     "voxels": 5499,
+     "min_mm": 0.75,
+     "p1_mm": 0.75,
+     "p5_mm": 0.906,
+     "p10_mm": 1.75,
+     "median_mm": 1.75,
+     "share_below_request": 0.6881
+    },
+    "interior": {
+     "voxels": 1184,
+     "min_mm": 0.938,
+     "p1_mm": 1.188,
+     "p5_mm": 1.25,
+     "p10_mm": 1.75,
+     "median_mm": 1.75,
+     "share_below_request": 0.6596
+    },
+    "face_layer": {
+     "voxels": 4315,
+     "min_mm": 0.75,
+     "p1_mm": 0.75,
+     "p5_mm": 0.75,
+     "p10_mm": 1.75,
+     "median_mm": 1.75,
+     "share_below_request": 0.6959
+    },
+    "face_layer_share_of_material": 0.785
+   },
+   "error_p5_interior": -0.375,
+   "error_median_interior": -0.125,
+   "error_p5_all": -0.547,
+   "compliance_final": 0.0052880742255069805,
+   "mass_final_g": 7.89,
+   "grayness": 0.024,
+   "metrics_filter": {
+    "radius_mm": 2.136,
+    "radius_source": "settings",
+    "solid_neighbours": "density_one",
+    "min_member_mm": null,
+    "min_member_radius_mm": null,
+    "min_feature_mm": 2.136,
+    "size": {
+     "radius_voxels": 2.136,
+     "entries_per_row": 33,
+     "entries": 607200,
+     "build_peak_bytes_estimate": 36432000,
+     "build_peak_gib_estimate": 0.03
+    },
+    "facts": []
+   },
+   "solver": "pardiso",
+   "n_free_dofs": 61200,
+   "seconds": 188.9,
+   "peak_rss_mib_so_far": 1044.7
+  },
+  {
+   "requested_mm": 2.5,
+   "filter_radius_mm": 2.67,
+   "radius_source": "settings",
+   "radius_voxels": 2.67,
+   "thickness": {
+    "all": {
+     "voxels": 5522,
+     "min_mm": 0.75,
+     "p1_mm": 0.75,
+     "p5_mm": 0.75,
+     "p10_mm": 1.75,
+     "median_mm": 1.75,
+     "share_below_request": 0.7209
+    },
+    "interior": {
+     "voxels": 1243,
+     "min_mm": 1.031,
+     "p1_mm": 1.188,
+     "p5_mm": 1.312,
+     "p10_mm": 1.75,
+     "median_mm": 2.031,
+     "share_below_request": 0.671
+    },
+    "face_layer": {
+     "voxels": 4279,
+     "min_mm": 0.75,
+     "p1_mm": 0.75,
+     "p5_mm": 0.75,
+     "p10_mm": 1.031,
+     "median_mm": 1.75,
+     "share_below_request": 0.7355
+    },
+    "face_layer_share_of_material": 0.775
+   },
+   "error_p5_interior": -0.475,
+   "error_median_interior": -0.188,
+   "error_p5_all": -0.7,
+   "compliance_final": 0.0054646735659390645,
+   "mass_final_g": 7.87,
+   "grayness": 0.0536,
+   "metrics_filter": {
+    "radius_mm": 2.67,
+    "radius_source": "settings",
+    "solid_neighbours": "density_one",
+    "min_member_mm": null,
+    "min_member_radius_mm": null,
+    "min_feature_mm": 2.67,
+    "size": {
+     "radius_voxels": 2.67,
+     "entries_per_row": 81,
+     "entries": 1490400,
+     "build_peak_bytes_estimate": 89424000,
+     "build_peak_gib_estimate": 0.08
+    },
+    "facts": []
+   },
+   "solver": "pardiso",
+   "n_free_dofs": 61200,
+   "seconds": 162.0,
+   "peak_rss_mib_so_far": 1070.1
+  },
+  {
+   "requested_mm": 3.0,
+   "filter_radius_mm": 3.204,
+   "radius_source": "settings",
+   "radius_voxels": 3.204,
+   "thickness": {
+    "all": {
+     "voxels": 5530,
+     "min_mm": 0.75,
+     "p1_mm": 0.75,
+     "p5_mm": 0.75,
+     "p10_mm": 1.75,
+     "median_mm": 1.938,
+     "share_below_request": 0.8694
+    },
+    "interior": {
+     "voxels": 1326,
+     "min_mm": 1.062,
+     "p1_mm": 1.25,
+     "p5_mm": 1.75,
+     "p10_mm": 1.75,
+     "median_mm": 2.406,
+     "share_below_request": 0.8424
+    },
+    "face_layer": {
+     "voxels": 4204,
+     "min_mm": 0.75,
+     "p1_mm": 0.75,
+     "p5_mm": 0.75,
+     "p10_mm": 1.0,
+     "median_mm": 1.75,
+     "share_below_request": 0.878
+    },
+    "face_layer_share_of_material": 0.76
+   },
+   "error_p5_interior": -0.417,
+   "error_median_interior": -0.198,
+   "error_p5_all": -0.75,
+   "compliance_final": 0.005708080575831005,
+   "mass_final_g": 7.87,
+   "grayness": 0.0786,
+   "metrics_filter": {
+    "radius_mm": 3.204,
+    "radius_source": "settings",
+    "solid_neighbours": "density_one",
+    "min_member_mm": null,
+    "min_member_radius_mm": null,
+    "min_feature_mm": 3.204,
+    "size": {
+     "radius_voxels": 3.204,
+     "entries_per_row": 147,
+     "entries": 2704800,
+     "build_peak_bytes_estimate": 162288000,
+     "build_peak_gib_estimate": 0.15
+    },
+    "facts": []
+   },
+   "solver": "pardiso",
+   "n_free_dofs": 61200,
+   "seconds": 161.9,
+   "peak_rss_mib_so_far": 1119.0
+  }
+ ]
+}

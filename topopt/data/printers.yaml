@@ -1,0 +1,417 @@
+# Printer catalog of topopt (CONTRACTS.md section 18.7). Read by topopt/printers.py. Format 1.
+#
+# Sources. Every number is a fact that the maker states on the page named in `source_url` (or, for one field, in
+# `field_sources`). The pages were opened on the date in `opened`. `tag: maker doc` means a page of the maker of the
+# printer. A value that no maker page states, or that two maker pages state differently, is `null`, and `note` says why
+# (the note names every field that is null). Nothing is guessed.
+#
+# Licence. This file is our own list of facts, written by hand from maker pages; it is MIT like the rest of topopt.
+# It holds NO data of a slicer profile set: OrcaSlicer, Bambu Studio, PrusaSlicer and SuperSlicer profiles are
+# AGPL-3.0, Cura profiles are LGPL-3.0, and nothing from them is copied here. A printer name names a product.
+#
+# Fields of a model:
+#   id                     lower-case slug; the value of `print.printer_model`
+#   vendor, model          the display name is "<vendor> <model>"
+#   aliases                other exact names (the vendor words of the `vendors` table are stripped before the compare)
+#   printer_type           fdm | sla | lpbf | sls (the values of `print.printer_type`)
+#   bed_mm                 [x, y] build plate, mm
+#   build_height_mm        build height (z), mm
+#   nozzle_mm              stock nozzle diameter, mm; nozzle_options_mm: the sizes that the maker sells for it
+#   max_nozzle_c, max_bed_c  maximum temperatures that the maker states, deg C
+#   enclosure              open | enclosed | heated (heated: the maker states active chamber heating)
+#   chamber_max_c          the maximum active chamber temperature that the maker states; null when none is stated
+#   stock_nozzle_material  brass | stainless | hardened_steel (the nozzle that ships with the printer)
+#   extruder               direct | bowden
+#   source_url, opened, tag  where the row comes from, when it was opened, and what kind of page it is
+#   field_sources          optional: a field -> the page for that one field, when it is not `source_url`
+#   note                   optional text; required when a field is null (it names the field)
+
+format: 1
+catalog_version: "2026-10-24"
+
+# Words that name a vendor. The display name of the vendor counts too. A vendor word in a name is a hard filter.
+vendors:
+  Bambu Lab: [bambu, bambulab, bambu lab, bbl]
+  Prusa: [prusa, original prusa, prusa research, prusa3d]
+  Creality: [creality]
+  Elegoo: [elegoo]
+  Voron: [voron, voron design]
+
+models:
+  - id: bambu-lab-a1
+    vendor: Bambu Lab
+    model: A1
+    aliases: []
+    printer_type: fdm
+    bed_mm: [256, 256]
+    build_height_mm: 256
+    nozzle_mm: 0.4
+    nozzle_options_mm: [0.2, 0.4, 0.6, 0.8]
+    max_nozzle_c: 300
+    max_bed_c: 100
+    enclosure: open
+    chamber_max_c: null
+    stock_nozzle_material: stainless
+    extruder: null
+    source_url: https://bambulab.com/en/a1/tech-specs
+    field_sources:
+      enclosure: https://wiki.bambulab.com/en/a1/manual/faq
+    opened: "2026-10-24"
+    tag: maker doc
+    note: >-
+      extruder: the type is not stated on the maker pages opened. Open frame; the maker does not recommend
+      enclosing it. 0.2 mm is stainless, and 0.4, 0.6 and 0.8 mm hardened nozzles are sold separately.
+
+  - id: bambu-lab-a1-mini
+    vendor: Bambu Lab
+    model: A1 mini
+    aliases: [a1m]
+    printer_type: fdm
+    bed_mm: [180, 180]
+    build_height_mm: 180
+    nozzle_mm: 0.4
+    nozzle_options_mm: [0.2, 0.4, 0.6, 0.8]
+    max_nozzle_c: 300
+    max_bed_c: 80
+    enclosure: open
+    chamber_max_c: null
+    stock_nozzle_material: stainless
+    extruder: null
+    source_url: https://bambulab.com/en/a1-mini/tech-specs
+    opened: "2026-10-24"
+    tag: maker doc
+    note: >-
+      extruder: the type is not stated on the maker pages opened. Open frame; the maker does not recommend
+      enclosing it.
+
+  - id: bambu-lab-p1s
+    vendor: Bambu Lab
+    model: P1S
+    aliases: []
+    printer_type: fdm
+    bed_mm: [256, 256]
+    build_height_mm: 256
+    nozzle_mm: 0.4
+    nozzle_options_mm: [0.2, 0.4, 0.6, 0.8]
+    max_nozzle_c: 300
+    max_bed_c: 100
+    enclosure: enclosed
+    chamber_max_c: null
+    stock_nozzle_material: stainless
+    extruder: direct
+    source_url: https://us.store.bambulab.com/products/p1s
+    field_sources:
+      bed_mm: https://wiki.bambulab.com/en/p1/manual/faq
+      build_height_mm: https://wiki.bambulab.com/en/p1/manual/faq
+      max_bed_c: https://wiki.bambulab.com/en/p1/manual/faq
+      enclosure: https://wiki.bambulab.com/en/p1/manual/faq
+      extruder: https://bambulab.com/en/p1
+    opened: "2026-10-24"
+    tag: maker doc
+    note: >-
+      The chamber is enclosed and not actively heated (maker wiki FAQ; the store text that says active heating for the
+      P series is not used). The mechanical build height is 256 mm; the default of Bambu Studio is 250 mm because of the
+      cutter stopper and the Z-hop buffer (maker wiki, print volume limitations).
+
+  - id: bambu-lab-p2s
+    vendor: Bambu Lab
+    model: P2S
+    aliases: []
+    printer_type: fdm
+    bed_mm: [256, 256]
+    build_height_mm: 256
+    nozzle_mm: null
+    nozzle_options_mm: [0.2, 0.4, 0.6, 0.8]
+    max_nozzle_c: 300
+    max_bed_c: 110
+    enclosure: enclosed
+    chamber_max_c: null
+    stock_nozzle_material: hardened_steel
+    extruder: null
+    source_url: https://wiki.bambulab.com/en/p2s/manual/p2s-faq
+    opened: "2026-10-24"
+    tag: maker doc
+    note: >-
+      nozzle_mm: the stock diameter is not stated on the maker pages opened. extruder: the type is not stated on the
+      maker pages opened. The maker says the chamber has no active temperature function.
+
+  - id: bambu-lab-x1-carbon
+    vendor: Bambu Lab
+    model: X1 Carbon
+    aliases: [x1c]
+    printer_type: fdm
+    bed_mm: [256, 256]
+    build_height_mm: 256
+    nozzle_mm: null
+    nozzle_options_mm: [0.2, 0.4, 0.6, 0.8]
+    max_nozzle_c: 300
+    max_bed_c: 120
+    enclosure: enclosed
+    chamber_max_c: null
+    stock_nozzle_material: hardened_steel
+    extruder: null
+    source_url: https://bambulab.com/en/x1
+    field_sources:
+      bed_mm: https://wiki.bambulab.com/en/knowledge-sharing/print-volume-limitations
+      build_height_mm: https://wiki.bambulab.com/en/knowledge-sharing/print-volume-limitations
+      enclosure: https://wiki.bambulab.com/en/x1/manual/faq
+    opened: "2026-10-24"
+    tag: maker doc
+    note: >-
+      nozzle_mm: the stock diameter is not stated on the maker pages opened (the nozzle is hardened steel, 50 HRC).
+      extruder: the type is not stated on the maker pages opened. The chamber is enclosed and not actively heated (maker
+      wiki FAQ); the product page shows a chamber temperature of 60 C, which is a reachable value and not a heater. The
+      bed maximum of 120 C is from the product page; the spec PDF was not read. The default build height of Bambu Studio
+      is 250 mm (see bambu-lab-p1s).
+
+  - id: bambu-lab-h2d
+    vendor: Bambu Lab
+    model: H2D
+    aliases: []
+    printer_type: fdm
+    bed_mm: [300, 320]
+    build_height_mm: 320
+    nozzle_mm: 0.4
+    nozzle_options_mm: [0.2, 0.4, 0.6, 0.8]
+    max_nozzle_c: 350
+    max_bed_c: 120
+    enclosure: heated
+    chamber_max_c: 65
+    stock_nozzle_material: hardened_steel
+    extruder: null
+    source_url: https://bambulab.com/en/h2d/tech-specs
+    opened: "2026-10-24"
+    tag: maker doc
+    note: >-
+      bed_mm and build_height_mm are the two-nozzle row of the tech specs, 300 x 320 x 320 mm: the area and the height
+      that both nozzles reach. The maker pages disagree on the height (the same page gives 325 mm for one nozzle and
+      350 x 320 x 320 mm in total, and the wiki area page differs by nozzle), so the value is the smaller one, 320 mm,
+      and a part that fits it fits with both nozzles. extruder: the type is not stated on the maker pages opened.
+
+  - id: prusa-mk4s
+    vendor: Prusa
+    model: MK4S
+    aliases: []
+    printer_type: fdm
+    bed_mm: [250, 210]
+    build_height_mm: 220
+    nozzle_mm: 0.4
+    nozzle_options_mm: null
+    max_nozzle_c: 290
+    max_bed_c: 120
+    enclosure: open
+    chamber_max_c: null
+    stock_nozzle_material: brass
+    extruder: direct
+    source_url: https://www.prusa3d.com/product/original-prusa-mk4s-3d-printer-5/
+    opened: "2026-10-24"
+    tag: maker doc
+    note: >-
+      Open frame. The maker sells an Enclosure add-on (45 C inside it). The stock nozzle is the High-flow Prusa Nozzle,
+      brass CHT, 0.4 mm. The extruder is the Nextruder, direct drive.
+
+  - id: prusa-core-one-plus
+    vendor: Prusa
+    model: CORE One+
+    aliases: []
+    printer_type: fdm
+    bed_mm: [250, 220]
+    build_height_mm: 270
+    nozzle_mm: 0.4
+    nozzle_options_mm: null
+    max_nozzle_c: 290
+    max_bed_c: 120
+    enclosure: heated
+    chamber_max_c: 55
+    stock_nozzle_material: brass
+    extruder: direct
+    source_url: https://www.prusa3d.com/product/prusa-core-one-kit/
+    opened: "2026-10-24"
+    tag: maker doc
+    note: >-
+      The page is the Gen 2 page of the CORE One+. The 290 C hotend is the standard one; the comparison table on the page
+      lists 400 C with the HT option. The stock nozzle is the High-flow Prusa Nozzle, brass CHT, 0.4 mm; the maker
+      suggests a hardened nozzle for abrasive filament.
+
+  - id: prusa-mini-plus
+    vendor: Prusa
+    model: MINI+
+    aliases: []
+    printer_type: fdm
+    bed_mm: [180, 180]
+    build_height_mm: 180
+    nozzle_mm: 0.4
+    nozzle_options_mm: null
+    max_nozzle_c: 280
+    max_bed_c: 100
+    enclosure: open
+    chamber_max_c: null
+    stock_nozzle_material: null
+    extruder: bowden
+    source_url: https://www.prusa3d.com/product/original-prusa-mini-3/
+    opened: "2026-10-24"
+    tag: maker doc
+    note: >-
+      stock_nozzle_material: the page gives the diameter (0.4 mm) and does not state the nozzle material. No enclosure
+      (the maker sells an Enclosure bundle). The extruder is Bowden with 3:1 gearing.
+
+  - id: creality-k1
+    vendor: Creality
+    model: K1
+    aliases: []
+    printer_type: fdm
+    bed_mm: [220, 220]
+    build_height_mm: 250
+    nozzle_mm: 0.4
+    nozzle_options_mm: [0.4, 0.6, 0.8]
+    max_nozzle_c: 300
+    max_bed_c: 100
+    enclosure: enclosed
+    chamber_max_c: null
+    stock_nozzle_material: hardened_steel
+    extruder: direct
+    source_url: https://www.creality.com/support/creality-k1-3d-printer
+    field_sources:
+      bed_mm: https://store.creality.com/blogs/all/k1c-vs-k1-vs-k1-se
+      build_height_mm: https://store.creality.com/blogs/all/k1c-vs-k1-vs-k1-se
+      max_nozzle_c: https://store.creality.com/blogs/all/k1c-vs-k1-vs-k1-se
+      max_bed_c: https://store.creality.com/blogs/all/k1c-vs-k1-vs-k1-se
+      enclosure: https://store.creality.com/blogs/all/k1c-vs-k1-vs-k1-se
+      nozzle_options_mm: https://store.creality.com/blogs/all/k1c-vs-k1-vs-k1-se
+    opened: "2026-10-24"
+    tag: maker doc
+    note: >-
+      The nozzle is hardened steel on the K1 support page. The same maker blog lists the K1 SE with a copper alloy nozzle,
+      so the K1 SE is another model and not in this catalog. The sizes 0.6 and 0.8 mm are optional for the K1 series.
+
+  - id: creality-k1c
+    vendor: Creality
+    model: K1C
+    aliases: [k1 carbon]
+    printer_type: fdm
+    bed_mm: [220, 220]
+    build_height_mm: 250
+    nozzle_mm: 0.4
+    nozzle_options_mm: [0.4, 0.6, 0.8]
+    max_nozzle_c: 300
+    max_bed_c: 100
+    enclosure: enclosed
+    chamber_max_c: null
+    stock_nozzle_material: hardened_steel
+    extruder: direct
+    source_url: https://www.creality.com/support/k1c-carbon-3d-printer
+    field_sources:
+      bed_mm: https://www.creality.com/products/k1c-carbon-3d-printer
+      build_height_mm: https://www.creality.com/products/k1c-carbon-3d-printer
+      max_nozzle_c: https://store.creality.com/blogs/all/k1c-vs-k1-vs-k1-se
+      max_bed_c: https://store.creality.com/blogs/all/k1c-vs-k1-vs-k1-se
+      enclosure: https://store.creality.com/blogs/all/k1c-vs-k1-vs-k1-se
+      nozzle_options_mm: https://store.creality.com/blogs/all/k1c-vs-k1-vs-k1-se
+    opened: "2026-10-24"
+    tag: maker doc
+    note: >-
+      The maker calls the nozzle hardened steel (tri-metal, steel tip). The sizes 0.6 and 0.8 mm are optional for the K1
+      series.
+
+  - id: creality-k2-plus
+    vendor: Creality
+    model: K2 Plus
+    aliases: []
+    printer_type: fdm
+    bed_mm: [350, 350]
+    build_height_mm: 350
+    nozzle_mm: 0.4
+    nozzle_options_mm: null
+    max_nozzle_c: 350
+    max_bed_c: 120
+    enclosure: heated
+    chamber_max_c: 60
+    stock_nozzle_material: hardened_steel
+    extruder: direct
+    source_url: https://www.creality.com/products/creality-k2-plus-cfs-combo
+    opened: "2026-10-24"
+    tag: maker doc
+    note: >-
+      The maker gives a chamber of 60 C for ABS, ASA and PPS, and 50 C for PA-CF. The nozzle has a hardened steel tip. The
+      extruder is a dual-gear direct drive.
+
+  - id: creality-ender-3-v3
+    vendor: Creality
+    model: Ender-3 V3
+    aliases: []
+    printer_type: fdm
+    bed_mm: [220, 220]
+    build_height_mm: 250
+    nozzle_mm: null
+    nozzle_options_mm: null
+    max_nozzle_c: 300
+    max_bed_c: 110
+    enclosure: null
+    chamber_max_c: null
+    stock_nozzle_material: null
+    extruder: direct
+    source_url: https://www.creality.com/support/creality-ender-3-v3
+    field_sources:
+      bed_mm: https://www.creality.com/products/creality-ender-3-v3
+      build_height_mm: https://www.creality.com/products/creality-ender-3-v3
+      max_nozzle_c: https://www.creality.com/products/creality-ender-3-v3
+      max_bed_c: https://www.creality.com/products/creality-ender-3-v3
+    opened: "2026-10-24"
+    tag: maker doc
+    note: >-
+      nozzle_mm: the stock diameter is not stated in the rows read. enclosure: the maker pages list no enclosure and do not
+      say open frame, so no value is given. stock_nozzle_material: the maker pages disagree (the support page says
+      hardened steel, a maker comparison blog says tri-metal), so no value is given. The V3 SE (nozzle 260 C, bed 100 C)
+      and the V3 KE (height 240 mm) are other models with other values and are not in this catalog.
+
+  - id: elegoo-centauri-carbon
+    vendor: Elegoo
+    model: Centauri Carbon
+    aliases: []
+    printer_type: fdm
+    bed_mm: [256, 256]
+    build_height_mm: 256
+    nozzle_mm: null
+    nozzle_options_mm: null
+    max_nozzle_c: 320
+    max_bed_c: 110
+    enclosure: enclosed
+    chamber_max_c: null
+    stock_nozzle_material: hardened_steel
+    extruder: null
+    source_url: https://us.elegoo.com/pages/elegoo-centauri-carbon
+    field_sources:
+      bed_mm: https://www.elegoo.com/products/centauri-carbon
+      build_height_mm: https://www.elegoo.com/products/centauri-carbon
+    opened: "2026-10-24"
+    tag: maker doc
+    note: >-
+      nozzle_mm: the stock diameter is not stated on the page. extruder: the type is not stated on the page. The maker
+      calls it a fully enclosed chamber and mentions no chamber heater. The maker words for the nozzle are
+      "brass-hardened steel nozzle"; stock_nozzle_material reads that as hardened steel.
+
+  - id: voron-2-4
+    vendor: Voron
+    model: "2.4"
+    aliases: [v2.4]
+    printer_type: fdm
+    bed_mm: null
+    build_height_mm: null
+    nozzle_mm: null
+    nozzle_options_mm: null
+    max_nozzle_c: null
+    max_bed_c: null
+    enclosure: enclosed
+    chamber_max_c: null
+    stock_nozzle_material: null
+    extruder: null
+    source_url: https://docs.vorondesign.com/sourcing.html
+    field_sources:
+      enclosure: https://vorondesign.com/voron2.4
+    opened: "2026-10-24"
+    tag: maker doc
+    note: >-
+      A kit that the builder configures. bed_mm: the build size is 250, 300 or 350 mm, chosen by the builder.
+      build_height_mm: not found on a maker page. nozzle_mm, max_nozzle_c, max_bed_c, stock_nozzle_material and extruder:
+      set by the builder (the extruder is direct or Bowden). The printer is designed enclosed; chamber temperatures
+      generally do not exceed 50 to 60 C, and no chamber heater is needed. Ask the user for the size.

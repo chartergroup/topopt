@@ -1,0 +1,631 @@
+{
+ "name": "shelf_bracket",
+ "yaml": "/Users/me/topopt-work/files/shelf_bracket.yaml",
+ "grid": {
+  "shape": [
+   105,
+   23,
+   41
+  ],
+  "voxel_mm": 1.35,
+  "origin_mm": [
+   -1.0,
+   -15.0,
+   -45.0
+  ],
+  "voxels": 99015
+ },
+ "voxel_counts": {
+  "design": 30351,
+  "fixed": 2652,
+  "load": 216,
+  "keep_out": 7072
+ },
+ "interfaces": null,
+ "interface_taken": [
+  {
+   "cut": "screw_hole_top",
+   "cut_kind": "keep-out region",
+   "region": "wall_plate",
+   "region_role": "fixed",
+   "voxels": 27,
+   "region_voxels": 2706,
+   "share": 0.01,
+   "depth_mm": 1.23,
+   "trim_mm": 2.0,
+   "bounded": false,
+   "warn": false
+  },
+  {
+   "cut": "screw_hole_bottom",
+   "cut_kind": "keep-out region",
+   "region": "wall_plate",
+   "region_role": "fixed",
+   "voxels": 27,
+   "region_voxels": 2706,
+   "share": 0.01,
+   "depth_mm": 1.23,
+   "trim_mm": 2.0,
+   "bounded": false,
+   "warn": false
+  }
+ ],
+ "load_regions": [
+  {
+   "name": "shelf_seat",
+   "voxels": 216,
+   "thickness_voxels": 3.0
+  }
+ ],
+ "solid_regions": null,
+ "solid_pull": {
+  "rule": "density_one",
+  "design_voxels": 30351,
+  "threshold": 0.1,
+  "voxels_above": 704,
+  "share_above": 0.0232,
+  "b_max": 0.3295,
+  "solid_voxels": 2868
+ },
+ "active_voxels": 33219,
+ "free_design_voxels": 30351,
+ "forced_solid_voxels": 2868,
+ "forced_solid_share": 0.0863,
+ "free_dofs": 105294,
+ "iterations": 80,
+ "volume_fraction": 0.25,
+ "connectivity": {
+  "components": 1,
+  "component_sizes": [
+   33219
+  ],
+  "fixed_touches_design": true
+ },
+ "region_planes": [
+  {
+   "role": "design",
+   "name": "design",
+   "planes": [
+    {
+     "axis": "x",
+     "side": "min",
+     "at_mm": 3.0,
+     "from_origin_voxels": 2.963,
+     "offset_mm": 0.05,
+     "offset_voxels": 0.037,
+     "effect": "smaller",
+     "changed_voxels": 0,
+     "changes_part": false
+    },
+    {
+     "axis": "x",
+     "side": "max",
+     "at_mm": 120.0,
+     "from_origin_voxels": 89.6296,
+     "offset_mm": 0.5,
+     "offset_voxels": 0.3704,
+     "effect": "larger",
+     "changed_voxels": 54,
+     "changes_part": true
+    },
+    {
+     "axis": "y",
+     "side": "min",
+     "at_mm": -12.0,
+     "from_origin_voxels": 2.2222,
+     "offset_mm": 0.3,
+     "offset_voxels": 0.2222,
+     "effect": "larger",
+     "changed_voxels": 1863,
+     "changes_part": true
+    },
+    {
+     "axis": "z",
+     "side": "max",
+     "at_mm": 10.0,
+     "from_origin_voxels": 40.7407,
+     "offset_mm": 0.35,
+     "offset_voxels": 0.2593,
+     "effect": "larger",
+     "changed_voxels": 1476,
+     "changes_part": true
+    }
+   ]
+  },
+  {
+   "role": "fixed",
+   "name": "wall_plate",
+   "planes": [
+    {
+     "axis": "x",
+     "side": "min",
+     "at_mm": 0.0,
+     "from_origin_voxels": 0.7407,
+     "offset_mm": 0.35,
+     "offset_voxels": 0.2593,
+     "effect": "smaller",
+     "changed_voxels": 884,
+     "changes_part": true
+    },
+    {
+     "axis": "x",
+     "side": "max",
+     "at_mm": 4.0,
+     "from_origin_voxels": 3.7037,
+     "offset_mm": 0.4,
+     "offset_voxels": 0.2963,
+     "effect": "larger",
+     "changed_voxels": 884,
+     "changes_part": true
+    },
+    {
+     "axis": "y",
+     "side": "max",
+     "at_mm": 15.0,
+     "from_origin_voxels": 22.2222,
+     "offset_mm": 0.3,
+     "offset_voxels": 0.2222,
+     "effect": "smaller",
+     "changed_voxels": 123,
+     "changes_part": true
+    },
+    {
+     "axis": "z",
+     "side": "max",
+     "at_mm": 10.0,
+     "from_origin_voxels": 40.7407,
+     "offset_mm": 0.35,
+     "offset_voxels": 0.2593,
+     "effect": "larger",
+     "changed_voxels": 66,
+     "changes_part": true
+    }
+   ]
+  },
+  {
+   "role": "keep_out",
+   "name": "screw_hole_top",
+   "planes": [
+    {
+     "axis": "x",
+     "side": "max",
+     "at_mm": 140.0,
+     "from_origin_voxels": 104.4444,
+     "offset_mm": 0.6,
+     "offset_voxels": 0.4444,
+     "effect": "smaller",
+     "changed_voxels": 0,
+     "changes_part": false
+    }
+   ]
+  },
+  {
+   "role": "keep_out",
+   "name": "screw_hole_bottom",
+   "planes": [
+    {
+     "axis": "x",
+     "side": "max",
+     "at_mm": 140.0,
+     "from_origin_voxels": 104.4444,
+     "offset_mm": 0.6,
+     "offset_voxels": 0.4444,
+     "effect": "smaller",
+     "changed_voxels": 0,
+     "changes_part": false
+    }
+   ]
+  },
+  {
+   "role": "load",
+   "name": "shelf_seat",
+   "planes": [
+    {
+     "axis": "x",
+     "side": "min",
+     "at_mm": 0.0,
+     "from_origin_voxels": 0.7407,
+     "offset_mm": 0.35,
+     "offset_voxels": 0.2593,
+     "effect": "smaller",
+     "changed_voxels": 54,
+     "changes_part": true
+    },
+    {
+     "axis": "x",
+     "side": "max",
+     "at_mm": 10.0,
+     "from_origin_voxels": 8.1481,
+     "offset_mm": 0.2,
+     "offset_voxels": 0.1481,
+     "effect": "smaller",
+     "changed_voxels": 54,
+     "changes_part": true
+    },
+    {
+     "axis": "y",
+     "side": "min",
+     "at_mm": -12.0,
+     "from_origin_voxels": 2.2222,
+     "offset_mm": 0.3,
+     "offset_voxels": 0.2222,
+     "effect": "larger",
+     "changed_voxels": 12,
+     "changes_part": true
+    },
+    {
+     "axis": "z",
+     "side": "min",
+     "at_mm": 6.0,
+     "from_origin_voxels": 37.7778,
+     "offset_mm": 0.3,
+     "offset_voxels": 0.2222,
+     "effect": "smaller",
+     "changed_voxels": 72,
+     "changes_part": true
+    },
+    {
+     "axis": "z",
+     "side": "max",
+     "at_mm": 10.0,
+     "from_origin_voxels": 40.7407,
+     "offset_mm": 0.35,
+     "offset_voxels": 0.2593,
+     "effect": "larger",
+     "changed_voxels": 72,
+     "changes_part": true
+    }
+   ]
+  }
+ ],
+ "repeated_load_cases": [],
+ "solver_setting": "auto",
+ "solver": {
+  "setting": "auto",
+  "resolved": "cholesky",
+  "platform": "darwin arm64",
+  "error": null
+ },
+ "backends": {
+  "cholesky": {
+   "available": true,
+   "note": "Apple Accelerate sparse Cholesky",
+   "time_estimate": {
+    "s_per_iteration": 1.1821194505585935,
+    "total_s": 120.75167549524608,
+    "note": "model calibrated on Apple Accelerate Cholesky (Apple silicon)"
+   }
+  },
+  "pardiso": {
+   "available": false,
+   "note": "runs on Linux x86_64 only (this platform is darwin arm64)",
+   "time_estimate": {
+    "s_per_iteration": 1.1821194505585935,
+    "total_s": 120.75167549524608,
+    "note": "same model as cholesky (the hook example: 99 s on a 16 cores / 22 threads Linux machine, model 145 s)"
+   }
+  },
+  "amg": {
+   "available": true,
+   "note": "PyAMG-preconditioned CG",
+   "time_estimate": {
+    "s_per_iteration": 4.846689747290233,
+    "total_s": 417.58186953050887,
+    "note": "the time per iteration is 4.1x the cholesky model (the factor is from the hook example; setup and post-process time do not change)"
+   }
+  }
+ },
+ "opencl": null,
+ "time_estimate": {
+  "solver": "cholesky",
+  "s_per_iteration": 1.1821194505585935,
+  "total_s": 120.75167549524608,
+  "limit_s": null,
+  "amg_total_s": 417.58186953050887,
+  "stress": null
+ },
+ "memory_estimate": {
+  "bytes": 1662569111,
+  "ram_bytes": 34359738368,
+  "filter_build_peak_bytes": 34600140,
+  "filter_held_bytes": 16146732,
+  "note": "rough model: grid arrays plus the larger of the filter build peak and (sparse Cholesky factor plus the filter matrix)"
+ },
+ "recommendation": null,
+ "hint": null,
+ "snapshot_disk_mb": 8.0,
+ "print": {
+  "bed_mm": [
+   220.0,
+   220.0
+  ],
+  "assumed": [
+   "build_direction",
+   "bed_mm",
+   "printer_type"
+  ],
+  "printer_type": "fdm",
+  "box_extents_mm": [
+   120.15,
+   29.7,
+   55.35
+  ],
+  "configured": {
+   "label": "+z",
+   "direction": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "extents_mm": [
+    120.15,
+    29.7,
+    55.35
+   ],
+   "bed_fit": true,
+   "bed_turn_deg": 45,
+   "bed_footprint_mm": [
+    105.96,
+    105.96
+   ],
+   "bed_margin_mm": 114.04
+  },
+  "options": [
+   {
+    "label": "+x",
+    "direction": [
+     1.0,
+     0.0,
+     0.0
+    ],
+    "extents_mm": [
+     29.7,
+     55.35,
+     120.15
+    ],
+    "bed_fit": true,
+    "bed_turn_deg": 0,
+    "bed_footprint_mm": [
+     29.7,
+     55.35
+    ],
+    "bed_margin_mm": 164.65
+   },
+   {
+    "label": "-x",
+    "direction": [
+     -1.0,
+     0.0,
+     0.0
+    ],
+    "extents_mm": [
+     29.7,
+     55.35,
+     120.15
+    ],
+    "bed_fit": true,
+    "bed_turn_deg": 0,
+    "bed_footprint_mm": [
+     29.7,
+     55.35
+    ],
+    "bed_margin_mm": 164.65
+   },
+   {
+    "label": "+y",
+    "direction": [
+     0.0,
+     1.0,
+     0.0
+    ],
+    "extents_mm": [
+     120.15,
+     55.35,
+     29.7
+    ],
+    "bed_fit": true,
+    "bed_turn_deg": 0,
+    "bed_footprint_mm": [
+     120.15,
+     55.35
+    ],
+    "bed_margin_mm": 99.85
+   },
+   {
+    "label": "-y",
+    "direction": [
+     0.0,
+     -1.0,
+     0.0
+    ],
+    "extents_mm": [
+     120.15,
+     55.35,
+     29.7
+    ],
+    "bed_fit": true,
+    "bed_turn_deg": 0,
+    "bed_footprint_mm": [
+     120.15,
+     55.35
+    ],
+    "bed_margin_mm": 99.85
+   },
+   {
+    "label": "+z",
+    "direction": [
+     0.0,
+     0.0,
+     1.0
+    ],
+    "extents_mm": [
+     120.15,
+     29.7,
+     55.35
+    ],
+    "bed_fit": true,
+    "bed_turn_deg": 45,
+    "bed_footprint_mm": [
+     105.96,
+     105.96
+    ],
+    "bed_margin_mm": 114.04
+   },
+   {
+    "label": "-z",
+    "direction": [
+     0.0,
+     0.0,
+     -1.0
+    ],
+    "extents_mm": [
+     120.15,
+     29.7,
+     55.35
+    ],
+    "bed_fit": true,
+    "bed_turn_deg": 45,
+    "bed_footprint_mm": [
+     105.96,
+     105.96
+    ],
+    "bed_margin_mm": 114.04
+   }
+  ],
+  "note": "the box is the design space (design, fixed and load voxels); the part lies inside it"
+ },
+ "warnings": [
+  "force is lost: 'shelf': 7.84 N of 39.2 N (20.0 percent; 20.0 percent of the sum of the region force sizes). Reason: load nodes touch fixed nodes; their force is dropped by the solver (the part sees less force, and the stiffness figure is too high). Options: move the load region off the fixed region, shrink the overlap, or accept it.",
+  "region planes off the voxel grid: 12 of 15 change the part (voxel 1.35 mm; grid origin (-1, -15, -45) mm, the min corner of all regions, so it moves when such a region moves). Each item is the region, the plane, and how much larger or smaller than the STL the region is there: design x max 120 mm: 0.50 mm larger; design y min -12 mm: 0.30 mm larger; design z max 10 mm: 0.35 mm larger; fixed 'wall_plate' x min 0 mm: 0.35 mm smaller; fixed 'wall_plate' x max 4 mm: 0.40 mm larger; fixed 'wall_plate' y max 15 mm: 0.30 mm smaller; fixed 'wall_plate' z max 10 mm: 0.35 mm larger; load 'shelf_seat' x min 0 mm: 0.35 mm smaller; load 'shelf_seat' x max 10 mm: 0.20 mm smaller; load 'shelf_seat' y min -12 mm: 0.30 mm larger; load 'shelf_seat' z min 6 mm: 0.30 mm smaller; load 'shelf_seat' z max 10 mm: 0.35 mm larger. A voxel is in a region when its centre is in the STL, so each plane moves to the nearest voxel face. Options: move or resize the region so that the plane is on a voxel face. Or choose a voxel size that divides the distance from the grid origin. Or extend a keep-out region past the part. All planes, with the offsets in voxels: `check.region_planes`"
+ ],
+ "lost_force": {
+  "cases": [
+   {
+    "name": "shelf",
+    "total_n": [
+     0.0,
+     0.0,
+     -39.19999999999983
+    ],
+    "total_magnitude_n": 39.19999999999983,
+    "lost_n": [
+     0.0,
+     0.0,
+     -7.840000000000013
+    ],
+    "lost_magnitude_n": 7.840000000000013,
+    "lost_percent": 20.00000000000012,
+    "lost_percent_of_sum": 20.000000000000032,
+    "regions": [
+     {
+      "region": "shelf_seat",
+      "nodes": 380,
+      "fixed_nodes": 76,
+      "lost_n": [
+       0.0,
+       0.0,
+       -7.840000000000001
+      ],
+      "lost_magnitude_n": 7.840000000000001
+     }
+    ]
+   }
+  ],
+  "max_lost_percent": 20.00000000000012
+ },
+ "mirror": null,
+ "perimeter": null,
+ "assumptions": [
+  "shelf with books: 4 kg x 9.81 = 39.2 N down",
+  "PETG"
+ ],
+ "derived": {
+  "load_cases": [
+   {
+    "name": "shelf",
+    "weight": 1.0,
+    "forces": [
+     {
+      "region": "shelf_seat",
+      "force_n": [
+       0.0,
+       0.0,
+       -39.2
+      ],
+      "magnitude_n": 39.2
+     }
+    ],
+    "total_magnitude_n": 39.2,
+    "compliance_limit": null,
+    "stress_limit_mpa": null,
+    "stress_limit_from": null,
+    "allowable_mpa": null,
+    "safety_factor": null,
+    "allowable_source": null
+   }
+  ],
+  "voxel_size_mm": 1.35,
+  "filter_radius_mm": 2.0250000000000004,
+  "min_feature_mm": 2.0250000000000004,
+  "filter": {
+   "radius_mm": 2.0250000000000004,
+   "radius_source": "default",
+   "solid_neighbours": "density_one",
+   "min_member_mm": null,
+   "min_member_radius_mm": null,
+   "min_feature_mm": 2.0250000000000004,
+   "min_feature_note": "walls survive from about 1.08 mm and rods from about 1.9 mm (continuum values, interior of the design space; thinner ones vanish). The grid sets a floor of about one voxel (1.35 mm). A skin at a free face of the design space can be about half as thin (0.539 mm for a wall)",
+   "size": {
+    "radius_voxels": 1.5,
+    "entries_per_row": 19,
+    "entries": 576669,
+    "build_peak_bytes_estimate": 34600140,
+    "build_peak_gib_estimate": 0.03,
+    "held_bytes_estimate": 16146732,
+    "held_gib_estimate": 0.02
+   },
+   "facts": []
+  },
+  "volume_fraction": 0.25,
+  "density_g_cm3": 1.24,
+  "iterations": 80,
+  "case_combine": "sum",
+  "objective": "compliance",
+  "robust": {
+   "mode": "off",
+   "on": false,
+   "facts": []
+  },
+  "min_feature_note": "walls survive from about 1.08 mm and rods from about 1.9 mm (continuum values, interior of the design space; thinner ones vanish). The grid sets a floor of about one voxel (1.35 mm). A skin at a free face of the design space can be about half as thin (0.539 mm for a wall)",
+  "grid_shape": [
+   105,
+   23,
+   41
+  ],
+  "active_voxels": 33219,
+  "volume": {
+   "active_block_mm3": 81731.2,
+   "volume_fraction": 0.25,
+   "volume_fraction_of": "free design voxels (engine value; forced-solid voxels are solid on top)",
+   "free_design_voxels": 30351,
+   "free_design_mm3": 74674.84,
+   "forced_solid_mm3": 7056.36,
+   "target_volume_mm3": 25725.07,
+   "target_mass_g": 31.899
+  },
+  "mass_active_block_g": 101.347,
+  "time_estimate_s": 120.8,
+  "memory_estimate_gib": 1.55
+ },
+ "buckling_off": {
+  "check": false,
+  "row": false,
+  "modes": 6,
+  "max_seconds": 120.0,
+  "memory_estimate_bytes": 1878069179,
+  "would_run": true,
+  "reason": null
+ },
+ "ok": true,
+ "yaml_rel": "files/shelf_bracket.yaml"
+}

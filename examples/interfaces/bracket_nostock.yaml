@@ -1,0 +1,41 @@
+# A bracket with a bore, a boss and a machined face (CONTRACTS.md section 23).
+# The plate is clamped at x = 0. The load pulls the free end down.
+# The bore, the boss and the face are exact shapes: the post-process unites and cuts them after the smoothing.
+# The same part without stock: one mesh, no nominal.stl.
+name: bracket_nostock
+
+regions:
+  design: design.stl
+  fixed:
+    - plate.stl
+  load:
+    tip: tip.stl
+
+load_cases:
+  - name: pull_down
+    forces:
+      - region: tip
+        force: [0.0, 0.0, -15.0]
+
+interfaces:
+  - name: bushing_seat          # a boss around the bore: the optimizer keeps it solid (label LOAD, no load case)
+    kind: boss
+    point: [28.0, 10.0, -2.0]
+    axis: [0.0, 0.0, 1.0]
+    radius_mm: 5.5
+    length_mm: 20.0
+  - name: pin_bore              # a bore through the boss and the part (label KEEP_OUT)
+    kind: bore
+    point: [28.0, 10.0, 20.0]
+    axis: [0.0, 0.0, -1.0]
+    radius_mm: 3.0
+    length_mm: 24.0
+  - name: mounting_face         # material at x >= 2 stays; the normal points to the side that is cut away
+    kind: face
+    point: [2.0, 0.0, 0.0]
+    normal: [-1.0, 0.0, 0.0]
+
+settings:
+  voxel_size: 1.0
+  volume_fraction: 0.3
+  iterations: 40

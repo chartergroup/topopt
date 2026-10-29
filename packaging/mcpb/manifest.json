@@ -1,0 +1,54 @@
+{
+  "manifest_version": "0.4",
+  "name": "topopt",
+  "display_name": "topopt: topology optimization for 3D printing",
+  "version": "0.5.0",
+  "description": "Describe a part in words. Claude builds the problem, runs a topology optimization on your computer, and gives you a printable STL.",
+  "long_description": "topopt makes a part lighter. You give it the space, the mounting and the loads. It removes the material that does little work and writes a printable STL. Everything runs on your computer.\n\nThe extension gives Claude tools to build a problem from a description, check it, run it, show the dashboard link and read the result. It also gives five role playbooks (lead design, CAD, FEA, print, finish) as the tool `team_guide`, as prompts and as resources.\n\nTarget: a Mac with Apple silicon. The first start downloads Python 3.13 and about 200 MB of packages, so it takes 1 to 3 minutes. topopt connects at once with all its tools: until the setup is done, a tool call gives the setup status, and then the tools work in the same chat. The Mac needs no Python and no uv: the extension downloads a checked uv release when there is none. If the tools are missing, turn the extension off and on in Settings > Extensions; each start continues from the uv cache, so a stopped download is not lost. Runs, STLs and results go in the work folder: the folder Documents/topopt in your home folder, or the folder that you choose in the settings of the extension.",
+  "author": {
+    "name": "chartergroup",
+    "url": "https://github.com/chartergroup"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/chartergroup/topopt.git"
+  },
+  "homepage": "https://github.com/chartergroup/topopt",
+  "documentation": "https://github.com/chartergroup/topopt#readme",
+  "support": "https://github.com/chartergroup/topopt/issues",
+  "server": {
+    "type": "binary",
+    "entry_point": "scripts/topopt-env.sh",
+    "mcp_config": {
+      "command": "/bin/sh",
+      "args": ["${__dirname}/scripts/topopt-env.sh", "mcp"],
+      "env": {
+        "TOPOPT_WORKSPACE": "${user_config.workspace}",
+        "TOPOPT_DEFAULT_WORKSPACE": "${HOME}/Documents/topopt"
+      }
+    }
+  },
+  "tools_generated": true,
+  "keywords": ["topology-optimization", "3d-printing", "stl", "fea", "cad"],
+  "license": "MIT",
+  "compatibility": {
+    "platforms": ["darwin", "linux"]
+  },
+  "user_config": {
+    "workspace": {
+      "type": "directory",
+      "title": "Work folder",
+      "description": "Runs, STL files and results go in this folder (in its subfolder runs/). Relative paths in tool calls start here. When this is empty, the folder Documents/topopt in your home folder is used. After a change, quit Claude completely and open it again.",
+      "required": false
+    }
+  },
+  "_meta": {
+    "io.github.chartergroup.topopt": {
+      "architectures": {
+        "darwin": ["arm64"],
+        "linux": ["x86_64"]
+      },
+      "note": "The manifest schema has no field for the CPU architecture. Apple silicon is the target on macOS. An Intel Mac (darwin x86_64) is best effort: topopt was tested on Linux only, the bundle uses the older pins of requirements-macos-x86_64.lock there, the solver auto gives amg, and the time estimate is not calibrated."
+    }
+  }
+}

@@ -1,0 +1,32 @@
+name: tshirt_hook_two
+regions:
+  design: design.stl
+  fixed: [wall_plate.stl]
+  keep_out: [screw_hole_top.stl, screw_hole_bottom.stl]
+  load: {tip_right: tip_right.stl, tip_left: tip_left.stl}
+load_cases:
+- name: hang
+  weight: 234.0
+  forces:
+  - region: tip_right
+    force: [0, 0, -1.96]
+  - region: tip_left
+    force: [0, 0, -1.96]
+- name: pull_off_right
+  weight: 1.0
+  forces:
+  - region: tip_right
+    force: [18.37, 10.61, -21.21]
+- name: pull_off_left
+  weight: 1.0
+  forces:
+  - region: tip_left
+    force: [18.37, -10.61, -21.21]
+material: {E: 3500.0, nu: 0.35, density: 1.24}
+settings: {voxel_size: 1.5, volume_fraction: 0.2, iterations: 80}
+assumptions: [Two arms leave the shared plate at 30 degrees to the left and to the
+    right of the plate normal (the plan view is a V)., 'One shirt on each arm: 0.2
+    kg x 9.81 = 1.96 N down on each tip (the same as the plain hook).', 'Abuse case:
+    a 30 N pull on one arm at a time, 45 degrees down, along the arm axis.', 'The
+    plate is 40 mm wide (the plain hook has 35 mm) so that both arms start on it;
+    screws, saddle and lip are as in the plain hook.']

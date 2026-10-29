@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<title>Refine - %%TITLE%%</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+*{box-sizing:border-box}
+body{margin:0;font:13px -apple-system,Helvetica,Arial,sans-serif;color:#222;background:#eef0f3;display:flex;height:100vh;overflow:hidden}
+#view{flex:1;position:relative;min-width:0}
+#cv{width:100%;height:100%;display:block;cursor:crosshair}
+#side{width:340px;background:#fff;border-left:1px solid #ccd;display:flex;flex-direction:column;overflow:hidden}
+#side>section{padding:8px 10px;border-bottom:1px solid #e3e5ea}
+h4{margin:0 0 6px;font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:#667}
+button{font:inherit;padding:4px 8px;border:1px solid #aab;border-radius:4px;background:#f6f7f9;cursor:pointer}
+button:hover{background:#e8ebf0}button.on{outline:2px solid #345;background:#dde}
+.tool{font-weight:600;padding:6px 10px}
+#tAdd{color:#0a7a2a}#tRem{color:#c0201a}#tSm{color:#1f56d0}
+#tAdd.on{background:#c9efd4}#tRem.on{background:#f6cfcc}#tSm.on{background:#cfdcf8}
+.row{display:flex;align-items:center;gap:6px;margin:4px 0}.row label{width:78px;flex:none}.row input[type=range]{flex:1}.row .v{width:36px;text-align:right}
+#list{flex:1;overflow:auto;padding:0}
+.item{padding:5px 10px;border-bottom:1px solid #eee;cursor:pointer;display:flex;gap:6px;align-items:center}
+.item:hover{background:#f3f5f8}.item.sel{background:#e3ebff}
+.dot{width:11px;height:11px;border-radius:50%;flex:none}
+.item .t{flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+#hud{position:absolute;left:8px;top:8px;display:flex;gap:4px;flex-wrap:wrap;max-width:70%}
+#info{position:absolute;left:8px;bottom:8px;background:rgba(255,255,255,.85);padding:5px 8px;border-radius:4px;font-size:11px;line-height:1.35;max-width:60%}
+#cbar{position:absolute;right:10px;top:10px;display:none;background:rgba(255,255,255,.85);padding:6px;border-radius:4px;font-size:11px}
+#cbar .g{width:18px;height:200px;background:linear-gradient(to top,hsl(240,100%,50%),hsl(180,100%,50%),hsl(120,100%,50%),hsl(60,100%,50%),hsl(0,100%,50%));float:left;border:1px solid #333}
+#cbar .l{float:left;height:200px;margin-left:4px;display:flex;flex-direction:column-reverse;justify-content:space-between}
+textarea{width:100%;height:46px;font:inherit}
+#err{position:absolute;inset:40% 10% auto 10%;background:#fee;border:1px solid #c33;padding:12px;display:none;z-index:9}
+.small{font-size:11px;color:#667}
+</style></head><body>
+<div id="view"><canvas id="cv"></canvas>
+ <div id="hud">
+  <button data-v="iso">Iso</button><button data-v="side">Side</button><button data-v="rear">Rear</button><button data-v="front">Front</button><button data-v="top">Top</button><button id="bReset">Reset view</button>
+  <label style="background:rgba(255,255,255,.85);padding:4px 6px;border-radius:4px"><input type="checkbox" id="cbStress"> colour by stress</label>
+  <label style="background:rgba(255,255,255,.85);padding:4px 6px;border-radius:4px"><input type="checkbox" id="cbMarkMode" checked> mark mode (M)</label>
+  <label style="background:rgba(255,255,255,.85);padding:4px 6px;border-radius:4px"><input type="checkbox" id="cbMarks" checked> show marks</label>
+ </div>
+ <div id="cbar"><div class="g"></div><div class="l" id="cbarL"></div><div style="clear:both">von Mises MPa<br>(max over cases)<br><span id="cbarS"></span></div></div>
+ <div id="info"></div>
+ <div id="err"></div>
+</div>
+<div id="side">
+ <section>
+  <h4>Tool</h4>
+  <button class="tool" id="tAdd">Add</button> <button class="tool" id="tRem">Remove</button> <button class="tool" id="tSm">Smooth</button>
+  <div class="small" style="margin-top:5px">Click the part = point mark. Hold Shift and drag along the part = stroke. Orbit with drag, pan with right drag / Ctrl-drag, zoom with wheel.</div>
+  <div class="row"><label>radius mm</label><input type="range" id="dRad" min="1" max="15" step="0.5" value="4"><span class="v" id="dRadV">4</span></div>
+  <div class="row" id="dAmtRow"><label>amount mm</label><input type="range" id="dAmt" min="0.2" max="5" step="0.1" value="1"><span class="v" id="dAmtV">1</span></div>
+  <div class="row" id="dStrRow"><label>strength</label><input type="range" id="dStr" min="1" max="3" step="0.1" value="1"><span class="v" id="dStrV">1</span></div>
+  <div class="row"><label>mirror y=0</label><input type="checkbox" id="dMir"><span class="small">(off by default; applies to new marks)</span></div>
+ </section>
+ <section id="edit" style="display:none">
+  <h4>Selected mark <span id="eId"></span></h4>
+  <div class="row"><label>radius mm</label><input type="range" id="eRad" min="1" max="15" step="0.5"><span class="v" id="eRadV"></span></div>
+  <div class="row" id="eAmtRow"><label>amount mm</label><input type="range" id="eAmt" min="0.2" max="5" step="0.1"><span class="v" id="eAmtV"></span></div>
+  <div class="row" id="eStrRow"><label>strength</label><input type="range" id="eStr" min="1" max="3" step="0.1"><span class="v" id="eStrV"></span></div>
+  <div class="row"><label>mirror y=0</label><input type="checkbox" id="eMir"></div>
+  <textarea id="eNote" placeholder="note (optional)"></textarea>
+  <div><button id="eDel">Delete mark</button></div>
+ </section>
+ <section style="padding-bottom:4px"><h4>Marks (<span id="cnt">0</span>)</h4></section>
+ <div id="list"></div>
+ <section>
+  <button id="bUndo">Undo</button> <button id="bClear">Clear all</button><br style="margin:4px">
+  <div style="margin-top:6px"><button id="bDl">Download marks JSON</button> <button id="bCopy">Copy JSON</button> <button id="bImp">Import JSON</button></div>
+  <input type="file" id="fImp" accept=".json,application/json" style="display:none">
+  <div class="small" id="status" style="margin-top:4px"></div>
+ </section>
+</div>
+<script>
+%%THREE_JS%%
+</script>
+<script>
+%%ORBIT_CONTROLS_JS%%
+</script>
+<script>
+var META = %%META%%;
+var B64_VERTS = "%%VERTS%%", B64_FACES = "%%FACES%%", B64_STRESS = "%%STRESS%%";
+</script>
+<script>
+(function(){
+"use strict";
+function $(i){return document.getElementById(i)}
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
+function fail(m){var e=$("err");e.style.display="block";e.textContent=m}
+if(typeof THREE==="undefined"||!THREE.OrbitControls){fail("three.js did not load. Make the page again: topopt refine <run_dir>");return}
+function dec(b64){var s=atob(b64),n=s.length,u=new Uint8Array(n);for(var i=0;i<n;i++)u[i]=s.charCodeAt(i);return u.buffer}
+var verts=new Float32Array(dec(B64_VERTS)), faces=new Uint32Array(dec(B64_FACES));
+var stress=null,SMAX=META.stress_max_mpa||1;
+if(B64_STRESS){var s16=new Uint16Array(dec(B64_STRESS));stress=new Float32Array(s16.length);for(var i=0;i<s16.length;i++)stress[i]=s16[i]/65535*SMAX}
+var C=new THREE.Vector3(META.center[0],META.center[1],META.center[2]);
+var COL={add:0x1fb04a,remove:0xe0302a,smooth:0x2f6ff0};
+var HEX={add:"#1fb04a",remove:"#e0302a",smooth:"#2f6ff0"};
+
+// ---- scene
+var cv=$("cv"),view=$("view");
+var renderer=new THREE.WebGLRenderer({canvas:cv,antialias:true,preserveDrawingBuffer:false});
+renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
+var scene=new THREE.Scene();scene.background=new THREE.Color(0xeef0f3);
+var camera=new THREE.PerspectiveCamera(35,1,1,5000);camera.up.set(0,0,1);
+var controls=new THREE.OrbitControls(camera,cv);controls.enableDamping=false;
+scene.add(new THREE.HemisphereLight(0xffffff,0x8a8f99,0.75));
+var key=new THREE.DirectionalLight(0xffffff,0.7);key.position.set(1,-1.5,2);scene.add(key);
+var fill=new THREE.DirectionalLight(0xffffff,0.35);fill.position.set(-1,1,-0.5);scene.add(fill);
+var geo=new THREE.BufferGeometry();
+geo.setAttribute("position",new THREE.BufferAttribute(verts,3));
+geo.setIndex(new THREE.BufferAttribute(faces,1));
+geo.computeVertexNormals();geo.computeBoundingSphere();geo.computeBoundingBox();
+var colArr=new Float32Array(verts.length);geo.setAttribute("color",new THREE.BufferAttribute(colArr,3));
+var mat=new THREE.MeshStandardMaterial({color:0xb4b8bf,roughness:0.55,metalness:0.1,side:THREE.DoubleSide,vertexColors:false});
+var mesh=new THREE.Mesh(geo,mat);scene.add(mesh);
+var R=geo.boundingSphere.radius;
+function tint(v){ // jet-like blue->red
+  var h=0.667*(1-v),r,g,b,i=Math.floor(h*6),f=h*6-i,q=1-f;
+  switch(i%6){case 0:r=1;g=f;b=0;break;case 1:r=q;g=1;b=0;break;case 2:r=0;g=1;b=f;break;case 3:r=0;g=q;b=1;break;default:r=f;g=0;b=1}
+  return [r,g,b]}
+if(stress){for(var i=0;i<stress.length;i++){var c=tint(Math.min(1,stress[i]/SMAX));colArr[3*i]=c[0];colArr[3*i+1]=c[1];colArr[3*i+2]=c[2]}}
+else{$("cbStress").parentNode.style.display="none"}
+function fmtS(x){return x>=100?x.toFixed(0):x>=10?x.toFixed(1):x.toFixed(2)}
+if(stress){var L=$("cbarL");for(var k=0;k<=5;k++){var sp=document.createElement("span");sp.textContent=fmtS(SMAX*k/5)+(k===5?"+":"");L.appendChild(sp)}
+  $("cbarS").textContent="scale 0 - "+fmtS(SMAX)+" MPa (p99 of the surface)"}
+$("cbStress").onchange=function(){mat.vertexColors=this.checked;mat.color.set(this.checked?0xffffff:0xb4b8bf);mat.needsUpdate=true;$("cbar").style.display=this.checked?"block":"none"};
+if(stress){$("cbStress").checked=true;$("cbStress").onchange()}
+
+// ---- views
+var VDIR={iso:[0.75,-0.95,0.65],side:[0,-1,0],rear:[-1,0,0],front:[1,0,0],top:[0,0,1]};
+function setView(n,animate){
+  var d=new THREE.Vector3().fromArray(VDIR[n]).normalize();
+  if(n==="top")camera.up.set(1,0,0);else camera.up.set(0,0,1);
+  flyTo(new THREE.Vector3(0,0,0),R*3.2,d,animate)}
+var anim=null;
+function flyTo(target,dist,dir,animate){
+  var t1=target.clone(),d=dir?dir.clone().normalize():camera.position.clone().sub(controls.target).normalize();
+  var p1=t1.clone().add(d.multiplyScalar(dist));
+  if(!animate){controls.target.copy(t1);camera.position.copy(p1);camera.lookAt(t1);controls.update();return}
+  anim={t0:performance.now(),dur:350,tp0:controls.target.clone(),tp1:t1,c0:camera.position.clone(),c1:p1}}
+function stepAnim(){if(!anim)return;var k=Math.min(1,(performance.now()-anim.t0)/anim.dur);k=k*k*(3-2*k);
+  controls.target.lerpVectors(anim.tp0,anim.tp1,k);camera.position.lerpVectors(anim.c0,anim.c1,k);controls.update();if(k>=1)anim=null}
+Array.prototype.forEach.call(document.querySelectorAll("[data-v]"),function(b){b.onclick=function(){setView(b.getAttribute("data-v"),true)}});
+$("bReset").onclick=function(){camera.up.set(0,0,1);setView("iso",true)};
+function resize(){var w=view.clientWidth,h=view.clientHeight;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix()}
+window.addEventListener("resize",resize);resize();
+camera.up.set(0,0,1);setView("iso",false);
+
+// ---- marks state
+var marks=[],nextId=1,sel=null,tool="add",undoStack=[];
+var SKEY="refine_"+META.source_sha256.slice(0,16);
+function snap(){return JSON.stringify({marks:marks,nextId:nextId})}
+function pushUndo(){undoStack.push(snap());if(undoStack.length>200)undoStack.shift()}
+function restore(s){var o=JSON.parse(s);marks=o.marks;nextId=o.nextId;if(!getMark(sel))sel=null;rebuild()}
+function getMark(id){for(var i=0;i<marks.length;i++)if(marks[i].id===id)return marks[i];return null}
+function save(){try{localStorage.setItem(SKEY,snap())}catch(e){}}
+function r3(x){return Math.round(x*1000)/1000}
+function r4(x){return Math.round(x*10000)/10000}
+
+// ---- mark graphics
+var markGroup=new THREE.Group();scene.add(markGroup);
+function mirrorPts(a){return a.map(function(p){return new THREE.Vector3(p[0]-C.x,-p[1]-C.y,p[2]-C.z)})}
+function localPts(a){return a.map(function(p){return new THREE.Vector3(p[0]-C.x,p[1]-C.y,p[2]-C.z)})}
+function makeShape(pts,radius,color,opacity,wire){
+  var g=new THREE.Group(),m=new THREE.MeshBasicMaterial({color:color,transparent:true,opacity:opacity,depthWrite:false});
+  if(pts.length===1||pts.length<2){var s=new THREE.Mesh(new THREE.SphereGeometry(radius,20,14),m);s.position.copy(pts[0]);g.add(s)}
+  else{
+    var curve=new THREE.CatmullRomCurve3(pts);
+    var tube=new THREE.Mesh(new THREE.TubeGeometry(curve,Math.min(400,pts.length*3),radius,12,false),m);g.add(tube);
+    [pts[0],pts[pts.length-1]].forEach(function(p){var s=new THREE.Mesh(new THREE.SphereGeometry(radius,16,12),m);s.position.copy(p);g.add(s)})}
+  var dm=new THREE.MeshBasicMaterial({color:color});
+  pts.forEach(function(p){var d=new THREE.Mesh(new THREE.SphereGeometry(Math.max(0.35,R*0.003),8,6),dm);d.position.copy(p);g.add(d)});
+  if(wire){var w=new THREE.LineSegments(new THREE.EdgesGeometry(g.children[0].geometry),new THREE.LineBasicMaterial({color:color}));w.position.copy(g.children[0].position);g.add(w)}
+  return g}
+function rebuild(){
+  while(markGroup.children.length){var c=markGroup.children.pop();c.traverse(function(o){if(o.geometry)o.geometry.dispose()})}
+  marks.forEach(function(mk){
+    var col=COL[mk.type],isSel=mk.id===sel;
+    markGroup.add(makeShape(localPts(mk.points),mk.radius_mm,col,isSel?0.5:0.3,isSel));
+    if(mk.mirror)markGroup.add(makeShape(mirrorPts(mk.points),mk.radius_mm,col,0.12,false))});
+  markGroup.visible=$("cbMarks").checked;
+  renderList();renderEdit();save()}
+$("cbMarks").onchange=function(){markGroup.visible=this.checked};
+function centre(mk){var s=new THREE.Vector3();mk.points.forEach(function(p){s.x+=p[0];s.y+=p[1];s.z+=p[2]});return s.multiplyScalar(1/mk.points.length).sub(C)}
+
+// ---- UI: list / edit
+function label(mk){var d=mk.type==="smooth"?"str "+mk.strength:mk.amount_mm+" mm";return "#"+mk.id+" "+mk.type+" "+(mk.points.length>1?"stroke("+mk.points.length+")":"point")+" r"+mk.radius_mm+" "+d+(mk.mirror?" M":"")}
+function renderList(){
+  var L=$("list");L.innerHTML="";$("cnt").textContent=marks.length;
+  marks.forEach(function(mk){
+    var it=document.createElement("div");it.className="item"+(mk.id===sel?" sel":"");
+    var d=document.createElement("span");d.className="dot";d.style.background=HEX[mk.type];
+    var t=document.createElement("span");t.className="t";t.textContent=label(mk)+(mk.note?" - "+mk.note:"");t.title=mk.note||"";
+    var x=document.createElement("button");x.textContent="x";x.title="delete";
+    x.onclick=function(e){e.stopPropagation();delMark(mk.id)};
+    it.appendChild(d);it.appendChild(t);it.appendChild(x);
+    it.onclick=function(){select(mk.id,true)};L.appendChild(it)})}
+function select(id,fly){sel=id;rebuild();if(fly){var mk=getMark(id);if(mk)flyTo(centre(mk),Math.max(R*0.6,mk.radius_mm*6),null,true)}}
+function renderEdit(){
+  var mk=getMark(sel);$("edit").style.display=mk?"block":"none";if(!mk)return;
+  $("eId").textContent="#"+mk.id+" ("+mk.type+")";
+  $("eRad").value=mk.radius_mm;$("eRadV").textContent=mk.radius_mm;
+  var sm=mk.type==="smooth";$("eAmtRow").style.display=sm?"none":"flex";$("eStrRow").style.display=sm?"flex":"none";
+  if(!sm){$("eAmt").value=mk.amount_mm;$("eAmtV").textContent=mk.amount_mm}else{$("eStr").value=mk.strength;$("eStrV").textContent=mk.strength}
+  $("eMir").checked=mk.mirror;if(document.activeElement!==$("eNote"))$("eNote").value=mk.note||""}
+function bindSlider(id,field,num){
+  var el=$(id),pre=false;
+  el.addEventListener("input",function(){var mk=getMark(sel);if(!mk)return;if(!pre){pushUndo();pre=true}mk[field]=parseFloat(el.value);$(id+"V").textContent=el.value;rebuild2()});
+  el.addEventListener("change",function(){pre=false})}
+function rebuild2(){ // rebuild graphics without touching the focused slider
+  var f=document.activeElement;rebuild();if(f&&f.focus)try{f.focus()}catch(e){}}
+bindSlider("eRad","radius_mm");bindSlider("eAmt","amount_mm");bindSlider("eStr","strength");
+$("eMir").onchange=function(){var mk=getMark(sel);if(!mk)return;pushUndo();mk.mirror=this.checked;rebuild()};
+var noteDirty=false;
+$("eNote").addEventListener("input",function(){var mk=getMark(sel);if(!mk)return;if(!noteDirty){pushUndo();noteDirty=true}mk.note=this.value;renderList();save()});
+$("eNote").addEventListener("blur",function(){noteDirty=false});
+$("eDel").onclick=function(){if(sel!==null)delMark(sel)};
+function delMark(id){pushUndo();marks=marks.filter(function(m){return m.id!==id});if(sel===id)sel=null;rebuild()}
+["dRad","dAmt","dStr"].forEach(function(id){$(id).oninput=function(){$(id+"V").textContent=this.value}});
+function setTool(t){tool=t;$("tAdd").className="tool"+(t==="add"?" on":"");$("tRem").className="tool"+(t==="remove"?" on":"");$("tSm").className="tool"+(t==="smooth"?" on":"");
+  $("dAmtRow").style.display=t==="smooth"?"none":"flex";$("dStrRow").style.display=t==="smooth"?"flex":"none";
+  cursor.material.color.set(COL[t])}
+$("tAdd").onclick=function(){setTool("add")};$("tRem").onclick=function(){setTool("remove")};$("tSm").onclick=function(){setTool("smooth")};
+$("bUndo").onclick=undo;
+function undo(){if(!undoStack.length){status("nothing to undo");return}restore(undoStack.pop())}
+$("bClear").onclick=function(){if(!marks.length)return;if(confirm("Delete all "+marks.length+" marks?")){pushUndo();marks=[];sel=null;rebuild()}};
+function status(s){$("status").textContent=s}
+document.addEventListener("keydown",function(e){
+  var tg=e.target&&e.target.tagName;if(tg==="TEXTAREA"||(tg==="INPUT"&&e.target.type==="text"))return;
+  if((e.ctrlKey||e.metaKey)&&!e.shiftKey&&e.key.toLowerCase()==="z"){e.preventDefault();undo()}
+  else if(e.key==="m"||e.key==="M"){$("cbMarkMode").checked=!$("cbMarkMode").checked}
+  else if(e.key==="Delete"&&sel!==null){delMark(sel)}});
+
+// ---- JSON
+function toJSON(){
+  return {version:1,source_stl:META.source_stl,source_sha256:META.source_sha256,units:"mm",created:new Date().toISOString(),
+   marks:marks.map(function(m){return {id:m.id,type:m.type,points:m.points.map(function(p){return [r3(p[0]),r3(p[1]),r3(p[2])]}),
+     normals:m.normals.map(function(p){return [r4(p[0]),r4(p[1]),r4(p[2])]}),radius_mm:m.radius_mm,
+     amount_mm:m.type==="smooth"?null:m.amount_mm,strength:m.type==="smooth"?m.strength:null,mirror:!!m.mirror,note:m.note||""}})}}
+function pad(n){return(n<10?"0":"")+n}
+function stamp(){var d=new Date();return d.getFullYear()+pad(d.getMonth()+1)+pad(d.getDate())+"-"+pad(d.getHours())+pad(d.getMinutes())}
+$("bDl").onclick=function(){
+  var b=new Blob([JSON.stringify(toJSON(),null,1)],{type:"application/json"}),a=document.createElement("a"),name="marks_"+META.stem+"_"+stamp()+".json";
+  a.href=URL.createObjectURL(b);a.download=name;document.body.appendChild(a);a.click();document.body.removeChild(a);
+  setTimeout(function(){URL.revokeObjectURL(a.href)},2000);status("downloaded "+name)};
+$("bCopy").onclick=function(){
+  var txt=JSON.stringify(toJSON(),null,1);
+  function fb(){var t=document.createElement("textarea");t.value=txt;document.body.appendChild(t);t.select();var ok=false;try{ok=document.execCommand("copy")}catch(e){}document.body.removeChild(t);status(ok?"JSON copied":"copy failed - use Download")}
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(txt).then(function(){status("JSON copied")},fb);else fb()};
+$("bImp").onclick=function(){$("fImp").click()};
+$("fImp").onchange=function(){
+  var f=this.files[0];if(!f)return;var rd=new FileReader();
+  rd.onload=function(){try{
+    var o=JSON.parse(rd.result);if(o.version!==1||!Array.isArray(o.marks))throw new Error("not a version 1 marks file");
+    if(o.source_sha256&&o.source_sha256!==META.source_sha256&&!confirm("This file was made for a different STL (sha256 differs). Import anyway?"))return;
+    pushUndo();var mx=0;
+    marks=o.marks.map(function(m){mx=Math.max(mx,m.id|0);return {id:m.id|0,type:m.type,points:m.points,normals:m.normals||m.points.map(function(){return[0,0,1]}),
+      radius_mm:m.radius_mm,amount_mm:m.amount_mm==null?1:m.amount_mm,strength:m.strength==null?1:m.strength,mirror:!!m.mirror,note:m.note||""}});
+    nextId=mx+1;sel=null;rebuild();status("imported "+marks.length+" marks")}catch(e){alert("Import failed: "+e.message)}};
+  rd.readAsText(f);this.value=""};
+
+// ---- picking
+var ray=new THREE.Raycaster(),mv=new THREE.Vector2();
+function pick(ev){
+  var r=cv.getBoundingClientRect();mv.set((ev.clientX-r.left)/r.width*2-1,-((ev.clientY-r.top)/r.height*2-1));
+  ray.setFromCamera(mv,camera);var h=ray.intersectObject(mesh,false);if(!h.length)return null;
+  var n=h[0].face.normal.clone();if(n.dot(ray.ray.direction)>0)n.negate();
+  return {p:h[0].point.clone(),n:n}}
+var cursor=new THREE.Mesh(new THREE.SphereGeometry(1,16,12),new THREE.MeshBasicMaterial({color:COL.add,transparent:true,opacity:0.25,depthWrite:false}));
+cursor.visible=false;scene.add(cursor);
+function newMark(pts,nrm){
+  var mk={id:nextId++,type:tool,points:pts.map(function(p){return[r3(p.x+C.x),r3(p.y+C.y),r3(p.z+C.z)]}),normals:nrm.map(function(n){return[r4(n.x),r4(n.y),r4(n.z)]}),
+    radius_mm:parseFloat($("dRad").value),amount_mm:parseFloat($("dAmt").value),strength:parseFloat($("dStr").value),mirror:$("dMir").checked,note:""};
+  pushUndo();marks.push(mk);sel=mk.id;rebuild()}
+var down=null,stroke=null,strokeLine=null,pend=false,lastEv=null;
+function markOn(){return $("cbMarkMode").checked}
+cv.addEventListener("pointerdown",function(e){
+  if(e.button!==0)return;down={x:e.clientX,y:e.clientY,shift:e.shiftKey,moved:false};
+  if(e.shiftKey&&markOn()){e.stopImmediatePropagation();e.preventDefault();controls.enabled=false;stroke={pts:[],nrm:[]};cv.setPointerCapture(e.pointerId);strokeAdd(e,true)}},true);
+function strokeAdd(e,first){
+  var h=pick(e);if(!h)return;var L=stroke.pts.length?stroke.pts[stroke.pts.length-1]:null;
+  if(L&&L.distanceTo(h.p)<2)return;stroke.pts.push(h.p);stroke.nrm.push(h.n);
+  if(strokeLine)scene.remove(strokeLine);
+  if(stroke.pts.length>1){strokeLine=new THREE.Line(new THREE.BufferGeometry().setFromPoints(stroke.pts),new THREE.LineBasicMaterial({color:COL[tool],linewidth:2}));scene.add(strokeLine)}}
+cv.addEventListener("pointermove",function(e){
+  lastEv=e;
+  if(down&&Math.hypot(e.clientX-down.x,e.clientY-down.y)>4)down.moved=true;
+  if(stroke&&(e.buttons&1)&&!pend){pend=true;requestAnimationFrame(function(){pend=false;if(stroke&&lastEv)strokeAdd(lastEv)})}});
+cv.addEventListener("pointerup",function(e){
+  if(e.button!==0||!down)return;var d=down;down=null;
+  if(stroke){controls.enabled=true;if(strokeLine){scene.remove(strokeLine);strokeLine=null}
+    var s=stroke;stroke=null;try{cv.releasePointerCapture(e.pointerId)}catch(x){}
+    if(s.pts.length)newMark(s.pts,s.nrm);return}
+  if(!d.moved&&markOn()&&!d.shift){var h=pick(e);if(h)newMark([h.p],[h.n])}});
+// hover cursor
+var hoverPend=false;
+cv.addEventListener("mousemove",function(e){
+  if(hoverPend||down||!markOn()){return}hoverPend=true;
+  requestAnimationFrame(function(){hoverPend=false;var h=pick(e);if(h){cursor.visible=true;cursor.position.copy(h.p);cursor.scale.setScalar(parseFloat($("dRad").value))}else cursor.visible=false})});
+cv.addEventListener("mouseleave",function(){cursor.visible=false});
+$("cbMarkMode").onchange=function(){cursor.visible=false;cv.style.cursor=this.checked?"crosshair":"default"};
+
+// ---- info
+$("info").innerHTML="<b>"+esc(META.stem)+"</b> &nbsp; mass "+META.mass_g.toFixed(1)+" g (vol "+(META.volume_mm3/1000).toFixed(1)+" cm3 x "+META.density_g_cm3+" g/cm3)<br>faces "+META.faces_embedded+" shown / "+META.faces_source+" source"+
+ (stress?"<br>stress overlay: von Mises, scale 0 - "+fmtS(SMAX)+" MPa (p99 of the surface)":"<br>stress overlay: none")+"<br><span title=\""+esc(META.source_stl)+"\">sha256 "+META.source_sha256.slice(0,16)+"... </span> mirror plane y=0 (off by default); +Z up";
+
+// ---- restore autosave
+try{var sv=localStorage.getItem(SKEY);if(sv){var o=JSON.parse(sv);if(o.marks&&o.marks.length){marks=o.marks;nextId=o.nextId;status("restored "+marks.length+" marks from autosave")}}}catch(e){}
+setTool("add");rebuild();
+(function loop(){requestAnimationFrame(loop);stepAnim();renderer.render(scene,camera)})();
+window.__markup={marks:function(){return marks},toJSON:toJSON,newAt:function(p,n){var mk=tool;newMark([new THREE.Vector3(p[0]-C.x,p[1]-C.y,p[2]-C.z)],[new THREE.Vector3(n[0],n[1],n[2])])}};
+})();
+</script></body></html>

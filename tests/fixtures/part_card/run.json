@@ -1,0 +1,286 @@
+{
+ "format": 1,
+ "name": "tshirt_hook_short",
+ "yaml_path": "../../examples/hook/hook_short.yaml",
+ "started_at": "2026-10-23T21:28:18+00:00",
+ "shape": [
+  41,
+  18,
+  33
+ ],
+ "origin": [
+  -1.0,
+  -17.5,
+  -30.0
+ ],
+ "h": 2.0,
+ "n_active": 8982,
+ "n_free_dofs": 27363,
+ "iterations": 40,
+ "volume_fraction": 0.2,
+ "load_cases": [
+  {
+   "name": "hang",
+   "weight": 234.0,
+   "forces": [
+    {
+     "region": "tip",
+     "force": [
+      0.0,
+      0.0,
+      -1.96
+     ],
+     "center": [
+      66.8,
+      -0.5,
+      13.4
+     ],
+     "kind": "force"
+    }
+   ]
+  },
+  {
+   "name": "pull_off",
+   "weight": 1.0,
+   "forces": [
+    {
+     "region": "tip",
+     "force": [
+      20.89,
+      5.21,
+      -20.89
+     ],
+     "center": [
+      66.8,
+      -0.5,
+      13.4
+     ],
+     "kind": "force"
+    }
+   ]
+  }
+ ],
+ "regions": {
+  "design": "design.stl",
+  "fixed": [
+   "wall_plate.stl"
+  ],
+  "keep_out": [
+   "screw_hole_top.stl",
+   "screw_hole_bottom.stl"
+  ],
+  "solid": [],
+  "load": {
+   "tip": "hook_tip.stl"
+  }
+ },
+ "region_files": {
+  "design": "design.stl",
+  "fixed": [
+   "wall_plate.stl"
+  ],
+  "keep_out": [
+   "screw_hole_top.stl",
+   "screw_hole_bottom.stl"
+  ],
+  "solid": [],
+  "load": {
+   "tip": "hook_tip.stl"
+  }
+ },
+ "solver": "pardiso",
+ "mesh_method": "sdf",
+ "objective": "weighted_compliance",
+ "objective_form": "sum",
+ "constraints": [
+  {
+   "name": "volume",
+   "limit": 0.2
+  }
+ ],
+ "mass_design_space_g": 89.10144,
+ "assumptions": [],
+ "lost_force": {
+  "cases": [
+   {
+    "name": "hang",
+    "total_n": [
+     0.0,
+     0.0,
+     -1.9599999999999955
+    ],
+    "total_magnitude_n": 1.9599999999999955,
+    "lost_n": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "lost_magnitude_n": 0.0,
+    "lost_percent": 0.0,
+    "lost_percent_of_sum": 0.0,
+    "regions": []
+   },
+   {
+    "name": "pull_off",
+    "total_n": [
+     20.889999999999848,
+     5.209999999999986,
+     -20.889999999999848
+    ],
+    "total_magnitude_n": 29.99880497619842,
+    "lost_n": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "lost_magnitude_n": 0.0,
+    "lost_percent": 0.0,
+    "lost_percent_of_sum": 0.0,
+    "regions": []
+   }
+  ],
+  "max_lost_percent": 0.0
+ },
+ "derived": {
+  "load_cases": [
+   {
+    "name": "hang",
+    "weight": 234.0,
+    "forces": [
+     {
+      "region": "tip",
+      "force_n": [
+       0.0,
+       0.0,
+       -1.96
+      ],
+      "magnitude_n": 1.96
+     }
+    ],
+    "total_magnitude_n": 1.96,
+    "compliance_limit": null,
+    "stress_limit_mpa": null,
+    "stress_limit_from": null,
+    "allowable_mpa": null,
+    "safety_factor": null,
+    "allowable_source": null
+   },
+   {
+    "name": "pull_off",
+    "weight": 1.0,
+    "forces": [
+     {
+      "region": "tip",
+      "force_n": [
+       20.89,
+       5.21,
+       -20.89
+      ],
+      "magnitude_n": 29.9988
+     }
+    ],
+    "total_magnitude_n": 29.9988,
+    "compliance_limit": null,
+    "stress_limit_mpa": null,
+    "stress_limit_from": null,
+    "allowable_mpa": null,
+    "safety_factor": null,
+    "allowable_source": null
+   }
+  ],
+  "voxel_size_mm": 2.0,
+  "filter_radius_mm": 3.0,
+  "min_feature_mm": 3.0,
+  "filter": {
+   "radius_mm": 3.0,
+   "radius_source": "default",
+   "solid_neighbours": "density_one",
+   "min_member_mm": null,
+   "min_member_radius_mm": null,
+   "min_feature_mm": 3.0,
+   "min_feature_note": "walls survive from about 1.6 mm and rods from about 2.81 mm (continuum values, interior of the design space; thinner ones vanish). The grid sets a floor of about one voxel (2 mm). A skin at a free face of the design space can be about half as thin (0.799 mm for a wall)",
+   "size": {
+    "radius_voxels": 1.5,
+    "entries_per_row": 19,
+    "entries": 145369,
+    "build_peak_bytes_estimate": 8722140,
+    "build_peak_gib_estimate": 0.01,
+    "held_bytes_estimate": 4070332,
+    "held_gib_estimate": 0.0
+   },
+   "facts": []
+  },
+  "volume_fraction": 0.2,
+  "density_g_cm3": 1.24,
+  "iterations": 40,
+  "case_combine": "sum",
+  "objective": "compliance",
+  "robust": {
+   "mode": "off",
+   "on": false,
+   "facts": []
+  },
+  "min_feature_note": "walls survive from about 1.6 mm and rods from about 2.81 mm (continuum values, interior of the design space; thinner ones vanish). The grid sets a floor of about one voxel (2 mm). A skin at a free face of the design space can be about half as thin (0.799 mm for a wall)",
+  "grid_shape": [
+   41,
+   18,
+   33
+  ],
+  "active_voxels": 8982,
+  "volume": {
+   "active_block_mm3": 71856.0,
+   "volume_fraction": 0.2,
+   "volume_fraction_of": "free design voxels (engine value; forced-solid voxels are solid on top)",
+   "free_design_voxels": 7651,
+   "free_design_mm3": 61208.0,
+   "forced_solid_mm3": 10648.0,
+   "target_volume_mm3": 22889.6,
+   "target_mass_g": 28.383
+  },
+  "mass_active_block_g": 89.101,
+  "time_estimate_s": 26.9,
+  "memory_estimate_gib": 0.49
+ },
+ "print": {
+  "build_direction": [
+   0.0,
+   0.0,
+   1.0
+  ],
+  "bed_mm": [
+   220.0,
+   220.0
+  ],
+  "printer_type": "fdm",
+  "self_supporting_angle_deg": null,
+  "given": []
+ },
+ "interface_taken": [
+  {
+   "cut": "screw_hole_top",
+   "cut_kind": "keep-out region",
+   "region": "wall_plate",
+   "region_role": "fixed",
+   "voxels": 8,
+   "region_voxels": 1122,
+   "share": 0.0071,
+   "depth_mm": 1.0,
+   "trim_mm": 2.0,
+   "bounded": false,
+   "warn": false
+  },
+  {
+   "cut": "screw_hole_bottom",
+   "cut_kind": "keep-out region",
+   "region": "wall_plate",
+   "region_role": "fixed",
+   "voxels": 8,
+   "region_voxels": 1122,
+   "share": 0.0071,
+   "depth_mm": 1.0,
+   "trim_mm": 2.0,
+   "bounded": false,
+   "warn": false
+  }
+ ]
+}

@@ -1,0 +1,44 @@
+{
+ "recorded": true,
+ "case": "runs/tshirt_hook/tshirt_hook.case.json",
+ "yaml_rel": "runs/tshirt_hook/tshirt_hook.yaml",
+ "brief": {
+  "id": 1,
+  "recorded_at": "2026-10-23T19:05:38+06:00",
+  "mode": "state",
+  "text": "A wall hook for one T-shirt on a hanger. Two screws hold the plate on the wall. Load 1: the shirt hangs (about 200 g). Load 2: a fast pull-off at an angle (about 30 N). PETG. Hook depth about 75 mm.",
+  "assumptions": [
+   {
+    "text": "shirt on a hanger: about 200 g, 1.96 N down",
+    "origin": "inferred"
+   },
+   {
+    "text": "pull-off at an angle: about 30 N",
+    "origin": "inferred"
+   },
+   {
+    "text": "two M4 screws into the wall, plate 3.5 mm",
+    "origin": "inferred"
+   },
+   {
+    "text": "PETG, E 3500 MPa",
+    "origin": "inferred"
+   }
+  ],
+  "criteria": [],
+  "inputs": {
+   "yaml": "ede03be446ef55f1fcbd714faff0cc6fce13ed5b688bde4b4326602e65482eb6",
+   "yaml_content": "2f1a77a86f437e46218f95cb80e1d2bcfcd9eb7e2fe9814151b9d90f972fc398",
+   "files": {
+    "design:design.stl": "54686a969c9e3a29bb4a3a2e75c3e4634b983b7503c036eb35a55a2bb4b2875a",
+    "fixed:wall_plate.stl": "124e6cac678ce0fc32be69a752b3ba702d803353fcf4f14f8674b4a214337328",
+    "keep_out:screw_hole_top.stl": "5849b2dc93d6c0a3d9d33ecff2e6a4f0cecea48add22f155ec74391824a3052c",
+    "keep_out:screw_hole_bottom.stl": "d6547091ebdea6f00bb1db517ee548747f79e2bbbe63702c21688c7dff7a2c22",
+    "load:hook_tip.stl": "fce2e9d7105bb3d15d988a773adcea57950a404ca5e9c1d0a3166f931990b4fe"
+   }
+  }
+ },
+ "replaced": null,
+ "facts": [],
+ "options": []
+}

@@ -1,0 +1,9 @@
+[PASS] watertight: winding_consistent=True
+[PASS] one body: 1 bodies; sizes(tri)=[12]
+[PASS] volume > 0: 6000.0 mm3
+[PASS] fits 220x220 mm bed: extents=[30.0, 20.0, 10.0] (any 2 axes < bed; flat side down)
+[SKIP] path checks cavity.stl: keep-out is not a hole (name has no 'hole')
+[PASS] thin members < 1.2 mm: volume lost by opening: 0.6mm=0.245%, 0.8mm=0.002%, 1mm=0.000%, 1.2mm=0.251%, 1.6mm=0.732%, 2mm=0.251%; thickest=10.0 mm; first diameter with loss>0.05% (noise level): 0.6
+[PASS] material in load box 'tip': 100.0% of box volume is solid; box=[27.0, 5.0, 0.0]..[30.0, 15.0, 10.0]
+[PASS] mass vs STL volume: metrics 7.44 g, STL 7.44 g (density 1.24), diff +0.00%
+run_time_s: 1.0

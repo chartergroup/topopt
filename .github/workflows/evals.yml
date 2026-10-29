@@ -1,0 +1,78 @@
+# The evals of the topopt plugin (`claude plugin eval`) on the MCP mocks. See evals/README.md ("Run the evals in CI") and CONTRACTS.md section 27.1.
+# MANUAL ONLY, like tests.yml: the only event is workflow_dispatch. A push or a pull request never
+# starts this file (scripts/ci/check_workflow.py checks that).
+# Start it from the Actions tab (workflow "evals", Run workflow; pick the branch and the inputs), or:
+#   gh workflow run evals.yml --repo chartergroup/topopt -f model=claude-sonnet-5-5 -f judge_model=claude-haiku-5-5 -f threshold=0.8
+# GitHub starts a manual run only when the workflow file is on the default branch.
+# The inputs model, judge_model and threshold go to `claude plugin eval` as they are. threshold 0 turns the score gate off: the job then fails only
+# when the run fails (a case that did not load, a run that ended on an API error, the cost ceiling, a refused credential).
+# Each run of a case is a real model call. The credential is the repository secret ANTHROPIC_API_KEY (the API bill pays) or CLAUDE_CODE_OAUTH_TOKEN
+# (from `claude setup-token`; the plan usage of that account pays). With neither secret the run step stops before a model call.
+# Cost: smoke with 1 run per case, about $3 to $4 of tokens (measured on a Mac, not in CI); mock with 3 runs, about $10 (estimate). max_cost_usd
+# stops the run at that list-price estimate (exit code 2). Runner time: one ubuntu job of about 5 to 15 minutes (estimate, not measured).
+# The steps are in the composite action .github/actions/plugin-eval. Its run step calls scripts/ci/run_evals.py.
+name: evals
+
+on:
+  workflow_dispatch:
+    inputs:
+      model:
+        description: "The model of the agent under test (--model). Pin it, so that a model change is not read as a plugin change."
+        type: string
+        default: claude-sonnet-5-5
+      judge_model:
+        description: "The model of the llm graders and the agent mocks (--judge-model)."
+        type: string
+        default: claude-haiku-5-5
+      threshold:
+        description: "The lowest case score that passes, 0 to 1. 0: no score gate (the job fails only when the run fails)."
+        type: string
+        default: "0.8"
+      tag:
+        description: "smoke: the short cases. mock: all the mocked cases."
+        type: choice
+        options:
+          - smoke
+          - mock
+        default: smoke
+      case:
+        description: "Optional glob of case names (--case), for example units-kg. Empty: all the cases of the tag."
+        type: string
+        default: ""
+      runs:
+        description: "Runs per case, 1 to 50. 1 is cheap; 3 gives less noise."
+        type: string
+        default: "1"
+      max_cost_usd:
+        description: "The cost ceiling in USD (list-price estimate). When the run gets to it, it stops with exit code 2."
+        type: string
+        default: "15"
+
+permissions:
+  contents: read
+
+# Manual runs of the same commit, tag and model run one after the other. A run that is going is never cancelled.
+concurrency:
+  group: evals-${{ github.sha }}-${{ inputs.tag }}-${{ inputs.model }}
+  cancel-in-progress: false
+
+jobs:
+  evals:
+    name: evals (${{ inputs.tag }}, ${{ inputs.model }}, threshold ${{ inputs.threshold }})
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Run the mocked eval cases of the plugin
+        uses: ./.github/actions/plugin-eval
+        with:
+          model: ${{ inputs.model }}
+          judge-model: ${{ inputs.judge_model }}
+          threshold: ${{ inputs.threshold }}
+          tag: ${{ inputs.tag }}
+          case: ${{ inputs.case }}
+          runs: ${{ inputs.runs }}
+          max-cost-usd: ${{ inputs.max_cost_usd }}
+          anthropic-api-key: ${{ secrets.ANTHROPIC_API_KEY }}
+          claude-code-oauth-token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}

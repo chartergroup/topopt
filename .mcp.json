@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "topopt": {
+      "type": "stdio",
+      "command": ".venv/bin/python",
+      "args": ["-m", "topopt_mcp.server"],
+      "env": {}
+    }
+  }
+}

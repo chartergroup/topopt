@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>topopt live</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<main>
+  <section id="view">
+    <canvas id="gl"></canvas>
+    <div id="pill" class="pill">WAITING</div>
+    <div id="replay-badge" hidden>REPLAY</div>
+    <div id="title"></div>
+    <div id="legend">
+      <span class="chip fixed"></span>fixed
+      <span class="chip load"></span>load
+    </div>
+    <div id="banner" hidden></div>
+  </section>
+
+  <aside id="side">
+    <section id="codepanel">
+      <header>
+        <span id="srcname">optimize.py</span>
+        <span id="steps"></span>
+      </header>
+      <div id="code"></div>
+      <pre id="log"></pre>
+    </section>
+    <section id="result" hidden>
+      <a id="refine-link" class="refine-link" href="/refine" target="_blank" rel="noopener" hidden>Refine &#8599;</a>
+      <h1>Result</h1>
+      <div class="big">
+        <div class="mass"><span id="m-before">-</span><span class="arrow">&rarr;</span><span id="m-after">-</span><small>g</small></div>
+        <div class="saved"><span id="m-saved">-</span> lighter</div>
+      </div>
+      <div class="rows" id="m-stiff"></div>
+      <div class="rows">
+        <div class="row"><span>Run time</span><b id="m-time">-</b></div>
+        <div class="row" id="row-perg" hidden><span>Pull-off stiffness per gram</span><b id="m-perg">-</b></div>
+      </div>
+      <div class="partfile" id="partfile" hidden><span>Part file</span><code id="m-file"></code></div>
+    </section>
+  </aside>
+</main>
+
+<footer id="bar">
+  <div class="cell"><label>Iteration</label><b id="b-iter">-</b></div>
+  <div class="cell"><label>Time</label><b id="b-time">00:00</b><span id="b-left" class="left"></span></div>
+  <div class="cell"><label>Volume</label><b id="b-vol">-</b></div>
+  <div class="cell"><label>Compliance</label><b id="b-comp">-</b></div>
+  <div class="cell spark"><canvas id="spark"></canvas></div>
+</footer>
+
+<script type="module" src="js/app.js"></script>
+</body>
+</html>

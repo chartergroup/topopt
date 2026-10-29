@@ -1,0 +1,33 @@
+# A first setup (launcher sync, Linux x86_64, uv 0.13.5, empty uv cache), 2026-10-27 (#399). Seconds since the start, the
+# source (err: setup.log, step: last-step.log, the live uv output of step 2) and the line. Lines of other kinds and paths are left out.
+0.26 err| topopt: step 1 of 3: make the Python 3.12 environment (uv gets Python 3.12 if it has none)
+6.15 err| topopt: step 2 of 3: install the packages of requirements.lock
+7.43 step| Resolved 54 packages in 1.31s
+7.69 step| Downloading pygments (1.2MiB)
+7.69 step| Downloading llvmlite (57.1MiB)
+7.69 step| Downloading cryptography (4.5MiB)
+7.69 step| Downloading numba (3.7MiB)
+7.69 step| Downloading manifold3d (1.4MiB)
+7.69 step| Downloading numpy (15.9MiB)
+7.69 step| Downloading pillow (6.6MiB)
+7.69 step| Downloading pyamg (1.8MiB)
+7.69 step| Downloading networkx (2.0MiB)
+7.69 step| Downloading pydantic-core (2.1MiB)
+7.69 step| Downloading scikit-image (12.9MiB)
+7.69 step| Downloading scipy (33.7MiB)
+16.69 step|  Downloaded pygments
+16.95 step|  Downloaded manifold3d
+18.75 step|  Downloaded pyamg
+19.01 step|  Downloaded networkx
+19.01 step|  Downloaded pydantic-core
+22.10 step|  Downloaded numba
+23.91 step|  Downloaded cryptography
+26.74 step|  Downloaded pillow
+34.98 step|  Downloaded scikit-image
+37.81 step|  Downloaded numpy
+48.34 step|  Downloaded scipy
+53.22 err| topopt: step 3 of 3: link the topopt code in <root>
+53.22 step|  Downloaded llvmlite
+53.22 step| Prepared 54 packages in 45.69s
+53.22 step| Installed 54 packages in 19ms
+59.93 err| topopt: ready after 59 s (pins=lock)

@@ -1,0 +1,25 @@
+name: tshirt_hook_light
+assumptions:
+  - "Target mass 18 g for the whole hook (the plain hook on the same grid is 28 g). The user gave the number."
+  - "Loads, plate, screws, saddle and lip are as in the plain hook: a 0.2 kg shirt (1.96 N) and a 30 N pull."
+regions:
+  design:
+    - prism: {plane: xz, extent: [-14, 14], points: [[2,-30],[72,8],[72,11],[56,15],[2,36]]}
+  fixed:
+    wall_plate:
+      - box: {min: [0,-17.5,-30], max: [3.5,17.5,36]}
+  keep_out:
+    screw_hole_top:
+      - cylinder: {p0: [-1,0,30], p1: [4,0,30], radius: 2.25}
+      - cylinder: {p0: [3.5,0,30], p1: [80,0,30], radius: 4.5}
+    screw_hole_bottom:
+      - cylinder: {p0: [-1,0,-20], p1: [4,0,-20], radius: 2.25}
+      - cylinder: {p0: [3.5,0,-20], p1: [80,0,-20], radius: 4.5}
+  load:
+    hook_tip:
+      - box: {min: [56,-9,11], max: [76,9,15]}
+      - box: {min: [73,-9,11], max: [76,9,24]}
+load_cases:
+  - {name: hang, weight: 234.0, forces: [{region: hook_tip, force: [0,0,-1.96]}]}
+  - {name: pull_off, weight: 1.0, forces: [{region: hook_tip, force: [20.89,5.21,-20.89]}]}
+settings: {target_mass_g: 18, iterations: 80, voxel_size: 1.5}

@@ -1,0 +1,95 @@
+{
+ "about": "Effective settings (`checkpoint.effective_settings`) and their SHA-256 of the cantilever case of tests/test_perimeter.py (`cantilever(tmp_path)`: tests/test_optimize.py `make_case`, 2 mm, 40 passes), computed ONCE with the code of base commit e6a3e70 (before A4c). A run without `perimeter_max_mm2` must give these again, so a checkpoint written before the key resumes. If a later field of `Settings` changes this file, pop it in `effective_settings` when it is unset (as the A4c key), or change this file on purpose and say that older checkpoints then need --allow-changed-inputs.",
+ "base_commit": "e6a3e700ec38ca9a412d06f5dab000bf8646c77e",
+ "effective": {
+  "load_cases": {
+   "down": {
+    "allowable_mpa": null,
+    "allowable_source": null,
+    "compliance_limit": null,
+    "forces": [
+     {
+      "at": null,
+      "force": [
+       0.0,
+       0.0,
+       -2.0
+      ],
+      "moment": null,
+      "region": "tip"
+     }
+    ],
+    "name": "down",
+    "pressures": [],
+    "safety_factor": null,
+    "stress_limit": null,
+    "weight": 3.0
+   },
+   "side": {
+    "allowable_mpa": null,
+    "allowable_source": null,
+    "compliance_limit": null,
+    "forces": [
+     {
+      "at": null,
+      "force": [
+       1.0,
+       3.0,
+       0.0
+      ],
+      "moment": null,
+      "region": "tip"
+     }
+    ],
+    "name": "side",
+    "pressures": [],
+    "safety_factor": null,
+    "stress_limit": null,
+    "weight": 1.0
+   }
+  },
+  "material": {
+   "E": 3500.0,
+   "density": 1.24,
+   "nu": 0.35
+  },
+  "settings": {
+   "beta_schedule": [
+    [
+     0,
+     1.0
+    ],
+    [
+     10,
+     2.0
+    ],
+    [
+     20,
+     4.0
+    ]
+   ],
+   "case_combine": "sum",
+   "eta_eroded": null,
+   "filter_radius": 3.0,
+   "filter_radius_source": "default",
+   "filter_solid_neighbours": "density_one",
+   "gpu_case": "auto",
+   "gpu_device": "auto",
+   "iterations": 40,
+   "mesh_method": "sdf",
+   "min_member_mm": null,
+   "move_limit": 0.2,
+   "objective": "compliance",
+   "penal": 3.0,
+   "robust": "off",
+   "solver": "auto",
+   "stress_power": 0.5,
+   "stress_q": 40.0,
+   "stress_scale": "auto",
+   "stress_step_acceptance": true,
+   "volume_fraction": 0.3,
+   "voxel_size": 2.0
+  }
+ },
+ "effective_sha256": "1d2d971259e0a72ae3f39d45ca95347f476513a60267c12e2cdd763b94bf28c3"
+}

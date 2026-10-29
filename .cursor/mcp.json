@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "topopt": {
+      "type": "stdio",
+      "command": "sh",
+      "args": ["${workspaceFolder}/scripts/topopt-env.sh", "mcp"],
+      "env": { "TOPOPT_WORKSPACE": "${workspaceFolder}" }
+    }
+  }
+}

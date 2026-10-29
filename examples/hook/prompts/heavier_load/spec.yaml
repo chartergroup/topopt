@@ -1,0 +1,28 @@
+name: tshirt_hook_jacket
+assumptions:
+  - "The hook holds a 2 kg jacket: 2 x 9.81 = 19.62 N down (the plain hook holds a 0.2 kg shirt)."
+  - "Abuse case: a pull of 5 times the static force, 98.1 N, in the direction of the plain hook (45 degrees down and out of the wall, 10 degrees to the side)."
+  - "The static case weight is (98.1 / 19.62)^2 = 25, so that both cases have the same share of the objective (the rule of the plain hook)."
+  - "Volume fraction 0.3 (the plain hook has 0.2): the abuse load is big."
+  - "Plate, screws, saddle and lip are as in the plain hook."
+regions:
+  design:
+    - prism: {plane: xz, extent: [-14, 14], points: [[2,-30],[72,8],[72,11],[56,15],[2,36]]}
+  fixed:
+    wall_plate:
+      - box: {min: [0,-17.5,-30], max: [3.5,17.5,36]}
+  keep_out:
+    screw_hole_top:
+      - cylinder: {p0: [-1,0,30], p1: [4,0,30], radius: 2.25}
+      - cylinder: {p0: [3.5,0,30], p1: [80,0,30], radius: 4.5}
+    screw_hole_bottom:
+      - cylinder: {p0: [-1,0,-20], p1: [4,0,-20], radius: 2.25}
+      - cylinder: {p0: [3.5,0,-20], p1: [80,0,-20], radius: 4.5}
+  load:
+    hook_tip:
+      - box: {min: [56,-9,11], max: [76,9,15]}
+      - box: {min: [73,-9,11], max: [76,9,24]}
+load_cases:
+  - {name: hang, weight: 25.0, forces: [{region: hook_tip, force: [0,0,-19.62]}]}
+  - {name: pull_off, weight: 1.0, forces: [{region: hook_tip, force: [68.31,17.03,-68.31]}]}
+settings: {volume_fraction: 0.3, iterations: 80, voxel_size: 1.5}

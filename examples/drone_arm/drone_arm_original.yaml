@@ -1,0 +1,51 @@
+# The reference for the README numbers: the plain 6 mm plate arm, all voxels solid, with the clamp, keep-outs and loads of drone_arm.yaml.
+# Pass 0 of this run gives the compliance of each load case (history.jsonl, compliance_cases). For the optimized part, set
+# regions.design to the final.stl of a drone_arm.yaml run (README.md, "How the numbers were measured").
+name: drone_arm_original
+regions:
+  design: arm_original.stl
+  fixed:
+  - frame_clamp.stl
+  keep_out:
+  - plate_stack.stl
+  - root_bolt_hole_a.stl
+  - root_bolt_hole_b.stl
+  - motor_bolt_hole_1.stl
+  - motor_bolt_hole_2.stl
+  - motor_bolt_hole_3.stl
+  - motor_bolt_hole_4.stl
+  - motor_shaft.stl
+  - motor_bell.stl
+  load:
+    motor_mount: motor_pad.stl
+load_cases:
+- name: thrust
+  weight: 9.0
+  forces:
+  - region: motor_mount
+    force: [0.0, 0.0, 20.0]
+    moment: [0.0, 0.0, 200.0]
+- name: side_hit
+  weight: 1.0
+  forces:
+  - region: motor_mount
+    force: [0.0, 60.0, 0.0]
+    at: [113.0, 0.0, 20.0]
+- name: front_hit
+  weight: 1.0
+  forces:
+  - region: motor_mount
+    force: [-60.0, 0.0, 0.0]
+    at: [113.0, 0.0, 20.0]
+material:
+  E: 3500.0
+  nu: 0.35
+  density: 1.24
+settings:
+  voxel_size: 0.5
+  volume_fraction: 1.0
+  iterations: 1
+  solver: amg
+assumptions:
+- 'Own parametric 5-inch arm (make_arm.py), the same regions as drone_arm.yaml'
+- 'Reference: the plain 6 mm plate arm, all voxels solid, same clamp, keep-outs, loads and material as drone_arm.yaml'

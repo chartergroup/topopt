@@ -1,0 +1,86 @@
+solid tip
+  facet normal -1 0 0
+    outer loop
+      vertex 27 5 10
+      vertex 27 15 10
+      vertex 27 5 0
+    endloop
+  endfacet
+  facet normal 0 -1 0
+    outer loop
+      vertex 30 5 0
+      vertex 27 5 10
+      vertex 27 5 0
+    endloop
+  endfacet
+  facet normal -1 0 0
+    outer loop
+      vertex 27 5 0
+      vertex 27 15 10
+      vertex 27 15 0
+    endloop
+  endfacet
+  facet normal 0 0 -1
+    outer loop
+      vertex 27 15 0
+      vertex 30 5 0
+      vertex 27 5 0
+    endloop
+  endfacet
+  facet normal 0 0 1
+    outer loop
+      vertex 27 5 10
+      vertex 30 15 10
+      vertex 27 15 10
+    endloop
+  endfacet
+  facet normal 0 -1 0
+    outer loop
+      vertex 30 5 10
+      vertex 27 5 10
+      vertex 30 5 0
+    endloop
+  endfacet
+  facet normal 0 0 1
+    outer loop
+      vertex 30 5 10
+      vertex 30 15 10
+      vertex 27 5 10
+    endloop
+  endfacet
+  facet normal 0 1 0
+    outer loop
+      vertex 27 15 10
+      vertex 30 15 10
+      vertex 27 15 0
+    endloop
+  endfacet
+  facet normal 0 0 -1
+    outer loop
+      vertex 30 15 0
+      vertex 30 5 0
+      vertex 27 15 0
+    endloop
+  endfacet
+  facet normal 0 1 0
+    outer loop
+      vertex 27 15 0
+      vertex 30 15 10
+      vertex 30 15 0
+    endloop
+  endfacet
+  facet normal 1 0 0
+    outer loop
+      vertex 30 15 0
+      vertex 30 5 10
+      vertex 30 5 0
+    endloop
+  endfacet
+  facet normal 1 0 0
+    outer loop
+      vertex 30 15 10
+      vertex 30 5 10
+      vertex 30 15 0
+    endloop
+  endfacet
+endsolid tip

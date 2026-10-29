@@ -1,0 +1,48 @@
+# The T-shirt hook with the buckling row (CONTRACTS.md section 39, a working number).
+#
+# The same hook as hook.yaml, plus `buckling.min_factor`: the lowest linear buckling load factor of each load case is held at or above
+# 150 (a multiplier on the load case). The value is an example. The final design of hook.yaml had a lowest factor of 121 for `pull_off` and
+# 1276 for `hang` in the A6a check (CONTRACTS.md section 33), so 150 is above `pull_off`: the row is active for that case. A voxel factor
+# reads high for thin members (a tet model gave 0.71 to 0.79 times the voxel factor), and the tool does not change the number: you set it.
+# The row needs a direct solver (PARDISO or Cholesky).
+# The run takes much longer than hook.yaml: 1469 s against 170 s at 4 threads on a shared Linux host (the eigen solve is the cost; see the README of this folder).
+#
+#   topopt check examples/hook/hook_buckling.yaml
+#   topopt run   examples/hook/hook_buckling.yaml --out runs/hook_buckling
+
+name: tshirt_hook_buckling
+
+regions:
+  design: design.stl
+  fixed:
+    - wall_plate.stl
+  keep_out:
+    - screw_hole_top.stl
+    - screw_hole_bottom.stl
+  load:
+    tip: hook_tip.stl
+
+load_cases:
+  - name: hang
+    weight: 234.0
+    forces:
+      - region: tip
+        force: [0.0, 0.0, -1.96]
+  - name: pull_off
+    weight: 1.0
+    forces:
+      - region: tip
+        force: [20.89, 5.21, -20.89]
+
+material:
+  E: 3500.0
+  nu: 0.35
+  density: 1.24
+
+settings:
+  voxel_size: 1.2
+  volume_fraction: 0.2
+  iterations: 80
+
+buckling:
+  min_factor: 150

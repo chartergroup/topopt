@@ -1,0 +1,195 @@
+{
+ "topopt_version": "0.1.0",
+ "code_folder": "/Users/me/topopt-demo/.plugin-env/venv/lib/python3.12/site-packages",
+ "python": {
+  "version": "3.12.14",
+  "executable": "/Users/me/topopt-demo/.plugin-env/venv/bin/python",
+  "implementation": "CPython"
+ },
+ "platform": {
+  "name": "darwin arm64",
+  "system": "darwin",
+  "machine": "arm64",
+  "release": "25.6.0",
+  "apple_silicon": true,
+  "linux_x86_64": false,
+  "mac_python": "arm64",
+  "hint": null
+ },
+ "packages": {
+  "numpy": "2.5.3",
+  "scipy": "1.18.1",
+  "pyamg": "5.3.0",
+  "pypardiso": null,
+  "mkl": null,
+  "scikit-image": "0.26.0",
+  "trimesh": "5.1.0",
+  "manifold3d": "3.5.4",
+  "mcp": "2.3.0",
+  "pyopencl": null
+ },
+ "tet": {
+  "state": "missing",
+  "version": null,
+  "detail": "gmsh is not installed",
+  "fix": "Install it with: uv pip install --python /Users/me/topopt-demo/.plugin-env/venv/bin/python gmsh==4.15.2 (gmsh is GPL-2.0-or-later, the core of topopt does not import it)"
+ },
+ "backends": {
+  "cholesky": {
+   "available": true,
+   "note": "Apple Accelerate sparse Cholesky",
+   "resolved_by": [
+    "auto",
+    "cholesky"
+   ]
+  },
+  "pardiso": {
+   "available": false,
+   "note": "runs on Linux x86_64 only (this platform is darwin arm64)",
+   "resolved_by": []
+  },
+  "amg": {
+   "available": true,
+   "note": "PyAMG-preconditioned CG",
+   "resolved_by": [
+    "amg"
+   ]
+  }
+ },
+ "solver_setting": {
+  "auto": {
+   "resolved": "cholesky",
+   "error": null,
+   "cpu_solver": "cholesky",
+   "fallback": null,
+   "why": "solver: auto -> cholesky (pyopencl is not usable here (missing: No module named 'pyopencl'))",
+   "choice": {
+    "setting": "auto",
+    "solver": "cholesky",
+    "cpu_solver": "cholesky",
+    "fallback": null,
+    "device": null,
+    "case": null,
+    "self_test": null,
+    "reason": "pyopencl is not usable here (missing: No module named 'pyopencl')",
+    "line": "solver: auto -> cholesky (pyopencl is not usable here (missing: No module named 'pyopencl'))"
+   }
+  },
+  "cholesky": {
+   "resolved": "cholesky",
+   "error": null
+  },
+  "pardiso": {
+   "resolved": null,
+   "error": "solver 'pardiso' runs on Linux x86_64 only, and this platform is darwin arm64. In settings.solver use 'cholesky' (macOS), 'amg' (all platforms) or 'auto'"
+  },
+  "amg": {
+   "resolved": "amg",
+   "error": null
+  },
+  "gpu-mg": {
+   "resolved": null,
+   "error": "solver 'gpu-mg' needs pyopencl, and it is not installed. Install the gpu extra: uv pip install --python /Users/me/topopt-demo/.plugin-env/venv/bin/python pyopencl==2026.1.4. Or set settings.solver to 'auto', 'cholesky' (Apple silicon), 'pardiso' (Linux x86_64, needs the pardiso extra) or 'amg'"
+  }
+ },
+ "experimental_solvers": {},
+ "opencl": {
+  "pyopencl": null,
+  "problem": "missing: No module named 'pyopencl'",
+  "install_command": "uv pip install --python /Users/me/topopt-demo/.plugin-env/venv/bin/python pyopencl==2026.1.4",
+  "platforms": [],
+  "devices": [],
+  "auto_device": null,
+  "auto_case": null,
+  "chosen_device": null
+ },
+ "auto_solver": "cholesky",
+ "auto_choice": {
+  "setting": "auto",
+  "solver": "cholesky",
+  "cpu_solver": "cholesky",
+  "fallback": null,
+  "device": null,
+  "case": null,
+  "self_test": null,
+  "reason": "pyopencl is not usable here (missing: No module named 'pyopencl')",
+  "line": "solver: auto -> cholesky (pyopencl is not usable here (missing: No module named 'pyopencl'))"
+ },
+ "gpu_solver": {
+  "used": false,
+  "device": null,
+  "case": null,
+  "self_test": null,
+  "why": "solver: auto -> cholesky (pyopencl is not usable here (missing: No module named 'pyopencl'))",
+  "to_use_the_gpu": "pyopencl is not installed. Install it with: uv pip install --python /Users/me/topopt-demo/.plugin-env/venv/bin/python pyopencl==2026.1.4",
+  "test_command": "/Users/me/topopt-demo/.plugin-env/venv/bin/python -m topopt gpu-check",
+  "measured": {
+   "machine": "MacBook Air M4, 16 GB",
+   "what": "the hook example, median seconds per optimizer iteration, 20 iterations, case C",
+   "rows": [
+    {
+     "voxel_mm": 1.2,
+     "free_dofs": 115836,
+     "default_s": 0.765,
+     "gpu_mg_s": 0.287
+    },
+    {
+     "voxel_mm": 1.0,
+     "free_dofs": 205485,
+     "default_s": 2.235,
+     "gpu_mg_s": 0.439
+    },
+    {
+     "voxel_mm": 0.8,
+     "free_dofs": 386142,
+     "default_s": 9.241,
+     "gpu_mg_s": 0.658
+    }
+   ],
+   "finest": {
+    "voxel_mm": 0.6,
+    "free_dofs": 905010,
+    "default_memory_estimate_gib": 22.5,
+    "ram_gib": 16,
+    "gpu_mg_s": 1.919,
+    "gpu_mg_peak_mb": 2415.5
+   },
+   "compliance_agreement": "1e-10 or better"
+  }
+ },
+ "ram": {
+  "total_bytes": 34359738368,
+  "available_bytes": 9655336960,
+  "host_total_bytes": 34359738368,
+  "host_available_bytes": 9655336960,
+  "cgroup_limit_bytes": null,
+  "cgroup_source": null,
+  "cgroup_used_bytes": null,
+  "cgroup_current_bytes": null,
+  "cgroup_inactive_file_bytes": null,
+  "cgroup_room_bytes": null,
+  "cgroup_facts": [],
+  "note": "total_bytes and available_bytes are for this process: the host value, or the cgroup (container) limit if it is lower. In a cgroup, available_bytes is the smaller of the host value and the room: the limit minus the working set (cgroup_used_bytes = cgroup_current_bytes minus the inactive file pages). The kernel takes the inactive page cache back when a process needs memory, so it is not counted as used."
+ },
+ "cores": {
+  "logical": 12,
+  "affinity": 12,
+  "cgroup_cpu_limit": null,
+  "usable": 12
+ },
+ "threads": {
+  "env": {},
+  "openblas_threads_in_run": null,
+  "note": "topopt does not limit threads on this platform."
+ },
+ "problem": null,
+ "recommendations": [],
+ "note": "Facts and estimates only. Nothing was installed or built. A recommendation is an offer: tell the user the reason and the speed-up, and run its command only after the user agrees.",
+ "run_interpreter": {
+  "executable": "/Users/me/topopt-demo/.plugin-env/venv/bin/python",
+  "server_executable": "/Users/me/topopt-demo/.plugin-env/venv/bin/python",
+  "report_is_for": "/Users/me/topopt-demo/.plugin-env/venv/bin/python",
+  "probe_error": null
+ },
+ "ok": true
+}

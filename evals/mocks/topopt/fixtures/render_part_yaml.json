@@ -1,0 +1,359 @@
+{
+ "ok": true,
+ "input": {
+  "kind": "yaml",
+  "run_dir": null,
+  "yaml": "/Users/me/topopt-work/runs/tshirt_hook/tshirt_hook.yaml"
+ },
+ "out_dir": "/Users/me/topopt-work/runs/tshirt_hook/renders",
+ "montage": {
+  "path": "/Users/me/topopt-work/runs/tshirt_hook/renders/tshirt_hook_montage.png",
+  "width": 1280,
+  "height": 1050,
+  "bytes": 48902
+ },
+ "views": [
+  {
+   "name": "iso",
+   "direction": [
+    1.0,
+    -1.0,
+    0.8
+   ],
+   "back_face_share": 0.0,
+   "cut_face_visible_px": 0,
+   "path": "/Users/me/topopt-work/runs/tshirt_hook/renders/tshirt_hook_iso.png",
+   "width": 640,
+   "height": 480,
+   "bytes": 15363
+  },
+  {
+   "name": "front",
+   "direction": [
+    0.0,
+    -1.0,
+    0.0
+   ],
+   "back_face_share": 0.0,
+   "cut_face_visible_px": 0,
+   "path": "/Users/me/topopt-work/runs/tshirt_hook/renders/tshirt_hook_front.png",
+   "width": 640,
+   "height": 480,
+   "bytes": 8188
+  },
+  {
+   "name": "right",
+   "direction": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "back_face_share": 0.0,
+   "cut_face_visible_px": 0,
+   "path": "/Users/me/topopt-work/runs/tshirt_hook/renders/tshirt_hook_right.png",
+   "width": 640,
+   "height": 480,
+   "bytes": 6515
+  },
+  {
+   "name": "top",
+   "direction": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "back_face_share": 0.0,
+   "cut_face_visible_px": 0,
+   "path": "/Users/me/topopt-work/runs/tshirt_hook/renders/tshirt_hook_top.png",
+   "width": 640,
+   "height": 480,
+   "bytes": 5811
+  }
+ ],
+ "section": null,
+ "meshes": [
+  {
+   "file": "design.stl",
+   "path": "/Users/me/topopt-work/runs/tshirt_hook/design.stl",
+   "role": "design",
+   "drawn": "ghost",
+   "bbox_mm": {
+    "min": [
+     2.0,
+     -14.0,
+     -30.0
+    ],
+    "max": [
+     72.0,
+     14.0,
+     36.0
+    ],
+    "size": [
+     70.0,
+     28.0,
+     66.0
+    ]
+   },
+   "triangles": 16,
+   "watertight": true,
+   "winding_consistent": true,
+   "volume_mm3": 65940.0,
+   "inside_out": false
+  },
+  {
+   "file": "wall_plate.stl",
+   "path": "/Users/me/topopt-work/runs/tshirt_hook/wall_plate.stl",
+   "role": "fixed",
+   "drawn": "solid",
+   "bbox_mm": {
+    "min": [
+     0.0,
+     -17.5,
+     -30.0
+    ],
+    "max": [
+     3.5,
+     17.5,
+     36.0
+    ],
+    "size": [
+     3.5,
+     35.0,
+     66.0
+    ]
+   },
+   "triangles": 12,
+   "watertight": true,
+   "winding_consistent": true,
+   "volume_mm3": 8085.0,
+   "inside_out": false
+  },
+  {
+   "file": "screw_hole_top.stl",
+   "path": "/Users/me/topopt-work/runs/tshirt_hook/screw_hole_top.stl",
+   "role": "keep-out",
+   "drawn": "ghost",
+   "bbox_mm": {
+    "min": [
+     -1.0,
+     -4.5,
+     25.5
+    ],
+    "max": [
+     80.0,
+     4.5,
+     34.5
+    ],
+    "size": [
+     81.0,
+     9.0,
+     9.0
+    ]
+   },
+   "triangles": 316,
+   "watertight": true,
+   "winding_consistent": true,
+   "volume_mm3": 4918.0,
+   "inside_out": false
+  },
+  {
+   "file": "screw_hole_bottom.stl",
+   "path": "/Users/me/topopt-work/runs/tshirt_hook/screw_hole_bottom.stl",
+   "role": "keep-out",
+   "drawn": "ghost",
+   "bbox_mm": {
+    "min": [
+     -1.0,
+     -4.5,
+     -24.5
+    ],
+    "max": [
+     80.0,
+     4.5,
+     -15.5
+    ],
+    "size": [
+     81.0,
+     9.0,
+     9.0
+    ]
+   },
+   "triangles": 316,
+   "watertight": true,
+   "winding_consistent": true,
+   "volume_mm3": 4918.0,
+   "inside_out": false
+  },
+  {
+   "file": "hook_tip.stl",
+   "path": "/Users/me/topopt-work/runs/tshirt_hook/hook_tip.stl",
+   "role": "load",
+   "drawn": "solid",
+   "bbox_mm": {
+    "min": [
+     56.0,
+     -9.0,
+     11.0
+    ],
+    "max": [
+     76.0,
+     9.0,
+     24.0
+    ],
+    "size": [
+     20.0,
+     18.0,
+     13.0
+    ]
+   },
+   "triangles": 26,
+   "watertight": true,
+   "winding_consistent": true,
+   "volume_mm3": 1926.0,
+   "inside_out": false
+  }
+ ],
+ "back_face_share": 0.0,
+ "missing_files": [],
+ "notes": [
+  "the forces differ in size (1.96 N to 29.9988 N), and every arrow has the same length: the length does not show the size of the force"
+ ],
+ "regions": "solid",
+ "load_arrows": {
+  "drawn": true,
+  "arrow_count": 2,
+  "length_mm": 19.8343,
+  "length_rule": "0.18 of the diagonal of the drawing, the same for every arrow: the length does not show the size of the force",
+  "tip_rule": "the arrow tip is at point_mm, the point where the force acts; the arrow points along force_n",
+  "cases": [
+   {
+    "case": "hang",
+    "color": "#7800c8",
+    "arrows": [
+     {
+      "region": "hook_tip",
+      "kind": "force",
+      "force_n": [
+       0.0,
+       0.0,
+       -1.96
+      ],
+      "size_n": 1.96,
+      "point_mm": [
+       68.145,
+       0.0,
+       14.64
+      ],
+      "point_source": "region centroid",
+      "arrow_tail_mm": [
+       68.145,
+       0.0,
+       34.475
+      ],
+      "arrow_tip_mm": [
+       68.145,
+       0.0,
+       14.64
+      ],
+      "color": "#7800c8"
+     }
+    ],
+    "not_drawn": []
+   },
+   {
+    "case": "pull_off",
+    "color": "#b09600",
+    "arrows": [
+     {
+      "region": "hook_tip",
+      "kind": "force",
+      "force_n": [
+       20.89,
+       5.21,
+       -20.89
+      ],
+      "size_n": 29.9988,
+      "point_mm": [
+       68.145,
+       0.0,
+       14.64
+      ],
+      "point_source": "region centroid",
+      "arrow_tail_mm": [
+       54.333,
+       -3.445,
+       28.452
+      ],
+      "arrow_tip_mm": [
+       68.145,
+       0.0,
+       14.64
+      ],
+      "color": "#b09600"
+     }
+    ],
+    "not_drawn": []
+   }
+  ]
+ },
+ "colors": {
+  "part": "#9aa7b4",
+  "design": "#78a5eb",
+  "fixed": "#285ac8",
+  "load": "#d62728",
+  "keep-out": "#966428",
+  "interface": "#32a05a",
+  "cut": "#eb466e",
+  "back_face": "#d91abf",
+  "cut_face": "#e88c3c"
+ },
+ "ghost_style": {
+  "design, keep-out": "tint alpha 0.14, thin lines",
+  "fixed, load (with a part)": "tint alpha 0.35, lines in the role color"
+ },
+ "scale": {
+  "px_per_mm": 4.695,
+  "bar_mm": 20.0
+ },
+ "tile_size": [
+  640,
+  480
+ ],
+ "triangles_drawn": 686,
+ "memory_estimate_mb": 450,
+ "legend": [
+  {
+   "label": "design",
+   "style": "ghost"
+  },
+  {
+   "label": "fixed",
+   "style": "solid"
+  },
+  {
+   "label": "load",
+   "style": "solid"
+  },
+  {
+   "label": "keep-out",
+   "style": "ghost"
+  },
+  {
+   "label": "force: hang",
+   "style": "arrow"
+  },
+  {
+   "label": "force: pull_off",
+   "style": "arrow"
+  },
+  {
+   "label": "back face",
+   "style": "solid"
+  }
+ ],
+ "font": "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+ "elapsed_s": 2.93,
+ "out_dir_rel": "runs/tshirt_hook/renders",
+ "montage_rel": "runs/tshirt_hook/renders/tshirt_hook_montage.png",
+ "inline": false
+}

@@ -1,0 +1,754 @@
+# The CI legs, the tolerance tiers and the allowed skips (CONTRACTS.md section 27).
+# The scripts in scripts/ci/ read this file. The workflow file holds only the runner names. The workflow file is
+# .github/workflows/tests.yml, started by hand only (workflow_dispatch; its input `legs` is `linux` or `all`) (CONTRACTS.md 27.1).
+# tests/test_ci_scripts.py checks that the workflow, this file and CONTRACTS.md agree.
+#
+# Keys of a leg that are not required (CONTRACTS.md 27.10):
+#   lock         the lock file of the install, a path relative to the repo (default requirements.lock)
+#   install_mode "project" (default): uv pip install -c <lock> -e ".[extras]". "lock-first": uv pip install --only-binary numba --only-binary llvmlite
+#                --only-binary cryptography -r <lock>, then -e . with --no-deps --no-build-isolation, then the requirements of the extras with -c <lock>. This is close to the
+#                install of the launcher on an x86_64 Mac, not equal (scripts/ci/install_env.py; the list of differences is in CONTRACTS.md 27.10): the
+#                launcher installs no extra and has a fallback that the leg does not test. (The launcher on main before PR #50 spells the flags --no-build-package,
+#                which uv pip install rejects; PR #50 changes it to --only-binary, as the leg has it.)
+#                A Linux leg needs it with the Intel lock: the markers of pyproject.toml ask for numba 0.67.0 there, and the lock holds 0.62.1.
+#   on_pull_request  the name is historic (no workflow runs on a pull request any more). true (the default) = the leg is in the choice
+#                `linux` of the input `legs`, so `linux` and `all` run it; false = the leg runs with `all` only (it takes more runner time, or it is a second
+#                Linux leg). scripts/ci/plan_legs.py reads it.
+#   workflow     the workflow that runs the leg (default "tests" = .github/workflows/tests.yml; "intel-mac" = intel-mac.yml,
+#                which starts by hand only). scripts/ci/plan_legs.py --workflow <name> writes the matrix of that workflow.
+#   check_locks  true: the step scripts/ci/check_locks.py runs on this leg (the lock files resolve for their platforms)
+#   pythons      REQUIRED. The Python versions that the leg runs, for example ["3.13"]. Each one is in SUPPORTED_PYTHONS (scripts/ci/_common.py, the one
+#                place that names the supported versions; pyproject.toml `requires-python` allows exactly those). scripts/ci/plan_legs.py makes one matrix
+#                entry for each version, so a leg with two versions is two jobs and takes twice the runner time. A leg that lists only "3.13" runs on the Python of the launcher (LAUNCHER_PYTHON in scripts/topopt-env.sh).
+#   shards       the number of parallel jobs that share the pytest run of the leg for each Python (a whole number of 1 or more; default 1 = no split). scripts/ci/plan_legs.py
+#                makes one matrix entry for each Python and shard. The test files are split by their measured times (tests/tiers/durations.json, scripts/ci/shards.py), the
+#                same set of tests runs, and the job `report` of tests.yml checks that. The licence check, the lock check and the short run run on shard 1 only.
+#                Each shard pays its own setup, so a leg on a runner that counts more per minute (macOS) has fewer shards.
+
+# --- tolerance tiers of the golden compare --------------------------------------------------------
+# A metric passes when |measured - golden| <= atol + rtol * |golden|.
+# `atol` of volume and mass is the rounding step of the number in result/metrics.json (topopt/post.py:327-330:
+# volume_final_mm3 has 1 decimal, mass_final_g has 2 decimals).
+
+[tiers.bit]
+# The same machine, the same pins, the same thread count: the numbers repeat exactly.
+# Basis: four runs of the short hook run at 1 thread on one Linux host gave equal numbers.
+compliance_final = { rtol = 0.0, atol = 0.0 }
+volume_fraction_final = { rtol = 0.0, atol = 0.0 }
+volume_final_mm3 = { rtol = 0.0, atol = 0.0 }
+mass_final_g = { rtol = 0.0, atol = 0.0 }
+
+[tiers.cross]
+# Another CPU, another operating system or another direct solver library (PARDISO against Accelerate).
+# Basis: the measured deviations in CONTRACTS.md section 27.5.
+compliance_final = { rtol = 1e-8, atol = 0.0 }
+volume_fraction_final = { rtol = 1e-8, atol = 0.0 }
+volume_final_mm3 = { rtol = 1e-6, atol = 0.1 }
+mass_final_g = { rtol = 1e-6, atol = 0.01 }
+
+# --- legs -------------------------------------------------------------------------------------------
+
+[legs.linux-x86_64]
+runner = "ubuntu-24.04"
+# The Linux leg is in the choice `linux` (the default of a manual run). A person starts it: no push or pull request does.
+on_pull_request = true
+# Python 3.13 only. The launcher makes Python 3.13 (#422), the Python of this leg, and the package supports 3.13 only. The lock
+# check of this leg resolves the locks for every supported Python (check_locks.py without --python).
+pythons = ["3.13"]
+# Parallel jobs for the pytest run (CONTRACTS.md 27.3.2): 2 jobs for each Python. A standard runner has 2 CPUs and the fast tier took 27.5 min there
+# in one job. With 2 jobs the longest job takes about 12 to 13 min (measured); with 4 jobs it takes about 6.4 to 7.2 min (estimate), and the sum
+# of the runner time is a little higher.
+shards = 2
+# Extras to install. An extra that pyproject.toml does not declare is dropped and named in the log
+# (the extra `verify` comes with PR #21). No `gpu` extras (GOAL: no OpenCL in CI).
+# The extra `step` (OpenCASCADE wheel `cadquery-ocp-novtk`) is on every leg: the licence step reads it and the tests with the marker
+# `needs_ocp` run. PyPI has a cp313 wheel for each leg platform (manylinux_2_31 x86_64, macosx_11_0 arm64 and x86_64). The extra is not in the lock files, as gmsh is not.
+extras = ["dev", "mcp", "pardiso", "step", "tet", "verify"]
+expect_solver = "pardiso"
+# The lock check (network, uv) runs on this leg: it resolves both lock files for their platforms (scripts/ci/check_locks.py).
+check_locks = true
+# apt packages that the gmsh wheel needs on a headless Linux (tests/test_tet.py runs gmsh). libgmsh.so also
+# needs libXcursor, libXfixes, libXext and libGL (the ubuntu-24.04 image has them today; the list names them
+# so that the leg does not depend on what else the image holds).
+system_packages = ["libglu1-mesa", "libopengl0", "libxft2", "libxinerama1", "libxcursor1", "libxfixes3", "libxext6", "libgl1"]
+build_shim = false
+tier = "cross"
+# The short hook run (one thread). Linux x86_64 PARDISO measured about 20 s.
+short_run_limit_s = 300
+# The full pytest step runs in parallel with pytest-xdist (scripts/ci/run_pytest.py). Workers: `auto` is one worker for each
+# usable CPU. Threads: the cap for BLAS, OpenMP and numba in each worker (OMP_NUM_THREADS, MKL_NUM_THREADS, OPENBLAS_NUM_THREADS,
+# NUMBA_NUM_THREADS), because the threads of all workers multiply. Measured on 4 CPUs (taskset -c 0-3, 4 workers): 619 s with
+# 1 thread, 646 s with 2 threads, 757 s with no cap. 1 thread: workers x threads = CPUs.
+pytest_workers = "auto"
+pytest_threads = 1
+# Fast tier: every test that took under 5 s in the CI run of 2026-10-25 (tests/tiers/slow.txt). Full tier: all tests. See CONTRACTS.md 27.3.
+pytest_fast = "not slow"
+
+[[legs.linux-x86_64.allowed_skip]]
+file = "tests/test_fe.py"
+reason = "needs Apple Accelerate"
+why = "the Accelerate Cholesky solver exists on macOS only"
+
+[[legs.linux-x86_64.allowed_skip]]
+file = "tests/test_springs.py"
+reason = "needs Apple Accelerate"
+why = "the Accelerate Cholesky solver exists on macOS only"
+
+[[legs.linux-x86_64.allowed_skip]]
+file = "tests/test_plugin_manifest.py"
+reason = "the claude command is not installed"
+why = "a hosted runner has no Claude Code command"
+
+[[legs.linux-x86_64.allowed_skip]]
+file = "tests/test_plugin_launcher.py"
+reason = "a real uv is in a standard folder"
+why = "the test needs a PATH without uv; an image may put uv in /usr/local/bin"
+
+[[legs.linux-x86_64.allowed_skip]]
+file = "tests/test_*gpu_mg*.py"
+reason = "no usable OpenCL device"
+why = "with pyopencl installed but no OpenCL platform (CI installs no OpenCL driver), the device fixtures of the gpu-mg tests skip with this text"
+
+[[legs.linux-x86_64.allowed_skip]]
+file = "tests/test_mcpb.py"
+reason = "the mcpb CLI is not installed"
+why = "a hosted runner has no mcpb command (npm install -g @anthropic-ai/mcpb); the extension build of PR #29 is in main"
+
+[[legs.linux-x86_64.allowed_skip]]
+file = "tests/test_mcpb.py"
+reason = "TOPOPT_TEST_MCPB_LAUNCH=1"
+why = "the launch test needs uv and the network (about 200 MB of packages), and a person sets the variable; CI does not"
+
+[[legs.linux-x86_64.allowed_skip]]
+file = "tests/test_joints.py"
+reason = "needs Apple Accelerate"
+why = "the Accelerate Cholesky solver exists on macOS only"
+
+[[legs.linux-x86_64.allowed_skip]]
+file = "tests/test_perimeter.py"
+reason = "needs Apple Accelerate"
+why = "the Accelerate Cholesky solver exists on macOS only"
+
+[[legs.linux-x86_64.allowed_skip]]
+file = "tests/test_verify_supports.py"
+reason = "needs Apple Accelerate"
+why = "the Accelerate Cholesky solver exists on macOS only"
+
+[[legs.linux-x86_64.allowed_skip]]
+file = "tests/test_cgroup_working_set.py"
+reason = "no readable cgroup memory.current"
+why = "a hosted runner is a VM, not a container: /sys/fs/cgroup is the root cgroup, which has no memory.current (seen on a hosted runner, 2026-10-26); the other tests of the file use a fake cgroup tree and run"
+
+[[legs.linux-x86_64.allowed_skip]]
+file = "tests/test_registry.py"
+reason = "runs inside test_a_runner_that_sets_xdg_state_home_"
+why = "an inner probe: it runs only in the subprocess that the test before it starts (TOPOPT_TEST_XDG_PROBE); in the main run it always skips"
+
+[[legs.linux-x86_64.allowed_skip]]
+file = "tests/test_release_pin.py"
+reason = "a tag of the record is not in this checkout"
+why = "a CI checkout is shallow and has no tags (actions/checkout with the default fetch-depth 1); the record is compared with the file of each tag only in a clone that has the tags"
+
+[[legs.linux-x86_64.allowed_skip]]
+file = "tests/test_release_notes.py"
+reason = "CI checkouts have no tags"
+why = "a CI checkout is shallow and has no tags (actions/checkout with the default fetch-depth 1); the test checks the v0.2.0 entry of CHANGELOG.md first and skips only the compare with git log v0.1.0..v0.2.0"
+
+[[legs.linux-x86_64.allowed_skip]]
+file = "tests/test_pm2_types.py"
+reason = "pyright is not installed"
+why = "pyright is in no extra and no leg installs it; the type check of the catalog modules runs where pyright is on the PATH"
+
+[legs.macos-arm64]
+# macos-15 (arm64, 3 M1 cores, 7 GB). The label macos-14 is deprecated: GitHub retires
+# the image on 2026-11-02 and fails the jobs of that label in brownouts before (2026-10-23, 26, 29 and 30, 14:00 to
+# 24:00 UTC). Source: github.com/actions/runner-images issue 13518, read on 2026-10-20.
+runner = "macos-15"
+# stage 2: the workflow starts this leg only after every leg of stage 1 (linux-x86_64) has passed (CONTRACTS.md 27.3). A leg without `stage` is in stage 1.
+stage = 2
+# A macOS runner minute counts more than a Linux minute, so this leg runs with the choice `all` of a manual run only. Set this value to true
+# to put it in the choice `linux`.
+on_pull_request = false
+# Python 3.13 only, as the Linux leg (2026-10-27): the choice `all` runs this leg once.
+pythons = ["3.13"]
+# 2 jobs for each Python. A macOS minute counts more than a Linux minute, and each job pays its own setup (about 1.5 min), so more than 2 shards would use more runner time than they save.
+shards = 2
+extras = ["dev", "mcp", "step", "tet", "verify"]
+expect_solver = "cholesky"
+system_packages = []
+# The Accelerate shim is built before the tests (sh topopt/native/build.sh).
+build_shim = true
+tier = "cross"
+short_run_limit_s = 300
+# Same meaning as in the Linux leg. The macOS runner has 3 cores. Not measured on a Mac.
+pytest_workers = "auto"
+pytest_threads = 1
+# Fast tier: the tests of the files that can differ on macOS (tests/tiers/platform_files.txt), without the slow ones. A macOS minute counts more than a Linux minute, so the full tier of this leg is for a big release only. See CONTRACTS.md 27.3.
+pytest_fast = "platform_sensitive and not slow"
+
+[[legs.macos-arm64.allowed_skip]]
+file = "tests/test_fe.py"
+reason = "needs pypardiso"
+why = "PARDISO exists on Linux x86_64 only"
+
+[[legs.macos-arm64.allowed_skip]]
+file = "tests/test_solver_choice.py"
+reason = "needs pypardiso"
+why = "PARDISO exists on Linux x86_64 only"
+
+[[legs.macos-arm64.allowed_skip]]
+file = "tests/test_solver_choice.py"
+reason = "the thread cap is for Linux only"
+why = "topopt caps OpenBLAS threads on Linux only"
+
+[[legs.macos-arm64.allowed_skip]]
+file = "tests/test_springs.py"
+reason = "needs pypardiso"
+why = "PARDISO exists on Linux x86_64 only"
+
+[[legs.macos-arm64.allowed_skip]]
+file = "tests/test_verify_p2.py"
+reason = "needs pypardiso"
+why = "PARDISO exists on Linux x86_64 only"
+
+[[legs.macos-arm64.allowed_skip]]
+file = "tests/test_plugin_manifest.py"
+reason = "the claude command is not installed"
+why = "a hosted runner has no Claude Code command"
+
+[[legs.macos-arm64.allowed_skip]]
+file = "tests/test_plugin_launcher.py"
+reason = "a real uv is in a standard folder"
+why = "the test needs a PATH without uv; Homebrew may put uv in /opt/homebrew/bin"
+
+[[legs.macos-arm64.allowed_skip]]
+file = "tests/test_plugin_launcher.py"
+reason = "setsid or perl in /opt/homebrew/bin"
+why = "the launcher adds /opt/homebrew/bin to PATH, and the macos-15 image has a Homebrew perl there, so the test of the plain way (no setsid, no perl) cannot hide it; the Linux leg runs that test"
+
+[[legs.macos-arm64.allowed_skip]]
+file = "tests/test_*gpu_mg*.py"
+reason = "no usable OpenCL device"
+why = "with pyopencl installed but no OpenCL platform (CI installs no OpenCL driver), the device fixtures of the gpu-mg tests skip with this text"
+
+[[legs.macos-arm64.allowed_skip]]
+file = "tests/test_*gpu_mg*.py"
+reason = "use a real GPU only when TOPOPT_TEST_REAL_GPU=1"
+why = "with pyopencl installed, a visible non-CPU OpenCL device (the Apple platform of the runner) makes tests/conftest.py skip the tests that make an OpenCL context on macOS, unless TOPOPT_TEST_REAL_GPU=1"
+
+[[legs.macos-arm64.allowed_skip]]
+file = "tests/test_mcpb.py"
+reason = "the mcpb CLI is not installed"
+why = "a hosted runner has no mcpb command (npm install -g @anthropic-ai/mcpb); the extension build of PR #29 is in main"
+
+[[legs.macos-arm64.allowed_skip]]
+file = "tests/test_mcpb.py"
+reason = "TOPOPT_TEST_MCPB_LAUNCH=1"
+why = "the launch test needs uv and the network (about 200 MB of packages), and a person sets the variable; CI does not"
+
+[[legs.macos-arm64.allowed_skip]]
+file = "tests/test_runjob.py"
+reason = "needs /proc (Linux)"
+why = "macOS has no /proc, and the run helper reads it (topopt/runjob.py; PR #34 is in main)"
+
+[[legs.macos-arm64.allowed_skip]]
+file = "tests/test_runinfo.py"
+reason = "needs /proc (Linux)"
+why = "macOS has no /proc"
+
+[[legs.macos-arm64.allowed_skip]]
+file = "tests/test_hostinfo.py"
+reason = "needs /proc (Linux)"
+why = "macOS has no /proc: the tests of the real /proc files (DL1a) skip there"
+
+[[legs.macos-arm64.allowed_skip]]
+file = "tests/test_job_facts.py"
+reason = "needs /proc (Linux)"
+why = "macOS has no /proc: the tests of the real /proc files (DL1a) skip there"
+
+[[legs.macos-arm64.allowed_skip]]
+file = "tests/test_registry.py"
+reason = "needs /proc (Linux)"
+why = "macOS has no /proc: the registry test of a pid of an earlier boot needs it"
+
+[[legs.macos-arm64.allowed_skip]]
+file = "tests/test_plugin_launcher.py"
+reason = "the process tree is read from /proc"
+why = "macOS has no /proc: the tests that walk the process tree of the launcher skip there"
+
+[[legs.macos-arm64.allowed_skip]]
+file = "tests/test_plugin_launcher.py"
+reason = "no /proc on this system"
+why = "macOS has no /proc: the doctor tests of the /proc fallback (a host with no ps) skip there"
+
+[[legs.macos-arm64.allowed_skip]]
+file = "tests/test_estimate_bounds.py"
+reason = "needs pypardiso"
+why = "PARDISO exists on Linux x86_64 only"
+
+[[legs.macos-arm64.allowed_skip]]
+file = "tests/test_joints.py"
+reason = "needs pypardiso"
+why = "PARDISO exists on Linux x86_64 only"
+
+[[legs.macos-arm64.allowed_skip]]
+file = "tests/test_perimeter.py"
+reason = "needs pypardiso"
+why = "PARDISO exists on Linux x86_64 only"
+
+[[legs.macos-arm64.allowed_skip]]
+file = "tests/test_cgroup_working_set.py"
+reason = "no readable cgroup memory.current"
+why = "macOS has no cgroup; the other tests of the file use a fake cgroup tree and run"
+
+[[legs.macos-arm64.allowed_skip]]
+file = "tests/test_registry.py"
+reason = "runs inside test_a_runner_that_sets_xdg_state_home_"
+why = "an inner probe: it runs only in the subprocess that the test before it starts (TOPOPT_TEST_XDG_PROBE); in the main run it always skips"
+
+[[legs.macos-arm64.allowed_skip]]
+file = "tests/test_plugin_launcher.py"
+reason = "no setsid on this machine"
+why = "macOS has no setsid command: the tests of the setsid way skip there, and the perl way and the plain way of the same tests run"
+
+[[legs.macos-arm64.allowed_skip]]
+file = "tests/test_tet_clean_retry.py"
+reason = "was measured on Linux x86_64"
+why = "the routes of the tet surface step (the boolean of manifold3d, the weld, the fold repair) were measured on Linux x86_64 and depend on the floating-point order; the tests of the seam part skip on another platform"
+
+[[legs.macos-arm64.allowed_skip]]
+file = "tests/test_apply_marks_seam.py"
+reason = "was measured on Linux x86_64"
+why = "the route of the surface step for the plain boolean cases was measured on Linux x86_64; the first run on Apple silicon ended one case another way, so this test skips on another platform (its fold-edge part runs first)"
+
+[[legs.macos-arm64.allowed_skip]]
+file = "tests/test_tet_clean_retry.py"
+reason = "this LAPACK gives another rounding"
+why = "the test builds examples whose rounding depends on the LAPACK of the machine and skips when they do not behave as they are written; the first run on Apple silicon (Accelerate) skipped it"
+
+[[legs.macos-arm64.allowed_skip]]
+file = "tests/test_release_pin.py"
+reason = "a tag of the record is not in this checkout"
+why = "a CI checkout is shallow and has no tags (actions/checkout with the default fetch-depth 1); the record is compared with the file of each tag only in a clone that has the tags"
+
+[[legs.macos-arm64.allowed_skip]]
+file = "tests/test_release_notes.py"
+reason = "CI checkouts have no tags"
+why = "a CI checkout is shallow and has no tags (actions/checkout with the default fetch-depth 1); the test checks the v0.2.0 entry of CHANGELOG.md first and skips only the compare with git log v0.1.0..v0.2.0"
+
+[[legs.macos-arm64.allowed_skip]]
+file = "tests/test_pm2_types.py"
+reason = "pyright is not installed"
+why = "pyright is in no extra and no leg installs it; the type check of the catalog modules runs where pyright is on the PATH"
+
+[legs.linux-x86_64-intel-pins]
+# The Linux leg with the pins of the Intel Mac lock (numpy 2.3.5, numba 0.62.1, llvmlite 0.45.1, cryptography 48.0.1). It answers: does the code
+# still work with the older pins that an Intel Mac installs? It is the Linux leg in every other key, and a test checks that. It runs with the
+# choice `all` of a manual run only (CONTRACTS.md 27.10). The short run compares with the same golden file at
+# tier cross: a hosted runner is not the machine that made it. The strict compare on one machine (tier bit) is a local job.
+runner = "ubuntu-24.04"
+# stage 2: the workflow starts this leg only after every leg of stage 1 (linux-x86_64) has passed (CONTRACTS.md 27.3). A leg without `stage` is in stage 1.
+stage = 2
+on_pull_request = false
+# Python 3.13 only, as the other legs (2026-10-27). The launcher makes Python 3.13 on an Intel Mac too; the Intel pins have wheels for 3.13 (the lock
+# check resolves the Intel lock for it).
+pythons = ["3.13"]
+# 2 jobs in the full tier, as the Linux leg. In the fast tier this leg runs no pytest (pytest_fast = "none"), and plan_legs.py --tier makes one job.
+shards = 2
+lock = "requirements-macos-x86_64.lock"
+install_mode = "lock-first"
+extras = ["dev", "mcp", "pardiso", "step", "tet", "verify"]
+expect_solver = "pardiso"
+system_packages = ["libglu1-mesa", "libopengl0", "libxft2", "libxinerama1", "libxcursor1", "libxfixes3", "libxext6", "libgl1"]
+build_shim = false
+tier = "cross"
+short_run_limit_s = 300
+pytest_workers = "auto"
+pytest_threads = 1
+# Fast tier: no pytest (install, licence, solver, locks and the short run still run). Full tier: the tests without the slow ones. This leg differs from linux-x86_64 only in the package pins. See CONTRACTS.md 27.3.
+pytest_fast = "none"
+pytest_full = "not slow"
+
+[[legs.linux-x86_64-intel-pins.allowed_skip]]
+file = "tests/test_fe.py"
+reason = "needs Apple Accelerate"
+why = "the Accelerate Cholesky solver exists on macOS only"
+
+[[legs.linux-x86_64-intel-pins.allowed_skip]]
+file = "tests/test_springs.py"
+reason = "needs Apple Accelerate"
+why = "the Accelerate Cholesky solver exists on macOS only"
+
+[[legs.linux-x86_64-intel-pins.allowed_skip]]
+file = "tests/test_plugin_manifest.py"
+reason = "the claude command is not installed"
+why = "a hosted runner has no Claude Code command"
+
+[[legs.linux-x86_64-intel-pins.allowed_skip]]
+file = "tests/test_plugin_launcher.py"
+reason = "a real uv is in a standard folder"
+why = "the test needs a PATH without uv; an image may put uv in /usr/local/bin"
+
+[[legs.linux-x86_64-intel-pins.allowed_skip]]
+file = "tests/test_*gpu_mg*.py"
+reason = "could not import 'pyopencl'"
+why = "the Intel lock has no pyopencl and the lock-first install (`--no-deps`) adds none, so pyopencl is missing on this leg and every gpu-mg test file skips at import (a glob: tests/test_ci_scripts.py checks that it matches only the files that need pyopencl and the files of GPU_MG_WITHOUT_OPENCL there)"
+
+[[legs.linux-x86_64-intel-pins.allowed_skip]]
+file = "tests/test_*gpu_mg*.py"
+reason = "no usable OpenCL device"
+why = "with pyopencl installed but no OpenCL platform (CI installs no OpenCL driver), the device fixtures of the gpu-mg tests skip with this text"
+
+[[legs.linux-x86_64-intel-pins.allowed_skip]]
+file = "tests/test_mcpb.py"
+reason = "the mcpb CLI is not installed"
+why = "a hosted runner has no mcpb command (npm install -g @anthropic-ai/mcpb); the extension build of PR #29 is in main"
+
+[[legs.linux-x86_64-intel-pins.allowed_skip]]
+file = "tests/test_mcpb.py"
+reason = "TOPOPT_TEST_MCPB_LAUNCH=1"
+why = "the launch test needs uv and the network (about 200 MB of packages), and a person sets the variable; CI does not"
+
+[[legs.linux-x86_64-intel-pins.allowed_skip]]
+file = "tests/test_joints.py"
+reason = "needs Apple Accelerate"
+why = "the Accelerate Cholesky solver exists on macOS only"
+
+[[legs.linux-x86_64-intel-pins.allowed_skip]]
+file = "tests/test_perimeter.py"
+reason = "needs Apple Accelerate"
+why = "the Accelerate Cholesky solver exists on macOS only"
+
+[[legs.linux-x86_64-intel-pins.allowed_skip]]
+file = "tests/test_verify_supports.py"
+reason = "needs Apple Accelerate"
+why = "the Accelerate Cholesky solver exists on macOS only"
+
+[[legs.linux-x86_64-intel-pins.allowed_skip]]
+file = "tests/test_cgroup_working_set.py"
+reason = "no readable cgroup memory.current"
+why = "a hosted runner is a VM, not a container: /sys/fs/cgroup is the root cgroup, which has no memory.current (seen on a hosted runner, 2026-10-26); the other tests of the file use a fake cgroup tree and run"
+
+[[legs.linux-x86_64-intel-pins.allowed_skip]]
+file = "tests/test_registry.py"
+reason = "runs inside test_a_runner_that_sets_xdg_state_home_"
+why = "an inner probe: it runs only in the subprocess that the test before it starts (TOPOPT_TEST_XDG_PROBE); in the main run it always skips"
+
+[[legs.linux-x86_64-intel-pins.allowed_skip]]
+file = "tests/test_release_pin.py"
+reason = "a tag of the record is not in this checkout"
+why = "a CI checkout is shallow and has no tags (actions/checkout with the default fetch-depth 1); the record is compared with the file of each tag only in a clone that has the tags"
+
+[[legs.linux-x86_64-intel-pins.allowed_skip]]
+file = "tests/test_release_notes.py"
+reason = "CI checkouts have no tags"
+why = "a CI checkout is shallow and has no tags (actions/checkout with the default fetch-depth 1); the test checks the v0.2.0 entry of CHANGELOG.md first and skips only the compare with git log v0.1.0..v0.2.0"
+
+[[legs.linux-x86_64-intel-pins.allowed_skip]]
+file = "tests/test_pm2_types.py"
+reason = "pyright is not installed"
+why = "pyright is in no extra and no leg installs it; the type check of the catalog modules runs where pyright is on the PATH"
+
+[legs.macos-x86_64]
+# A hosted Intel Mac runner, started by hand (workflow_dispatch of .github/workflows/intel-mac.yml). Nothing ran on it yet (CONTRACTS.md 27.10).
+# macos-15-intel: x64, 4 vCPU, 14 GB. GitHub ends the Intel architecture on macOS after the macOS 15 image is retired in fall 2027;
+# macos-26-intel is the option (no end date found, 2026-10-21; it may be the same).
+runner = "macos-15-intel"
+workflow = "intel-mac"
+# Not used (the workflow runs on workflow_dispatch only); the key keeps every leg complete.
+on_pull_request = false
+# 3.13 only, as the Intel-pins leg (intel-mac.yml makes its venv with `matrix.python`; a test checks that the two agree).
+pythons = ["3.13"]
+# One job: intel-mac.yml starts by hand, and nothing has run on this runner yet.
+shards = 1
+lock = "requirements-macos-x86_64.lock"
+install_mode = "lock-first"
+extras = ["dev", "mcp", "step", "tet", "verify"]
+# `auto` gives amg on an x86_64 Mac (CONTRACTS.md section 28).
+expect_solver = "amg"
+system_packages = []
+# The Accelerate shim is not built: it is for Apple silicon, and `cholesky` is a user error here.
+build_shim = false
+# The golden file is from Linux with PARDISO. Linux PARDISO against AMG measured 9.6e-10 in compliance, inside tier cross.
+tier = "cross"
+# The values below copy the other legs. Not measured on an Intel Mac: the first run gives the first time.
+short_run_limit_s = 300
+pytest_workers = "auto"
+pytest_threads = 1
+# Same tiers as macos-arm64 (this leg runs from intel-mac.yml, which passes no tier: it runs the full tier). See CONTRACTS.md 27.3.
+pytest_fast = "platform_sensitive and not slow"
+
+[[legs.macos-x86_64.allowed_skip]]
+file = "tests/test_fe.py"
+reason = "needs Apple Accelerate"
+why = "the Accelerate shim is for Apple silicon; `cholesky` is a user error on an x86_64 Mac"
+
+[[legs.macos-x86_64.allowed_skip]]
+file = "tests/test_fe.py"
+reason = "needs pypardiso"
+why = "PARDISO exists on Linux x86_64 only"
+
+[[legs.macos-x86_64.allowed_skip]]
+file = "tests/test_springs.py"
+reason = "needs Apple Accelerate"
+why = "the Accelerate shim is for Apple silicon; `cholesky` is a user error on an x86_64 Mac"
+
+[[legs.macos-x86_64.allowed_skip]]
+file = "tests/test_springs.py"
+reason = "needs pypardiso"
+why = "PARDISO exists on Linux x86_64 only"
+
+[[legs.macos-x86_64.allowed_skip]]
+file = "tests/test_verify_p2.py"
+reason = "needs pypardiso"
+why = "PARDISO exists on Linux x86_64 only"
+
+[[legs.macos-x86_64.allowed_skip]]
+file = "tests/test_checkpoint.py"
+reason = "needs a direct solver (PARDISO or Cholesky)"
+why = "an x86_64 Mac has no direct solver (`auto` gives amg), and the test needs one: AMG is not reproducible"
+
+[[legs.macos-x86_64.allowed_skip]]
+file = "tests/test_continue.py"
+reason = "needs a direct solver (PARDISO or Cholesky)"
+why = "the tests use the marker needs_direct of tests/test_checkpoint.py: an x86_64 Mac has no direct solver (`auto` gives amg), and AMG is not reproducible"
+
+[[legs.macos-x86_64.allowed_skip]]
+file = "tests/test_continue_mcp.py"
+reason = "needs a direct solver (PARDISO or Cholesky)"
+why = "the tests use the marker needs_direct of tests/test_checkpoint.py: an x86_64 Mac has no direct solver (`auto` gives amg), and AMG is not reproducible"
+
+[[legs.macos-x86_64.allowed_skip]]
+file = "tests/test_gpu_mg_x_merge.py"
+reason = "needs a direct solver (PARDISO or Cholesky)"
+why = "the tests use the marker needs_direct of tests/test_checkpoint.py: an x86_64 Mac has no direct solver (`auto` gives amg), and AMG is not reproducible"
+
+[[legs.macos-x86_64.allowed_skip]]
+file = "tests/test_objective_scale_resume.py"
+reason = "needs a direct solver (PARDISO or Cholesky)"
+why = "the tests use the marker needs_direct of tests/test_checkpoint.py: an x86_64 Mac has no direct solver (`auto` gives amg), and AMG is not reproducible"
+
+[[legs.macos-x86_64.allowed_skip]]
+file = "tests/test_perimeter.py"
+reason = "needs a direct solver (PARDISO or Cholesky)"
+why = "the tests use the marker needs_direct of tests/test_checkpoint.py: an x86_64 Mac has no direct solver (`auto` gives amg), and AMG is not reproducible"
+
+[[legs.macos-x86_64.allowed_skip]]
+file = "tests/test_run_stop.py"
+reason = "needs a direct solver (PARDISO or Cholesky)"
+why = "the tests use the marker needs_direct of tests/test_checkpoint.py: an x86_64 Mac has no direct solver (`auto` gives amg), and AMG is not reproducible"
+
+[[legs.macos-x86_64.allowed_skip]]
+file = "tests/test_springs_x_merge.py"
+reason = "needs a direct solver (PARDISO or Cholesky)"
+why = "the tests use the marker needs_direct of tests/test_checkpoint.py: an x86_64 Mac has no direct solver (`auto` gives amg), and AMG is not reproducible"
+
+[[legs.macos-x86_64.allowed_skip]]
+file = "tests/test_stage_facts.py"
+reason = "needs a direct solver (PARDISO or Cholesky)"
+why = "the tests use the marker needs_direct of tests/test_checkpoint.py: an x86_64 Mac has no direct solver (`auto` gives amg), and AMG is not reproducible"
+
+[[legs.macos-x86_64.allowed_skip]]
+file = "tests/test_load_types.py"
+reason = "this host has no direct solver"
+why = "an x86_64 Mac has no direct solver (`auto` gives amg), and the test needs one"
+
+[[legs.macos-x86_64.allowed_skip]]
+file = "tests/test_buckling.py"
+reason = "needs a direct solver (cholesky on macOS arm64, or pardiso on Linux x86_64)"
+why = "an x86_64 Mac has no direct solver (`auto` gives amg), and the test needs one"
+
+[[legs.macos-x86_64.allowed_skip]]
+file = "tests/test_buckling.py"
+reason = "the solver of this machine is not direct"
+why = "an x86_64 Mac has no direct solver (`auto` gives amg), and the test needs one (the buckling check gives a fact with AMG)"
+
+[[legs.macos-x86_64.allowed_skip]]
+file = "tests/test_solid_filter.py"
+reason = "bit-equal runs need a direct solver"
+why = "an x86_64 Mac has no direct solver (`auto` gives amg), and the test needs one: with AMG the two forms differ at 1e-11"
+
+[[legs.macos-x86_64.allowed_skip]]
+file = "tests/test_multirow_mma.py"
+reason = "the values come from a direct solver"
+why = "an x86_64 Mac has no direct solver (`auto` gives amg), and the test needs one: AMG-CG differs at its tolerance"
+
+[[legs.macos-x86_64.allowed_skip]]
+file = "tests/test_solver_choice.py"
+reason = "needs pypardiso"
+why = "PARDISO exists on Linux x86_64 only"
+
+[[legs.macos-x86_64.allowed_skip]]
+file = "tests/test_solver_choice.py"
+reason = "the thread cap is for Linux only"
+why = "topopt caps OpenBLAS threads on Linux only"
+
+[[legs.macos-x86_64.allowed_skip]]
+file = "tests/test_plugin_manifest.py"
+reason = "the claude command is not installed"
+why = "a hosted runner has no Claude Code command"
+
+[[legs.macos-x86_64.allowed_skip]]
+file = "tests/test_plugin_launcher.py"
+reason = "a real uv is in a standard folder"
+why = "the test needs a PATH without uv; Homebrew puts uv in /usr/local/bin on an Intel Mac"
+
+[[legs.macos-x86_64.allowed_skip]]
+file = "tests/test_plugin_launcher.py"
+reason = "setsid or perl in /usr/local/bin"
+why = "the launcher adds /usr/local/bin to PATH, and Homebrew puts perl there on an Intel Mac, so the test of the plain way (no setsid, no perl) cannot hide it; the Linux leg runs that test"
+
+[[legs.macos-x86_64.allowed_skip]]
+file = "tests/test_*gpu_mg*.py"
+reason = "could not import 'pyopencl'"
+why = "the marker of pyopencl in pyproject.toml leaves an Intel Mac out and the Intel lock has no pyopencl, so pyopencl is missing on this leg and every gpu-mg test file skips at import (a glob: tests/test_ci_scripts.py checks that it matches only the files that need pyopencl and the files of GPU_MG_WITHOUT_OPENCL there)"
+
+[[legs.macos-x86_64.allowed_skip]]
+file = "tests/test_*gpu_mg*.py"
+reason = "no usable OpenCL device"
+why = "with pyopencl installed but no OpenCL platform (CI installs no OpenCL driver), the device fixtures of the gpu-mg tests skip with this text"
+
+[[legs.macos-x86_64.allowed_skip]]
+file = "tests/test_mcpb.py"
+reason = "the mcpb CLI is not installed"
+why = "a hosted runner has no mcpb command (npm install -g @anthropic-ai/mcpb)"
+
+[[legs.macos-x86_64.allowed_skip]]
+file = "tests/test_mcpb.py"
+reason = "TOPOPT_TEST_MCPB_LAUNCH=1"
+why = "the launch test needs the network and a person sets the variable; CI does not"
+
+[[legs.macos-x86_64.allowed_skip]]
+file = "tests/test_runjob.py"
+reason = "needs /proc (Linux)"
+why = "macOS has no /proc"
+
+[[legs.macos-x86_64.allowed_skip]]
+file = "tests/test_runinfo.py"
+reason = "needs /proc (Linux)"
+why = "macOS has no /proc"
+
+[[legs.macos-x86_64.allowed_skip]]
+file = "tests/test_hostinfo.py"
+reason = "needs /proc (Linux)"
+why = "macOS has no /proc: the tests of the real /proc files (DL1a) skip there"
+
+[[legs.macos-x86_64.allowed_skip]]
+file = "tests/test_job_facts.py"
+reason = "needs /proc (Linux)"
+why = "macOS has no /proc: the tests of the real /proc files (DL1a) skip there"
+
+[[legs.macos-x86_64.allowed_skip]]
+file = "tests/test_registry.py"
+reason = "needs /proc (Linux)"
+why = "macOS has no /proc: the registry test of a pid of an earlier boot needs it"
+
+[[legs.macos-x86_64.allowed_skip]]
+file = "tests/test_plugin_launcher.py"
+reason = "the process tree is read from /proc"
+why = "macOS has no /proc: the tests that walk the process tree of the launcher skip there"
+
+[[legs.macos-x86_64.allowed_skip]]
+file = "tests/test_plugin_launcher.py"
+reason = "no /proc on this system"
+why = "macOS has no /proc: the doctor tests of the /proc fallback (a host with no ps) skip there"
+
+[[legs.macos-x86_64.allowed_skip]]
+file = "tests/test_joints.py"
+reason = "needs Apple Accelerate"
+why = "the Accelerate shim is for Apple silicon; `cholesky` is a user error on an x86_64 Mac"
+
+[[legs.macos-x86_64.allowed_skip]]
+file = "tests/test_perimeter.py"
+reason = "needs Apple Accelerate"
+why = "the Accelerate shim is for Apple silicon; `cholesky` is a user error on an x86_64 Mac"
+
+[[legs.macos-x86_64.allowed_skip]]
+file = "tests/test_verify_supports.py"
+reason = "needs Apple Accelerate"
+why = "the Accelerate shim is for Apple silicon; `cholesky` is a user error on an x86_64 Mac"
+
+[[legs.macos-x86_64.allowed_skip]]
+file = "tests/test_estimate_bounds.py"
+reason = "needs pypardiso"
+why = "PARDISO exists on Linux x86_64 only"
+
+[[legs.macos-x86_64.allowed_skip]]
+file = "tests/test_joints.py"
+reason = "needs pypardiso"
+why = "PARDISO exists on Linux x86_64 only"
+
+[[legs.macos-x86_64.allowed_skip]]
+file = "tests/test_perimeter.py"
+reason = "needs pypardiso"
+why = "PARDISO exists on Linux x86_64 only"
+
+[[legs.macos-x86_64.allowed_skip]]
+file = "tests/test_buckling_joints.py"
+reason = "needs a direct solver (Apple Cholesky on Apple silicon, or PARDISO"
+why = "an Intel Mac has neither direct solver (no Accelerate shim, no pypardiso): the tests with the shared marker needs_direct_solver skip"
+
+[[legs.macos-x86_64.allowed_skip]]
+file = "tests/test_buckling_row.py"
+reason = "needs a direct solver (Apple Cholesky on Apple silicon, or PARDISO"
+why = "an Intel Mac has neither direct solver (no Accelerate shim, no pypardiso): the tests with the shared marker needs_direct_solver skip"
+
+[[legs.macos-x86_64.allowed_skip]]
+file = "tests/test_buckling_row_failure.py"
+reason = "needs a direct solver (Apple Cholesky on Apple silicon, or PARDISO"
+why = "an Intel Mac has neither direct solver (no Accelerate shim, no pypardiso): the tests with the shared marker needs_direct_solver skip"
+
+[[legs.macos-x86_64.allowed_skip]]
+file = "tests/test_buckling_row_joints.py"
+reason = "needs a direct solver (Apple Cholesky on Apple silicon, or PARDISO"
+why = "an Intel Mac has neither direct solver (no Accelerate shim, no pypardiso): the tests with the shared marker needs_direct_solver skip"
+
+[[legs.macos-x86_64.allowed_skip]]
+file = "tests/test_buckling_row_resume.py"
+reason = "needs a direct solver (Apple Cholesky on Apple silicon, or PARDISO"
+why = "an Intel Mac has neither direct solver (no Accelerate shim, no pypardiso): the tests with the shared marker needs_direct_solver skip"
+
+[[legs.macos-x86_64.allowed_skip]]
+file = "tests/test_buckling_row_wiring.py"
+reason = "needs a direct solver (Apple Cholesky on Apple silicon, or PARDISO"
+why = "an Intel Mac has neither direct solver (no Accelerate shim, no pypardiso): the tests with the shared marker needs_direct_solver skip"
+
+[[legs.macos-x86_64.allowed_skip]]
+file = "tests/test_cgroup_working_set.py"
+reason = "no readable cgroup memory.current"
+why = "macOS has no cgroup; the other tests of the file use a fake cgroup tree and run"
+
+[[legs.macos-x86_64.allowed_skip]]
+file = "tests/test_registry.py"
+reason = "runs inside test_a_runner_that_sets_xdg_state_home_"
+why = "an inner probe: it runs only in the subprocess that the test before it starts (TOPOPT_TEST_XDG_PROBE); in the main run it always skips"
+
+[[legs.macos-x86_64.allowed_skip]]
+file = "tests/test_plugin_launcher.py"
+reason = "no setsid on this machine"
+why = "macOS has no setsid command: the tests of the setsid way skip there, and the perl way and the plain way of the same tests run"
+
+[[legs.macos-x86_64.allowed_skip]]
+file = "tests/test_tet_clean_retry.py"
+reason = "was measured on Linux x86_64"
+why = "the routes of the tet surface step (the boolean of manifold3d, the weld, the fold repair) were measured on Linux x86_64 and depend on the floating-point order; the tests of the seam part skip on another platform"
+
+[[legs.macos-x86_64.allowed_skip]]
+file = "tests/test_apply_marks_seam.py"
+reason = "was measured on Linux x86_64"
+why = "the route of the surface step for the plain boolean cases was measured on Linux x86_64; the first run on Apple silicon ended one case another way, so this test skips on another platform (its fold-edge part runs first)"
+
+[[legs.macos-x86_64.allowed_skip]]
+file = "tests/test_release_pin.py"
+reason = "a tag of the record is not in this checkout"
+why = "a CI checkout is shallow and has no tags (actions/checkout with the default fetch-depth 1); the record is compared with the file of each tag only in a clone that has the tags"
+
+[[legs.macos-x86_64.allowed_skip]]
+file = "tests/test_release_notes.py"
+reason = "CI checkouts have no tags"
+why = "a CI checkout is shallow and has no tags (actions/checkout with the default fetch-depth 1); the test checks the v0.2.0 entry of CHANGELOG.md first and skips only the compare with git log v0.1.0..v0.2.0"
+
+[[legs.macos-x86_64.allowed_skip]]
+file = "tests/test_pm2_types.py"
+reason = "pyright is not installed"
+why = "pyright is in no extra and no leg installs it; the type check of the catalog modules runs where pyright is on the PATH"

@@ -1,0 +1,14 @@
+Bit-equality of the E1a hook run (fix round 1, HEAD 416d115) against the base run, 2026-10-20. Scripts: run_hook.sh and compare_hook.py (outside the repo).
+compliance_final new: 1.3891411615538347 == 1.3891411615538347: True
+compliance_final base: 1.3891411615538347
+snapshots base/new: 81 81 same names: True
+snapshots bit-equal: True
+final.stl bit-equal: True
+preview.bin bit-equal: True
+stress.npz bit-equal: True
+labels.bin bit-equal: True
+old metrics keys: 13 | differ (excl run_time_s): [] | missing: [] | new: ['print']
+run_time_s base/new: 568.9 354.1
+run.json keys base/new equal: False | print block equal: False
+run.json differing keys: ['yaml_path', 'started_at']
+run.json print block of this run: {build_direction [0,0,1], bed_mm [220,220], printer_type fdm, self_supporting_angle_deg null, given []}, with no key limits (the same as round 0; the base run is from before #23 and has no print block).

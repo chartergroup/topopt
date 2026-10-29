@@ -1,0 +1,69 @@
+# The T-shirt hook as a stress-limited mass minimization (CONTRACTS.md section 17).
+#
+# The objective is the mass. Each load case has a stress limit in MPa. The optimizer removes material
+# until the relaxed stress (the measure of the optimizer, not physical) is at the limit. There is no volume row:
+# settings.volume_fraction is only the start density.
+#
+# The numbers below are an example. The tool has no default allowable (decision D7; the filament catalog holds data-sheet
+# numbers with a source, not an allowable): the allowable stress and its source come from you (or from the agent that writes the YAML).
+#
+# Why the limit of `pull_off` is 0.5 MPa:
+# the mass minimization holds the stress limit with the least material. The area that carries the force is of
+# the order of force / limit. The `pull_off` force is 30 N: with 5 MPa that is 6 mm2, about one voxel face at
+# 2.4 mm (5.8 mm2), and the optimizer builds members that are one voxel thick. The relaxed rows are met, and
+# the thresholded voxels still join the tip to the plate, but the smoothing of the post-process (a Gaussian
+# blur and one iso level) drops such a member: `final.stl` was the wall plate alone, 15 g, with no material at
+# the tip, and the rows still said "met". With 1 MPa `final.stl` is one body, but it joins the tip to the plate
+# through a thin neck (`topopt verify`: stiffness 1 N/mm, against 517 N/mm in the voxel model). With 0.5 MPa
+# (60 mm2, about 10 voxel faces) the neck is thick enough: one body, 37.8 g, `topopt verify` stiffness about
+# 670 N/mm. At 2.4 mm this limit sets the member size more than the strength. So `stress_limit` is the design limit,
+# and `allowable_mpa` is only the material value that the report uses for the achieved safety factor.
+# The limits 0.7, 1, 1.5 and 2 MPa, a larger `filter_radius`, and the compliance objective with a volume fraction
+# were measured too; the plan has the table. After a run, read metrics.json "stress.load_paths": it says whether
+# the thresholded part and `final.stl` connect the load region to the plate (it does not say how stiff the joint is).
+#
+#   topopt check examples/hook/hook_stress.yaml
+#   topopt run   examples/hook/hook_stress.yaml --out runs/hook_stress
+#
+# The run ends with metrics.json "stress": relaxed numbers, physical numbers (peak and p99.9, an estimate),
+# the achieved safety factor in words, and a verdict only for a statistic with measured accuracy.
+
+name: tshirt_hook_stress
+
+regions:
+  design: design.stl
+  fixed:
+    - wall_plate.stl
+  keep_out:
+    - screw_hole_top.stl
+    - screw_hole_bottom.stl
+  load:
+    tip: hook_tip.stl
+
+load_cases:
+  - name: hang
+    forces:
+      - region: tip
+        force: [0.0, 0.0, -1.96]
+    stress_limit: 1.5               # MPa, explicit: a long static load (creep), so a low value
+
+  - name: pull_off
+    forces:
+      - region: tip
+        force: [20.89, 5.21, -20.89]
+    stress_limit: 0.5               # MPa, the design limit (see above)
+    allowable_mpa: 40.0             # MPa, not a limit here: the report uses it for the achieved safety factor
+    allowable_source: "generic PLA tensile strength, example value only; layer direction and voxel stress estimate not covered"
+
+material:
+  E: 3500.0
+  nu: 0.35
+  density: 1.24
+
+settings:
+  objective: mass
+  voxel_size: 2.4                   # coarse: about 1 minute. At 1.2 mm the run takes about 14 minutes
+  volume_fraction: 0.3              # the start density (no volume row in a mass run)
+  iterations: 220
+  move_limit: 0.03                  # the upper limit of the trial step of the step acceptance (settings.stress_step_acceptance, default true)
+  beta_schedule: [[0, 1], [60, 2], [100, 4], [140, 8]]

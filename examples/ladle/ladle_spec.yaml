@@ -1,0 +1,30 @@
+# This file is a PART SPEC for build_regions, not a problem YAML: `regions` holds shapes (box, sphere, cylinder, bowl), and
+# `topopt run` and `topopt check` refuse it. build_regions turns the shapes into region STL files and a problem YAML:
+#   python -m topopt.regions_builder examples/ladle/ladle_spec.yaml --out runs/ladle_built
+# (or the MCP tool `build_regions`, or the skill part-to-topopt). Then run the YAML that it writes (named after `name`):
+#   topopt run runs/ladle_built/ladle.yaml --out runs/ladle
+# `examples/ladle/ladle.yaml` is the finished problem YAML of the same part, with the STL files beside it.
+#
+# Gravy ladle, wide design space. The bowl is one whole solid feature that carries the load.
+# It is a load region (solid, not a design variable). The handle is carved from a big block.
+name: ladle
+regions:
+  design:                         # ONE big block: room above and below the grip-to-bowl line
+    - box: {min: [0, -48, -40], max: [154, 48, 40]}     # 154 x 96 x 80 mm
+  fixed:
+    grip:                         # the hand holds this end
+      - box: {min: [0, -12, -8], max: [20, 12, 8]}
+  keep_out:
+    gravy_space:                  # not a screw hole: the name does not start with "hole"
+      - sphere: {center: [182, 0, 0], radius: 26}      # the scoop cavity
+    over_opening:                 # nothing grows over the opening of the bowl
+      - cylinder: {p0: [182, 0, 0], p1: [182, 0, 45], radius: 36}
+  load:
+    bowl:                         # the whole bowl shell: gravy weight, scrape and stir act here
+      - bowl: {center: [182, 0, 0], radius: 36, wall: 9, open: [0, 0, 1]}
+load_cases:
+  - {name: full_scoop, weight: 1.0, forces: [{region: bowl, force: [0, 0, -4.9]}]}
+  - {name: scrape, weight: 1.0, forces: [{region: bowl, force: [-30, 0, -40]}]}
+  - {name: side_stir, weight: 1.0, forces: [{region: bowl, force: [0, 18, -5]}]}
+material: {E: 3500, nu: 0.35, density: 1.24}
+settings: {volume_fraction: 0.10628, iterations: 80, voxel_size: auto}   # mean density of the FREE block voxels: the engine basis, as in ladle.yaml

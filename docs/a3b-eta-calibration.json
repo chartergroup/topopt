@@ -1,0 +1,511 @@
+{
+ "case": {
+  "design_mm": [
+   [
+    0,
+    0,
+    0
+   ],
+   [
+    48,
+    24,
+    16
+   ]
+  ],
+  "plate_mm": [
+   [
+    -2,
+    0,
+    0
+   ],
+   [
+    0,
+    24,
+    16
+   ]
+  ],
+  "tip_mm": [
+   [
+    46,
+    10,
+    12
+   ],
+   [
+    48,
+    14,
+    16
+   ]
+  ],
+  "voxel_mm": 1.0,
+  "volume_fraction": 0.3,
+  "iterations": 150,
+  "beta_schedule": [
+   [
+    0,
+    1
+   ],
+   [
+    40,
+    2
+   ],
+   [
+    70,
+    4
+   ],
+   [
+    100,
+    8
+   ],
+   [
+    130,
+    16
+   ]
+  ],
+  "load_cases": [
+   {
+    "name": "down",
+    "weight": 1.0,
+    "force_n": [
+     0,
+     0,
+     -1.0
+    ]
+   },
+   {
+    "name": "side",
+    "weight": 1.0,
+    "force_n": [
+     0,
+     1.0,
+     -0.5
+    ]
+   }
+  ]
+ },
+ "rule": "filter_radius = 1.877 * min_member_mm",
+ "radius_per_member": 1.877,
+ "explicit_factor": null,
+ "robust_etas": [
+  0.55,
+  0.6
+ ],
+ "measure": {
+  "kind": "local thickness of the design material (density > 0.5), voxel level, grid refined by 2",
+  "interior_margin_voxels": 2,
+  "bias_mm": 0.25
+ },
+ "machine": {
+  "platform": "Linux x86_64",
+  "python": "3.12.13"
+ },
+ "rows": [
+  {
+   "requested_mm": 2.0,
+   "robust_eta": 0.55,
+   "filter_radius_mm": 3.754,
+   "radius_source": "min_member_mm",
+   "radius_voxels": 3.754,
+   "thickness": {
+    "all": {
+     "voxels": 5393,
+     "min_mm": 0.75,
+     "p1_mm": 0.75,
+     "p5_mm": 1.031,
+     "p10_mm": 1.75,
+     "median_mm": 2.781,
+     "share_below_request": 0.3308
+    },
+    "interior": {
+     "voxels": 1466,
+     "min_mm": 1.25,
+     "p1_mm": 1.781,
+     "p5_mm": 2.625,
+     "p10_mm": 2.75,
+     "median_mm": 3.375,
+     "share_below_request": 0.0136
+    },
+    "face_layer": {
+     "voxels": 3927,
+     "min_mm": 0.75,
+     "p1_mm": 0.75,
+     "p5_mm": 0.956,
+     "p10_mm": 1.75,
+     "median_mm": 2.25,
+     "share_below_request": 0.4492
+    },
+    "face_layer_share_of_material": 0.728
+   },
+   "error_p5_interior": 0.312,
+   "error_median_interior": 0.688,
+   "error_p5_all": -0.485,
+   "compliance_final": 0.007131437874283365,
+   "mass_final_g": 7.72,
+   "compliance_nominal": 0.0063633804115982105,
+   "compliance_eroded": 0.007131437874283365,
+   "robust_s": 1.535,
+   "grayness": 0.0822,
+   "metrics_filter": {
+    "radius_mm": 3.754,
+    "radius_source": "min_member_mm",
+    "solid_neighbours": "density_one",
+    "min_member_mm": 2.0,
+    "min_member_radius_mm": 3.754,
+    "min_feature_mm": 3.754,
+    "min_member_rule": "filter_radius = 1.877 * min_member_mm",
+    "min_member_note": "estimate, not a guarantee: a filter and a projection do not set a minimum member size. Measure the thickness of the final part",
+    "size": {
+     "radius_voxels": 3.754,
+     "entries_per_row": 251,
+     "entries": 4618400,
+     "build_peak_bytes_estimate": 277104000,
+     "build_peak_gib_estimate": 0.26
+    },
+    "facts": []
+   },
+   "solver": "pardiso",
+   "n_free_dofs": 61200,
+   "seconds": 206.7,
+   "peak_rss_mib_so_far": 1001.4
+  },
+  {
+   "requested_mm": 2.5,
+   "robust_eta": 0.55,
+   "filter_radius_mm": 4.6925,
+   "radius_source": "min_member_mm",
+   "radius_voxels": 4.692,
+   "thickness": {
+    "all": {
+     "voxels": 5434,
+     "min_mm": 0.75,
+     "p1_mm": 0.75,
+     "p5_mm": 1.031,
+     "p10_mm": 1.75,
+     "median_mm": 3.375,
+     "share_below_request": 0.3062
+    },
+    "interior": {
+     "voxels": 1688,
+     "min_mm": 1.25,
+     "p1_mm": 2.25,
+     "p5_mm": 2.75,
+     "p10_mm": 2.938,
+     "median_mm": 3.75,
+     "share_below_request": 0.0124
+    },
+    "face_layer": {
+     "voxels": 3746,
+     "min_mm": 0.75,
+     "p1_mm": 0.75,
+     "p5_mm": 1.0,
+     "p10_mm": 1.75,
+     "median_mm": 2.75,
+     "share_below_request": 0.4386
+    },
+    "face_layer_share_of_material": 0.689
+   },
+   "error_p5_interior": 0.1,
+   "error_median_interior": 0.5,
+   "error_p5_all": -0.588,
+   "compliance_final": 0.008156763666819129,
+   "mass_final_g": 7.71,
+   "compliance_nominal": 0.006863316904440127,
+   "compliance_eroded": 0.008156763666819129,
+   "robust_s": 1.36,
+   "grayness": 0.1078,
+   "metrics_filter": {
+    "radius_mm": 4.6925,
+    "radius_source": "min_member_mm",
+    "solid_neighbours": "density_one",
+    "min_member_mm": 2.5,
+    "min_member_radius_mm": 4.6925,
+    "min_feature_mm": 4.6925,
+    "min_member_rule": "filter_radius = 1.877 * min_member_mm",
+    "min_member_note": "estimate, not a guarantee: a filter and a projection do not set a minimum member size. Measure the thickness of the final part",
+    "size": {
+     "radius_voxels": 4.692,
+     "entries_per_row": 461,
+     "entries": 8482400,
+     "build_peak_bytes_estimate": 508944000,
+     "build_peak_gib_estimate": 0.47
+    },
+    "facts": []
+   },
+   "solver": "pardiso",
+   "n_free_dofs": 61200,
+   "seconds": 225.3,
+   "peak_rss_mib_so_far": 1092.4
+  },
+  {
+   "requested_mm": 3.0,
+   "robust_eta": 0.55,
+   "filter_radius_mm": 5.631,
+   "radius_source": "min_member_mm",
+   "radius_voxels": 5.631,
+   "thickness": {
+    "all": {
+     "voxels": 5473,
+     "min_mm": 0.75,
+     "p1_mm": 0.75,
+     "p5_mm": 1.75,
+     "p10_mm": 1.75,
+     "median_mm": 3.688,
+     "share_below_request": 0.3539
+    },
+    "interior": {
+     "voxels": 1899,
+     "min_mm": 1.281,
+     "p1_mm": 2.625,
+     "p5_mm": 2.75,
+     "p10_mm": 3.125,
+     "median_mm": 4.25,
+     "share_below_request": 0.0879
+    },
+    "face_layer": {
+     "voxels": 3574,
+     "min_mm": 0.75,
+     "p1_mm": 0.75,
+     "p5_mm": 1.02,
+     "p10_mm": 1.75,
+     "median_mm": 3.0,
+     "share_below_request": 0.4952
+    },
+    "face_layer_share_of_material": 0.653
+   },
+   "error_p5_interior": -0.083,
+   "error_median_interior": 0.417,
+   "error_p5_all": -0.417,
+   "compliance_final": 0.00955658924598732,
+   "mass_final_g": 7.79,
+   "compliance_nominal": 0.0075517810788785535,
+   "compliance_eroded": 0.00955658924598732,
+   "robust_s": 1.507,
+   "grayness": 0.1276,
+   "metrics_filter": {
+    "radius_mm": 5.631,
+    "radius_source": "min_member_mm",
+    "solid_neighbours": "density_one",
+    "min_member_mm": 3.0,
+    "min_member_radius_mm": 5.631,
+    "min_feature_mm": 5.631,
+    "min_member_rule": "filter_radius = 1.877 * min_member_mm",
+    "min_member_note": "estimate, not a guarantee: a filter and a projection do not set a minimum member size. Measure the thickness of the final part",
+    "size": {
+     "radius_voxels": 5.631,
+     "entries_per_row": 739,
+     "entries": 13597600,
+     "build_peak_bytes_estimate": 815856000,
+     "build_peak_gib_estimate": 0.76
+    },
+    "facts": []
+   },
+   "solver": "pardiso",
+   "n_free_dofs": 61200,
+   "seconds": 226.8,
+   "peak_rss_mib_so_far": 1158.1
+  },
+  {
+   "requested_mm": 2.0,
+   "robust_eta": 0.6,
+   "filter_radius_mm": 3.754,
+   "radius_source": "min_member_mm",
+   "radius_voxels": 3.754,
+   "thickness": {
+    "all": {
+     "voxels": 5450,
+     "min_mm": 0.75,
+     "p1_mm": 0.938,
+     "p5_mm": 1.75,
+     "p10_mm": 1.75,
+     "median_mm": 3.312,
+     "share_below_request": 0.2622
+    },
+    "interior": {
+     "voxels": 1650,
+     "min_mm": 1.0,
+     "p1_mm": 2.531,
+     "p5_mm": 2.75,
+     "p10_mm": 2.75,
+     "median_mm": 3.75,
+     "share_below_request": 0.0048
+    },
+    "face_layer": {
+     "voxels": 3800,
+     "min_mm": 0.75,
+     "p1_mm": 0.906,
+     "p5_mm": 1.75,
+     "p10_mm": 1.75,
+     "median_mm": 2.75,
+     "share_below_request": 0.3739
+    },
+    "face_layer_share_of_material": 0.697
+   },
+   "error_p5_interior": 0.375,
+   "error_median_interior": 0.875,
+   "error_p5_all": -0.125,
+   "compliance_final": 0.008436248425925785,
+   "mass_final_g": 7.76,
+   "compliance_nominal": 0.006664654386369479,
+   "compliance_eroded": 0.008436248425925785,
+   "robust_s": 1.047,
+   "grayness": 0.0794,
+   "metrics_filter": {
+    "radius_mm": 3.754,
+    "radius_source": "min_member_mm",
+    "solid_neighbours": "density_one",
+    "min_member_mm": 2.0,
+    "min_member_radius_mm": 3.754,
+    "min_feature_mm": 3.754,
+    "min_member_rule": "filter_radius = 1.877 * min_member_mm",
+    "min_member_note": "estimate, not a guarantee: a filter and a projection do not set a minimum member size. Measure the thickness of the final part",
+    "size": {
+     "radius_voxels": 3.754,
+     "entries_per_row": 251,
+     "entries": 4618400,
+     "build_peak_bytes_estimate": 277104000,
+     "build_peak_gib_estimate": 0.26
+    },
+    "facts": []
+   },
+   "solver": "pardiso",
+   "n_free_dofs": 61200,
+   "seconds": 172.4,
+   "peak_rss_mib_so_far": 1158.1
+  },
+  {
+   "requested_mm": 2.5,
+   "robust_eta": 0.6,
+   "filter_radius_mm": 4.6925,
+   "radius_source": "min_member_mm",
+   "radius_voxels": 4.692,
+   "thickness": {
+    "all": {
+     "voxels": 5501,
+     "min_mm": 0.75,
+     "p1_mm": 1.0,
+     "p5_mm": 1.75,
+     "p10_mm": 1.75,
+     "median_mm": 3.688,
+     "share_below_request": 0.2234
+    },
+    "interior": {
+     "voxels": 1947,
+     "min_mm": 1.281,
+     "p1_mm": 2.449,
+     "p5_mm": 2.75,
+     "p10_mm": 2.925,
+     "median_mm": 4.0,
+     "share_below_request": 0.0103
+    },
+    "face_layer": {
+     "voxels": 3554,
+     "min_mm": 0.75,
+     "p1_mm": 1.0,
+     "p5_mm": 1.75,
+     "p10_mm": 1.75,
+     "median_mm": 3.0,
+     "share_below_request": 0.3402
+    },
+    "face_layer_share_of_material": 0.646
+   },
+   "error_p5_interior": 0.1,
+   "error_median_interior": 0.6,
+   "error_p5_all": -0.3,
+   "compliance_final": 0.010123144384811954,
+   "mass_final_g": 7.74,
+   "compliance_nominal": 0.007247605320754389,
+   "compliance_eroded": 0.010123144384811954,
+   "robust_s": 1.163,
+   "grayness": 0.0961,
+   "metrics_filter": {
+    "radius_mm": 4.6925,
+    "radius_source": "min_member_mm",
+    "solid_neighbours": "density_one",
+    "min_member_mm": 2.5,
+    "min_member_radius_mm": 4.6925,
+    "min_feature_mm": 4.6925,
+    "min_member_rule": "filter_radius = 1.877 * min_member_mm",
+    "min_member_note": "estimate, not a guarantee: a filter and a projection do not set a minimum member size. Measure the thickness of the final part",
+    "size": {
+     "radius_voxels": 4.692,
+     "entries_per_row": 461,
+     "entries": 8482400,
+     "build_peak_bytes_estimate": 508944000,
+     "build_peak_gib_estimate": 0.47
+    },
+    "facts": []
+   },
+   "solver": "pardiso",
+   "n_free_dofs": 61200,
+   "seconds": 170.5,
+   "peak_rss_mib_so_far": 1158.1
+  },
+  {
+   "requested_mm": 3.0,
+   "robust_eta": 0.6,
+   "filter_radius_mm": 5.631,
+   "radius_source": "min_member_mm",
+   "radius_voxels": 5.631,
+   "thickness": {
+    "all": {
+     "voxels": 5497,
+     "min_mm": 0.75,
+     "p1_mm": 1.0,
+     "p5_mm": 1.75,
+     "p10_mm": 2.281,
+     "median_mm": 4.75,
+     "share_below_request": 0.1635
+    },
+    "interior": {
+     "voxels": 2639,
+     "min_mm": 1.812,
+     "p1_mm": 2.75,
+     "p5_mm": 3.375,
+     "p10_mm": 3.688,
+     "median_mm": 5.75,
+     "share_below_request": 0.0307
+    },
+    "face_layer": {
+     "voxels": 2858,
+     "min_mm": 0.75,
+     "p1_mm": 0.938,
+     "p5_mm": 1.75,
+     "p10_mm": 1.75,
+     "median_mm": 4.094,
+     "share_below_request": 0.2862
+    },
+    "face_layer_share_of_material": 0.52
+   },
+   "error_p5_interior": 0.125,
+   "error_median_interior": 0.917,
+   "error_p5_all": -0.417,
+   "compliance_final": 0.011797088865338801,
+   "mass_final_g": 7.8,
+   "compliance_nominal": 0.008219577350663766,
+   "compliance_eroded": 0.011797088865338801,
+   "robust_s": 0.999,
+   "grayness": 0.0973,
+   "metrics_filter": {
+    "radius_mm": 5.631,
+    "radius_source": "min_member_mm",
+    "solid_neighbours": "density_one",
+    "min_member_mm": 3.0,
+    "min_member_radius_mm": 5.631,
+    "min_feature_mm": 5.631,
+    "min_member_rule": "filter_radius = 1.877 * min_member_mm",
+    "min_member_note": "estimate, not a guarantee: a filter and a projection do not set a minimum member size. Measure the thickness of the final part",
+    "size": {
+     "radius_voxels": 5.631,
+     "entries_per_row": 739,
+     "entries": 13597600,
+     "build_peak_bytes_estimate": 815856000,
+     "build_peak_gib_estimate": 0.76
+    },
+    "facts": []
+   },
+   "solver": "pardiso",
+   "n_free_dofs": 61200,
+   "seconds": 172.4,
+   "peak_rss_mib_so_far": 1179.8
+  }
+ ]
+}

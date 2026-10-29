@@ -1,0 +1,70 @@
+# One arm of a 5-inch quadcopter frame: our own parametric arm (make_arm.py, named round dimensions only).
+# Run: topopt run examples/drone_arm/drone_arm.yaml --out runs/drone_arm
+name: drone_arm
+regions:
+  design: design.stl
+  fixed:
+  - frame_clamp.stl
+  keep_out:
+  - plate_stack.stl
+  - root_bolt_hole_a.stl
+  - root_bolt_hole_b.stl
+  - motor_bolt_hole_1.stl
+  - motor_bolt_hole_2.stl
+  - motor_bolt_hole_3.stl
+  - motor_bolt_hole_4.stl
+  - motor_shaft.stl
+  - motor_bell.stl
+  load:
+    motor_mount: motor_pad.stl
+load_cases:
+- name: thrust
+  weight: 9.0
+  forces:
+  - region: motor_mount
+    force: [0.0, 0.0, 20.0]
+    moment: [0.0, 0.0, 200.0]
+- name: side_hit
+  weight: 1.0
+  forces:
+  - region: motor_mount
+    force: [0.0, 60.0, 0.0]
+    at: [113.0, 0.0, 20.0]
+- name: front_hit
+  weight: 1.0
+  forces:
+  - region: motor_mount
+    force: [-60.0, 0.0, 0.0]
+    at: [113.0, 0.0, 20.0]
+material:
+  E: 3500.0
+  nu: 0.35
+  density: 1.24
+settings:
+  voxel_size: 0.5
+  max_active_voxels: 200000
+  target_mass_g: 10.801
+  min_member_mm: 2.0
+  # Method settings for walls that print (README.md, "Settings"): 200 passes, a beta schedule up to 32 and the eroded robust design.
+  iterations: 200
+  beta_schedule: [[0, 1], [30, 2], [50, 4], [70, 8], [100, 16], [140, 32]]
+  robust: eroded
+  eta_eroded: 0.7
+  # Set on purpose, not left to the default: the README numbers are for this setting.
+  envelope_fill: on
+assumptions:
+- 'Own parametric 5-inch arm (make_arm.py): 226 mm wheelbase, a half-circle root end, a straight taper from 10 mm at the root to 5 mm at
+  the motor centre, a round motor end r 16.5 mm, 6 mm plate; frame centre at the origin, x out to the motor, z up'
+- 'Plain plate arm: 1452 mm2 (the outline minus the holes) x 6 mm = 8710 mm3, 10.80 g in this material'
+- 'Design space: the arm outline (same footprint, so no more prop-wash blockage), 6 mm deeper below and 6 mm higher above the plate
+  (z -6..12)'
+- 'Clamp: the arm area under a 40 mm square body stack (turned 45 deg, true X) is fixed, 6 mm thick; no material above or below it
+  (plate stack)'
+- 'Motor: 2207-class motor on a solid pad r 14 mm, z 2..6; 4 M3 slots for the 16 x 16 to 19 x 19 mm patterns, with head and driver room
+  below the plate; motor bell r 15 mm kept free above the pad; shaft hole r 4 mm'
+- 'Thrust: 20 N up (about 2 kgf, peak static thrust of a 2207 motor on a 5-inch prop at 6S) + 200 N mm motor reaction torque; weight 9 so
+  vertical stiffness counts like a 60 N vertical hit (also covers a hard landing)'
+- 'Crash: 60 N side hit and 60 N frontal hit on the motor bell, 14 mm above the pad top (adds twist and bending)'
+- 'Material: the default printed polymer of the tool (E 3500 MPa, nu 0.35, 1.24 g/cm3); the shape does not depend on E'
+- 'Mass target: the same mass as the plain plate arm in the same material, so the stiffness is compared at about the same mass'
+- 'Not modelled: motor wire channel, fatigue and vibration modes, print orientation (layer direction), real crash energy'

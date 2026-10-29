@@ -1,0 +1,52 @@
+{
+ "made_with": "topopt.filter.build_filter of origin/main 7555b19 (before A3a), git archive, Linux x86_64, numpy 2.5.3",
+ "h_mm": 2.0,
+ "shape": [
+  14,
+  10,
+  9
+ ],
+ "note": "The default rule (density_one) must give the same bytes. See tools/make_filter_reference.py.",
+ "cases": [
+  {
+   "radius_voxels": 1.5,
+   "nnz": 14846,
+   "n_design": 970,
+   "dtypes": [
+    "float64",
+    "int32",
+    "int32",
+    "float64"
+   ],
+   "sha256": {
+    "F.data": "c87b1d2802179de813e3a2da5dac7c29241519ebd0f58da81844b484c2e19f3d",
+    "F.indices": "bd8693484bda989efe7944b03d40be4ae17729ef1348522f9326fb5a8922c0f8",
+    "F.indptr": "062f729b1b2b6b705c53434d1f3aa0d3c372ffd9deeeeabae0634cd01b1e7821",
+    "b": "a5c8af0ae9a35dfc25ab264e8492c75086d26ebc08d9f31a6441ccfc93f88f7d",
+    "FT.data": "260ecbac4aa9a8a99071b964045f76a56b662df3e7ed70a2ba0d98dab30f3158",
+    "FT.indices": "bd8693484bda989efe7944b03d40be4ae17729ef1348522f9326fb5a8922c0f8",
+    "FT.indptr": "062f729b1b2b6b705c53434d1f3aa0d3c372ffd9deeeeabae0634cd01b1e7821"
+   }
+  },
+  {
+   "radius_voxels": 3.75,
+   "nnz": 135378,
+   "n_design": 970,
+   "dtypes": [
+    "float64",
+    "int32",
+    "int32",
+    "float64"
+   ],
+   "sha256": {
+    "F.data": "daffab7a0bdb4d0fda130eaf17d5937bb42500d089e167cb9c585e598bb93fdc",
+    "F.indices": "6b507ed41dd04368a86976d610febbbd7ee92fbcb02206a3743cfa21b00b9ca8",
+    "F.indptr": "e6aba670da5d616d1bbd37d3fc87d80f551158fe57b1e36e14d883c0cc3fa906",
+    "b": "f94373fced72461a78e11947ca488587b09ee5c4a38dd33df343fd7ff97f5f94",
+    "FT.data": "6dbefb058ad94316bb037560999f270a60531f4b92393c66b7b2895d3dde3b09",
+    "FT.indices": "6b507ed41dd04368a86976d610febbbd7ee92fbcb02206a3743cfa21b00b9ca8",
+    "FT.indptr": "e6aba670da5d616d1bbd37d3fc87d80f551158fe57b1e36e14d883c0cc3fa906"
+   }
+  }
+ ]
+}

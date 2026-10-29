@@ -1,0 +1,38 @@
+{
+ "ok": false,
+ "name": "tshirt_hook",
+ "run_dir_rel": "runs/tshirt_hook",
+ "yaml_rel": "runs/tshirt_hook/tshirt_hook.yaml",
+ "files_rel": [
+  "runs/tshirt_hook/design.stl",
+  "runs/tshirt_hook/hook_tip.stl",
+  "runs/tshirt_hook/screw_hole_bottom.stl",
+  "runs/tshirt_hook/screw_hole_top.stl",
+  "runs/tshirt_hook/tshirt_hook.yaml",
+  "runs/tshirt_hook/wall_plate.stl"
+ ],
+ "other_files_rel": [],
+ "overwrote_existing_folder": false,
+ "voxel_size": 0.3,
+ "voxel_auto": false,
+ "retries": 0,
+ "builder_ok": false,
+ "problems": [
+  "grid would have 6949800 voxels at voxel_size 0.3, the limit is 5000000 (max_grid_voxels). Try voxel_size 0.35 or more, or raise settings.max_grid_voxels in the YAML if this machine has the memory"
+ ],
+ "builder_warnings": [],
+ "report": [
+  "wrote /Users/me/topopt-work/runs/tshirt_hook/tshirt_hook.yaml (voxel_size 0.3 mm)",
+  "ERROR: grid would have 6949800 voxels at voxel_size 0.3, the limit is 5000000 (max_grid_voxels). Try voxel_size 0.35 or more, or raise settings.max_grid_voxels in the YAML if this machine has the memory"
+ ],
+ "check": null,
+ "warnings": [],
+ "check_error": "grid would have 6949800 voxels at voxel_size 0.3, the limit is 5000000 (max_grid_voxels). Try voxel_size 0.35 or more, or raise settings.max_grid_voxels in the YAML if this machine has the memory (file: /Users/me/topopt-work/runs/tshirt_hook/tshirt_hook.yaml)",
+ "derived": null,
+ "assumptions": [
+  "shirt on a hanger: about 200 g, 1.96 N down",
+  "pull-off at an angle: about 30 N",
+  "two M4 screws into the wall, plate 3.5 mm",
+  "PETG, E 3500 MPa"
+ ]
+}

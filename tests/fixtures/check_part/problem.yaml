@@ -1,0 +1,7 @@
+name: golden
+regions:
+  design: design.stl
+  keep_out: [cavity.stl]
+  load:
+    tip: tip.stl
+material: {density: 1.24}

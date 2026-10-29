@@ -1,0 +1,118 @@
+/* Dark theme for a far audience. All sizes use rem. */
+:root {
+  --bg: #0b0f16;
+  --panel: #111823;
+  --line: #1f2b3b;
+  --text: #e6edf6;
+  --dim: #6f8197;
+  --accent: #4cc2ff;
+  --fixed: #3b82f6;
+  --load: #ffb020;
+  --good: #5be3a4;
+  --bad: #ff6b6b;
+  --warn: #ffc857;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { font-size: clamp(14px, calc(1vw + 5px), 28px); }
+html, body { height: 100%; margin: 0; background: var(--bg); color: var(--text);
+  font-family: -apple-system, "SF Pro Display", "Helvetica Neue", Arial, sans-serif; overflow: hidden; }
+body { display: grid; grid-template-rows: 1fr auto; }
+
+main { display: grid; grid-template-columns: 58fr 42fr; gap: 0.6rem; padding: 0.6rem 0.6rem 0; min-height: 0; }
+
+/* 3D view */
+#view { position: relative; min-height: 0; border-radius: 0.6rem; overflow: hidden;
+  background: radial-gradient(120% 90% at 50% 35%, #1a2536 0%, #0d131d 70%); border: 1px solid var(--line); }
+#gl { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.pill { position: absolute; top: 0.8rem; left: 0.8rem; padding: 0.25rem 0.8rem; border-radius: 99px;
+  font-weight: 700; letter-spacing: 0.08em; font-size: 0.9rem; background: #1b2738; color: var(--accent); }
+#replay-badge { position: absolute; top: 3.1rem; left: 1rem; font-size: 0.7rem;
+  letter-spacing: 0.14em; color: var(--dim); opacity: 0.75; }
+.pill.done { background: #12372a; color: var(--good); }
+.pill.error { background: #3d1717; color: var(--bad); }
+.pill.stopped { background: #3a2f12; color: var(--warn); }
+#title { position: absolute; top: 0.8rem; right: 1rem; font-size: 1.1rem; color: var(--dim); }
+#legend { position: absolute; bottom: 0.8rem; left: 0.9rem; font-size: 1rem; color: var(--dim);
+  display: flex; align-items: center; gap: 0.5rem; }
+#legend .chip { width: 0.9rem; height: 0.9rem; border-radius: 3px; display: inline-block; margin-left: 0.6rem; }
+.chip.fixed { background: var(--fixed); }
+.chip.load { background: var(--load); }
+#banner { position: absolute; left: 50%; top: 40%; transform: translateX(-50%); max-width: 80%;
+  padding: 0.8rem 1.4rem; border-radius: 0.5rem; background: #3d1717; color: #ffd0d0; font-size: 1.3rem; }
+#banner.stopped { background: #3a2f12; color: #ffe9b0; }
+#view.waiting::after { content: "Waiting for a run..."; position: absolute; inset: 0; display: grid;
+  place-items: center; font-size: 2rem; color: var(--dim); }
+
+/* Right side */
+#side { display: flex; flex-direction: column; min-height: 0; min-width: 0; }
+#codepanel, #result { flex: 1; min-height: 0; display: flex; flex-direction: column; background: var(--panel);
+  border: 1px solid var(--line); border-radius: 0.6rem; overflow: hidden; }
+#codepanel > header { display: flex; justify-content: space-between; align-items: center; gap: 0.6rem;
+  padding: 0.5rem 0.9rem; border-bottom: 1px solid var(--line); color: var(--dim); font-size: 0.95rem; }
+#steps { display: flex; gap: 0.35rem; flex-wrap: wrap; justify-content: flex-end; }
+#steps span { padding: 0.05rem 0.5rem; border-radius: 99px; font-size: 0.8rem; color: var(--dim); background: #172131; }
+#steps span.on { background: var(--accent); color: #04121c; font-weight: 700; }
+#steps span.past { color: #9fb4c9; }
+
+#code { flex: 1; overflow-y: auto; overflow-x: hidden; position: relative; padding: 0.4rem 0;
+  font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 0.92rem; line-height: 1.5; scrollbar-width: none; }
+#code::-webkit-scrollbar { display: none; }
+.ln { display: flex; white-space: pre; padding-right: 0.8rem; opacity: 0.38; transition: opacity 0.35s, background 0.35s; }
+.ln .no { flex: none; width: 2.6rem; text-align: right; padding-right: 0.8rem; color: var(--dim); }
+.ln .tx { overflow: hidden; }
+.ln.on { opacity: 1; background: rgba(76, 194, 255, 0.14); box-shadow: inset 0.28rem 0 0 var(--accent); }
+.ln.on .no { color: var(--accent); }
+.kw { color: #c792ea; } .st { color: #a5e075; } .cm { color: #6f8197; } .nm { color: #f7a76c; }
+
+#log { margin: 0; padding: 0.4rem 0.9rem; height: 7.2rem; overflow: hidden; border-top: 1px solid var(--line);
+  font-family: "SF Mono", Menlo, monospace; font-size: 0.75rem; line-height: 1.35; color: var(--dim);
+  display: flex; flex-direction: column; justify-content: flex-end; white-space: pre; }
+
+/* No talk screen (no `pull_off` case, no ?demo=1): the log is the main content of the side panel, and under the result card
+   it stays as a short strip. */
+#codepanel.plain > #log { flex: 1; height: auto; border-top: 0; padding: 0.7rem 0.9rem; font-size: 0.85rem; }
+#codepanel.plain.short { order: 2; flex: none; height: 12rem; margin-top: 0.6rem; }
+
+/* Result card */
+#result { padding: 1rem 1.3rem; gap: 0.8rem; justify-content: center; position: relative; }
+/* Out of the flow: the link does not move anything on the final screen. */
+.refine-link { position: absolute; top: 0.8rem; right: 1.1rem; padding: 0.25rem 0.9rem; border-radius: 99px;
+  border: 1px solid var(--line); background: #172131; color: var(--accent); font-size: 1.05rem;
+  font-weight: 700; text-decoration: none; }
+.refine-link:hover { background: #1d2b40; }
+#result h1 { margin: 0; font-size: 1.3rem; color: var(--dim); letter-spacing: 0.1em; text-transform: uppercase; }
+#result .big { padding: 0.5rem 0 0.8rem; border-bottom: 1px solid var(--line); }
+#result .mass { font-size: 3.2rem; font-weight: 800; display: flex; align-items: baseline; gap: 0.6rem; }
+#result .mass .arrow { color: var(--dim); font-weight: 400; }
+#result .mass small { font-size: 1.4rem; color: var(--dim); font-weight: 400; }
+#result .saved { font-size: 2.4rem; font-weight: 800; color: var(--good); }
+.rows { display: flex; flex-direction: column; gap: 0.5rem; }
+.row { display: flex; justify-content: space-between; align-items: baseline; font-size: 1.4rem; }
+.row span { color: var(--dim); }
+.row b { font-size: 1.9rem; font-variant-numeric: tabular-nums; }
+.row b small { font-size: 1rem; color: var(--dim); font-weight: 400; }
+#result .partfile { display: flex; flex-direction: column; gap: 0.2rem; padding-top: 0.6rem; border-top: 1px solid var(--line); }
+#result .partfile span { color: var(--dim); font-size: 0.95rem; }
+#result .partfile code { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 1rem; overflow-wrap: anywhere; user-select: all; }
+
+/* Bottom bar */
+#bar { display: grid; grid-template-columns: repeat(4, auto) 1fr; gap: 0.6rem; margin: 0.6rem; align-items: stretch;
+  background: var(--panel); border: 1px solid var(--line); border-radius: 0.6rem; padding: 0.5rem 1rem; }
+#bar .cell { display: flex; flex-direction: column; justify-content: center; padding: 0 1.1rem 0 0.4rem; min-width: 0; }
+#bar label { font-size: 0.85rem; color: var(--dim); letter-spacing: 0.1em; text-transform: uppercase; }
+#bar b { font-size: 2.3rem; font-variant-numeric: tabular-nums; font-weight: 700; white-space: nowrap; line-height: 1.15; }
+#bar b small { font-size: 1.2rem; color: var(--dim); font-weight: 400; }
+/* "about 93 s left" under the timer (E1-P2). The line is always there, empty before a value exists, so the label and the timer do not move
+   when the text appears (review n6); the ::after text keeps the width of a value free in the same way (it is never seen). */
+#bar .left { display: block; min-height: 1.2em; font-size: 1rem; color: var(--dim); white-space: nowrap; line-height: 1.2; font-variant-numeric: tabular-nums; }
+#bar .left::after { content: "about 000 s left"; display: block; height: 0; overflow: hidden; visibility: hidden; }
+#bar { height: 6.4rem; }
+#bar .spark { padding: 0; position: relative; }
+#spark { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+
+/* Narrow window: stack the panels */
+@media (max-width: 900px) {
+  main { grid-template-columns: 1fr; grid-template-rows: 3fr 2fr; }
+  #bar b { font-size: 1.6rem; }
+}

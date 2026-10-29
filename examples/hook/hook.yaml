@@ -1,0 +1,34 @@
+name: tshirt_hook
+
+regions:
+  design: design.stl
+  fixed:
+    - wall_plate.stl
+  keep_out:
+    - screw_hole_top.stl
+    - screw_hole_bottom.stl
+  load:
+    tip: hook_tip.stl
+
+load_cases:
+  - name: hang
+    weight: 234.0
+    forces:
+      - region: tip
+        force: [0.0, 0.0, -1.96]
+  - name: pull_off
+    weight: 1.0
+    forces:
+      - region: tip
+        force: [20.89, 5.21, -20.89]
+
+material:
+  E: 3500.0
+  nu: 0.35
+  density: 1.24
+
+settings:
+  voxel_size: 1.2
+  volume_fraction: 0.2
+  iterations: 80
+  envelope_fill: auto   # the chosen look of this example: the fill makes the top chord flat on the design space face

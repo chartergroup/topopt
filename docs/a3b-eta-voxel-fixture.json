@@ -1,0 +1,414 @@
+{
+ "what": "thinnest wall and rod (whole voxels) whose filtered centre value reaches eta, real build_filter, mesh-free (no solve)",
+ "continuum": "infinite hat filter w = R - d: wall 2u - 2u^3 + u^4 = eta with u = t / 2R; flat face v - v^3 + v^4/2 = eta - 0.5; rod by numeric integration",
+ "rows": [
+  {
+   "radius_voxels": 2.0,
+   "eta": 0.5,
+   "wall_survive_voxels": 2,
+   "wall_centre_value": 0.7429,
+   "wall_continuum_voxels": 1.066,
+   "rod_survive_voxels": 2,
+   "rod_centre_value": 0.5511,
+   "rod_continuum_voxels": 1.872,
+   "flat_face_erosion_voxels": 0.0
+  },
+  {
+   "radius_voxels": 2.0,
+   "eta": 0.55,
+   "wall_survive_voxels": 2,
+   "wall_centre_value": 0.7429,
+   "wall_continuum_voxels": 1.19,
+   "rod_survive_voxels": 2,
+   "rod_centre_value": 0.5511,
+   "rod_continuum_voxels": 1.996,
+   "flat_face_erosion_voxels": 0.1
+  },
+  {
+   "radius_voxels": 2.0,
+   "eta": 0.6,
+   "wall_survive_voxels": 2,
+   "wall_centre_value": 0.7429,
+   "wall_continuum_voxels": 1.32,
+   "rod_survive_voxels": 3,
+   "rod_centre_value": 1.0,
+   "rod_continuum_voxels": 2.121,
+   "flat_face_erosion_voxels": 0.202
+  },
+  {
+   "radius_voxels": 2.0,
+   "eta": 0.65,
+   "wall_survive_voxels": 2,
+   "wall_centre_value": 0.7429,
+   "wall_continuum_voxels": 1.459,
+   "rod_survive_voxels": 3,
+   "rod_centre_value": 1.0,
+   "rod_continuum_voxels": 2.249,
+   "flat_face_erosion_voxels": 0.307
+  },
+  {
+   "radius_voxels": 2.0,
+   "eta": 0.7,
+   "wall_survive_voxels": 2,
+   "wall_centre_value": 0.7429,
+   "wall_continuum_voxels": 1.607,
+   "rod_survive_voxels": 3,
+   "rod_centre_value": 1.0,
+   "rod_continuum_voxels": 2.382,
+   "flat_face_erosion_voxels": 0.416
+  },
+  {
+   "radius_voxels": 3.0,
+   "eta": 0.5,
+   "wall_survive_voxels": 2,
+   "wall_centre_value": 0.5851,
+   "wall_continuum_voxels": 1.598,
+   "rod_survive_voxels": 3,
+   "rod_centre_value": 0.6766,
+   "rod_continuum_voxels": 2.808,
+   "flat_face_erosion_voxels": 0.0
+  },
+  {
+   "radius_voxels": 3.0,
+   "eta": 0.55,
+   "wall_survive_voxels": 2,
+   "wall_centre_value": 0.5851,
+   "wall_continuum_voxels": 1.784,
+   "rod_survive_voxels": 3,
+   "rod_centre_value": 0.6766,
+   "rod_continuum_voxels": 2.993,
+   "flat_face_erosion_voxels": 0.15
+  },
+  {
+   "radius_voxels": 3.0,
+   "eta": 0.6,
+   "wall_survive_voxels": 3,
+   "wall_centre_value": 0.8342,
+   "wall_continuum_voxels": 1.98,
+   "rod_survive_voxels": 3,
+   "rod_centre_value": 0.6766,
+   "rod_continuum_voxels": 3.181,
+   "flat_face_erosion_voxels": 0.303
+  },
+  {
+   "radius_voxels": 3.0,
+   "eta": 0.65,
+   "wall_survive_voxels": 3,
+   "wall_centre_value": 0.8342,
+   "wall_continuum_voxels": 2.188,
+   "rod_survive_voxels": 3,
+   "rod_centre_value": 0.6766,
+   "rod_continuum_voxels": 3.374,
+   "flat_face_erosion_voxels": 0.46
+  },
+  {
+   "radius_voxels": 3.0,
+   "eta": 0.7,
+   "wall_survive_voxels": 3,
+   "wall_centre_value": 0.8342,
+   "wall_continuum_voxels": 2.411,
+   "rod_survive_voxels": 4,
+   "rod_centre_value": 0.7274,
+   "rod_continuum_voxels": 3.574,
+   "flat_face_erosion_voxels": 0.624
+  },
+  {
+   "radius_voxels": 3.75,
+   "eta": 0.5,
+   "wall_survive_voxels": 3,
+   "wall_centre_value": 0.7101,
+   "wall_continuum_voxels": 1.998,
+   "rod_survive_voxels": 4,
+   "rod_centre_value": 0.5581,
+   "rod_continuum_voxels": 3.51,
+   "flat_face_erosion_voxels": 0.0
+  },
+  {
+   "radius_voxels": 3.75,
+   "eta": 0.55,
+   "wall_survive_voxels": 3,
+   "wall_centre_value": 0.7101,
+   "wall_continuum_voxels": 2.23,
+   "rod_survive_voxels": 4,
+   "rod_centre_value": 0.5581,
+   "rod_continuum_voxels": 3.742,
+   "flat_face_erosion_voxels": 0.188
+  },
+  {
+   "radius_voxels": 3.75,
+   "eta": 0.6,
+   "wall_survive_voxels": 3,
+   "wall_centre_value": 0.7101,
+   "wall_continuum_voxels": 2.475,
+   "rod_survive_voxels": 5,
+   "rod_centre_value": 0.836,
+   "rod_continuum_voxels": 3.977,
+   "flat_face_erosion_voxels": 0.379
+  },
+  {
+   "radius_voxels": 3.75,
+   "eta": 0.65,
+   "wall_survive_voxels": 3,
+   "wall_centre_value": 0.7101,
+   "wall_continuum_voxels": 2.735,
+   "rod_survive_voxels": 5,
+   "rod_centre_value": 0.836,
+   "rod_continuum_voxels": 4.217,
+   "flat_face_erosion_voxels": 0.575
+  },
+  {
+   "radius_voxels": 3.75,
+   "eta": 0.7,
+   "wall_survive_voxels": 3,
+   "wall_centre_value": 0.7101,
+   "wall_continuum_voxels": 3.014,
+   "rod_survive_voxels": 5,
+   "rod_centre_value": 0.836,
+   "rod_continuum_voxels": 4.467,
+   "flat_face_erosion_voxels": 0.78
+  },
+  {
+   "radius_voxels": 4.69,
+   "eta": 0.5,
+   "wall_survive_voxels": 3,
+   "wall_centre_value": 0.5912,
+   "wall_continuum_voxels": 2.499,
+   "rod_survive_voxels": 5,
+   "rod_centre_value": 0.6371,
+   "rod_continuum_voxels": 4.39,
+   "flat_face_erosion_voxels": 0.0
+  },
+  {
+   "radius_voxels": 4.69,
+   "eta": 0.55,
+   "wall_survive_voxels": 3,
+   "wall_centre_value": 0.5912,
+   "wall_continuum_voxels": 2.79,
+   "rod_survive_voxels": 5,
+   "rod_centre_value": 0.6371,
+   "rod_continuum_voxels": 4.68,
+   "flat_face_erosion_voxels": 0.235
+  },
+  {
+   "radius_voxels": 4.69,
+   "eta": 0.6,
+   "wall_survive_voxels": 4,
+   "wall_centre_value": 0.72,
+   "wall_continuum_voxels": 3.095,
+   "rod_survive_voxels": 5,
+   "rod_centre_value": 0.6371,
+   "rod_continuum_voxels": 4.973,
+   "flat_face_erosion_voxels": 0.474
+  },
+  {
+   "radius_voxels": 4.69,
+   "eta": 0.65,
+   "wall_survive_voxels": 4,
+   "wall_centre_value": 0.72,
+   "wall_continuum_voxels": 3.42,
+   "rod_survive_voxels": 6,
+   "rod_centre_value": 0.7899,
+   "rod_continuum_voxels": 5.274,
+   "flat_face_erosion_voxels": 0.719
+  },
+  {
+   "radius_voxels": 4.69,
+   "eta": 0.7,
+   "wall_survive_voxels": 4,
+   "wall_centre_value": 0.72,
+   "wall_continuum_voxels": 3.769,
+   "rod_survive_voxels": 6,
+   "rod_centre_value": 0.7899,
+   "rod_continuum_voxels": 5.587,
+   "flat_face_erosion_voxels": 0.976
+  },
+  {
+   "radius_voxels": 5.63,
+   "eta": 0.5,
+   "wall_survive_voxels": 3,
+   "wall_centre_value": 0.5032,
+   "wall_continuum_voxels": 2.999,
+   "rod_survive_voxels": 6,
+   "rod_centre_value": 0.6417,
+   "rod_continuum_voxels": 5.27,
+   "flat_face_erosion_voxels": 0.0
+  },
+  {
+   "radius_voxels": 5.63,
+   "eta": 0.55,
+   "wall_survive_voxels": 4,
+   "wall_centre_value": 0.6291,
+   "wall_continuum_voxels": 3.349,
+   "rod_survive_voxels": 6,
+   "rod_centre_value": 0.6417,
+   "rod_continuum_voxels": 5.618,
+   "flat_face_erosion_voxels": 0.282
+  },
+  {
+   "radius_voxels": 5.63,
+   "eta": 0.6,
+   "wall_survive_voxels": 4,
+   "wall_centre_value": 0.6291,
+   "wall_continuum_voxels": 3.716,
+   "rod_survive_voxels": 6,
+   "rod_centre_value": 0.6417,
+   "rod_continuum_voxels": 5.97,
+   "flat_face_erosion_voxels": 0.569
+  },
+  {
+   "radius_voxels": 5.63,
+   "eta": 0.65,
+   "wall_survive_voxels": 5,
+   "wall_centre_value": 0.7551,
+   "wall_continuum_voxels": 4.106,
+   "rod_survive_voxels": 7,
+   "rod_centre_value": 0.721,
+   "rod_continuum_voxels": 6.331,
+   "flat_face_erosion_voxels": 0.863
+  },
+  {
+   "radius_voxels": 5.63,
+   "eta": 0.7,
+   "wall_survive_voxels": 5,
+   "wall_centre_value": 0.7551,
+   "wall_continuum_voxels": 4.525,
+   "rod_survive_voxels": 7,
+   "rod_centre_value": 0.721,
+   "rod_continuum_voxels": 6.706,
+   "flat_face_erosion_voxels": 1.171
+  },
+  {
+   "radius_voxels": 7.5,
+   "eta": 0.5,
+   "wall_survive_voxels": 5,
+   "wall_centre_value": 0.6068,
+   "wall_continuum_voxels": 3.996,
+   "rod_survive_voxels": 8,
+   "rod_centre_value": 0.6111,
+   "rod_continuum_voxels": 7.02,
+   "flat_face_erosion_voxels": 0.0
+  },
+  {
+   "radius_voxels": 7.5,
+   "eta": 0.55,
+   "wall_survive_voxels": 5,
+   "wall_centre_value": 0.6068,
+   "wall_continuum_voxels": 4.461,
+   "rod_survive_voxels": 8,
+   "rod_centre_value": 0.6111,
+   "rod_continuum_voxels": 7.483,
+   "flat_face_erosion_voxels": 0.376
+  },
+  {
+   "radius_voxels": 7.5,
+   "eta": 0.6,
+   "wall_survive_voxels": 5,
+   "wall_centre_value": 0.6068,
+   "wall_continuum_voxels": 4.95,
+   "rod_survive_voxels": 8,
+   "rod_centre_value": 0.6111,
+   "rod_continuum_voxels": 7.953,
+   "flat_face_erosion_voxels": 0.757
+  },
+  {
+   "radius_voxels": 7.5,
+   "eta": 0.65,
+   "wall_survive_voxels": 6,
+   "wall_centre_value": 0.6932,
+   "wall_continuum_voxels": 5.47,
+   "rod_survive_voxels": 9,
+   "rod_centre_value": 0.7433,
+   "rod_continuum_voxels": 8.434,
+   "flat_face_erosion_voxels": 1.15
+  },
+  {
+   "radius_voxels": 7.5,
+   "eta": 0.7,
+   "wall_survive_voxels": 7,
+   "wall_centre_value": 0.7797,
+   "wall_continuum_voxels": 6.028,
+   "rod_survive_voxels": 9,
+   "rod_centre_value": 0.7433,
+   "rod_continuum_voxels": 8.934,
+   "flat_face_erosion_voxels": 1.561
+  }
+ ],
+ "projected_at_threshold": {
+  "eta_0.5": {
+   "beta_1": 0.5,
+   "beta_2": 0.5,
+   "beta_4": 0.5,
+   "beta_8": 0.5,
+   "beta_16": 0.5
+  },
+  "eta_0.55": {
+   "beta_1": 0.54262,
+   "beta_2": 0.52776,
+   "beta_4": 0.50753,
+   "beta_8": 0.5003,
+   "beta_16": 0.5
+  },
+  "eta_0.6": {
+   "beta_1": 0.58566,
+   "beta_2": 0.55663,
+   "beta_4": 0.51627,
+   "beta_8": 0.5008,
+   "beta_16": 0.5
+  },
+  "eta_0.65": {
+   "beta_1": 0.62956,
+   "beta_2": 0.58777,
+   "beta_4": 0.52766,
+   "beta_8": 0.50183,
+   "beta_16": 0.50001
+  },
+  "eta_0.7": {
+   "beta_1": 0.67476,
+   "beta_2": 0.62243,
+   "beta_4": 0.54352,
+   "beta_8": 0.50411,
+   "beta_16": 0.50003
+  }
+ },
+ "eroded_density_at_rho_tilde_0.5": {
+  "eta_0.5": {
+   "beta_1": 0.5,
+   "beta_2": 0.5,
+   "beta_4": 0.5,
+   "beta_8": 0.5,
+   "beta_16": 0.5
+  },
+  "eta_0.55": {
+   "beta_1": 0.4885,
+   "beta_2": 0.462,
+   "beta_4": 0.4049,
+   "beta_8": 0.3102,
+   "beta_16": 0.168
+  },
+  "eta_0.6": {
+   "beta_1": 0.477,
+   "beta_2": 0.4248,
+   "beta_4": 0.3169,
+   "beta_8": 0.1682,
+   "beta_16": 0.0392
+  },
+  "eta_0.65": {
+   "beta_1": 0.4656,
+   "beta_2": 0.3891,
+   "beta_4": 0.2411,
+   "beta_8": 0.0835,
+   "beta_16": 0.0082
+  },
+  "eta_0.7": {
+   "beta_1": 0.4544,
+   "beta_2": 0.3553,
+   "beta_4": 0.1799,
+   "beta_8": 0.0395,
+   "beta_16": 0.0017
+  }
+ },
+ "machine": {
+  "platform": "Linux x86_64",
+  "python": "3.12.13"
+ }
+}

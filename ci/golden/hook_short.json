@@ -1,0 +1,46 @@
+{
+  "format": 1,
+  "case": "examples/hook/hook_short.yaml",
+  "inputs_sha256": {
+    "examples/hook/hook_short.yaml": "505faf5efb7d68cf6fdc49e5037a73da071f0e47ad5e3cd3097d5afd897c12c8",
+    "examples/hook/design.stl": "3d9fd8d4a8fc919a061a2ecd1c4d930519fdc484cdf9a64173ef83b7b1cc2fd9",
+    "examples/hook/wall_plate.stl": "124e6cac678ce0fc32be69a752b3ba702d803353fcf4f14f8674b4a214337328",
+    "examples/hook/screw_hole_top.stl": "c7230745c28af035049c524e24b8220d8adfe736c79774d0a49add610276d4d8",
+    "examples/hook/screw_hole_bottom.stl": "bf7cc4ca00f29f4a7fab803e07d01bb08b89e372e16ea719a29fafa6044a2192",
+    "examples/hook/hook_tip.stl": "fce2e9d7105bb3d15d988a773adcea57950a404ca5e9c1d0a3166f931990b4fe"
+  },
+  "metrics": {
+    "compliance_final": 1.3777520284093208,
+    "volume_fraction_final": 0.20002912402522507,
+    "volume_final_mm3": 20738.9,
+    "mass_final_g": 25.72
+  },
+  "info": {
+    "iterations": 40,
+    "triangles": 18800,
+    "solver": "pardiso",
+    "watertight": true
+  },
+  "made_by": {
+    "platform": "linux-x86_64",
+    "cpu": "Intel(R) Core(TM) Ultra 9 185H",
+    "solver": "pardiso",
+    "threads": 1,
+    "python": "3.12.13",
+    "packages": {
+      "numpy": "2.5.3",
+      "scipy": "1.18.1",
+      "pypardiso": "0.4.7",
+      "mkl": "2026.2.0",
+      "pyamg": "5.3.0",
+      "numba": "0.67.0",
+      "scikit-image": "0.26.0",
+      "trimesh": "5.1.0",
+      "manifold3d": "3.5.4"
+    },
+    "topopt_base": "d68bdc5 + #319 field limit to the envelope",
+    "date": "2026-10-27",
+    "wall_s": 39.4,
+    "load_average": "15.09 14.55 13.45"
+  }
+}

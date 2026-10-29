@@ -1,0 +1,1180 @@
+{
+ "examples/hook/hook.yaml": {
+  "assumptions": [],
+  "buckling": {
+   "check": false,
+   "density": "printed",
+   "max_gb": null,
+   "max_seconds": 120.0,
+   "modes": 6
+  },
+  "interfaces": [],
+  "limits": {
+   "alignment": [],
+   "displacement": []
+  },
+  "load_cases": [
+   {
+    "allowable_mpa": null,
+    "allowable_source": null,
+    "compliance_limit": null,
+    "forces": [
+     {
+      "at": null,
+      "force": [
+       0.0,
+       0.0,
+       -1.96
+      ],
+      "moment": null,
+      "region": "tip"
+     }
+    ],
+    "name": "hang",
+    "pressures": [],
+    "safety_factor": null,
+    "stress_limit": null,
+    "weight": 234.0
+   },
+   {
+    "allowable_mpa": null,
+    "allowable_source": null,
+    "compliance_limit": null,
+    "forces": [
+     {
+      "at": null,
+      "force": [
+       20.89,
+       5.21,
+       -20.89
+      ],
+      "moment": null,
+      "region": "tip"
+     }
+    ],
+    "name": "pull_off",
+    "pressures": [],
+    "safety_factor": null,
+    "stress_limit": null,
+    "weight": 1.0
+   }
+  ],
+  "material": {
+   "E": 3500.0,
+   "density": 1.24,
+   "nu": 0.35
+  },
+  "mirror": [],
+  "name": "tshirt_hook",
+  "print_settings": {
+   "bed_mm": [
+    220.0,
+    220.0
+   ],
+   "build_direction": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "given": [],
+   "limits": [],
+   "printer_type": "fdm",
+   "self_supporting_angle_deg": null
+  },
+  "regions": {
+   "design": "<repo>/examples/hook/design.stl",
+   "fixed": [
+    "<repo>/examples/hook/wall_plate.stl"
+   ],
+   "fixed_axes": [],
+   "keep_out": [
+    "<repo>/examples/hook/screw_hole_top.stl",
+    "<repo>/examples/hook/screw_hole_bottom.stl"
+   ],
+   "load": [
+    {
+     "name": "tip",
+     "path": "<repo>/examples/hook/hook_tip.stl"
+    }
+   ],
+   "measure": [],
+   "solid": []
+  },
+  "settings": {
+   "beta_schedule": [
+    [
+     0,
+     1.0
+    ],
+    [
+     30,
+     2.0
+    ],
+    [
+     50,
+     4.0
+    ],
+    [
+     65,
+     8.0
+    ]
+   ],
+   "case_combine": "sum",
+   "eta_eroded": null,
+   "filter_radius": 1.7999999999999998,
+   "filter_radius_source": "default",
+   "filter_solid_neighbours": "density_one",
+   "gpu_case": "auto",
+   "gpu_device": "auto",
+   "iterations": 80,
+   "max_active_voxels": 100000,
+   "max_grid_voxels": 5000000,
+   "mesh_method": "sdf",
+   "min_member_mm": null,
+   "move_limit": 0.2,
+   "objective": "compliance",
+   "penal": 3.0,
+   "robust": "off",
+   "solver": "auto",
+   "stop_rules": {
+    "enabled": false,
+    "grayness_max": 0.1,
+    "objective_change": 0.0001,
+    "time_budget_s": null,
+    "window": 5
+   },
+   "stress_power": 0.5,
+   "stress_q": 40.0,
+   "stress_scale": "auto",
+   "stress_step_acceptance": true,
+   "volume_fraction": 0.2,
+   "voxel_size": 1.2
+  },
+  "springs": [],
+  "yaml_path": "<repo>/examples/hook/hook.yaml"
+ },
+ "examples/hook/hook_mirror.yaml": {
+  "assumptions": [],
+  "buckling": {
+   "check": false,
+   "density": "printed",
+   "max_gb": null,
+   "max_seconds": 120.0,
+   "modes": 6
+  },
+  "interfaces": [],
+  "limits": {
+   "alignment": [],
+   "displacement": []
+  },
+  "load_cases": [
+   {
+    "allowable_mpa": null,
+    "allowable_source": null,
+    "compliance_limit": null,
+    "forces": [
+     {
+      "at": null,
+      "force": [
+       0.0,
+       0.0,
+       -1.96
+      ],
+      "moment": null,
+      "region": "tip"
+     }
+    ],
+    "name": "hang",
+    "pressures": [],
+    "safety_factor": null,
+    "stress_limit": null,
+    "weight": 234.0
+   },
+   {
+    "allowable_mpa": null,
+    "allowable_source": null,
+    "compliance_limit": null,
+    "forces": [
+     {
+      "at": null,
+      "force": [
+       20.89,
+       5.21,
+       -20.89
+      ],
+      "moment": null,
+      "region": "tip"
+     }
+    ],
+    "name": "pull_off",
+    "pressures": [],
+    "safety_factor": null,
+    "stress_limit": null,
+    "weight": 1.0
+   }
+  ],
+  "material": {
+   "E": 3500.0,
+   "density": 1.24,
+   "nu": 0.35
+  },
+  "mirror": [
+   {
+    "align": "auto",
+    "at_mm": 0.0,
+    "axis": "y"
+   }
+  ],
+  "name": "tshirt_hook",
+  "print_settings": {
+   "bed_mm": [
+    220.0,
+    220.0
+   ],
+   "build_direction": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "given": [],
+   "limits": [],
+   "printer_type": "fdm",
+   "self_supporting_angle_deg": null
+  },
+  "regions": {
+   "design": "<repo>/examples/hook/design.stl",
+   "fixed": [
+    "<repo>/examples/hook/wall_plate.stl"
+   ],
+   "fixed_axes": [],
+   "keep_out": [
+    "<repo>/examples/hook/screw_hole_top.stl",
+    "<repo>/examples/hook/screw_hole_bottom.stl"
+   ],
+   "load": [
+    {
+     "name": "tip",
+     "path": "<repo>/examples/hook/hook_tip.stl"
+    }
+   ],
+   "measure": [],
+   "solid": []
+  },
+  "settings": {
+   "beta_schedule": [
+    [
+     0,
+     1.0
+    ],
+    [
+     30,
+     2.0
+    ],
+    [
+     50,
+     4.0
+    ],
+    [
+     65,
+     8.0
+    ]
+   ],
+   "case_combine": "sum",
+   "eta_eroded": null,
+   "filter_radius": 1.7999999999999998,
+   "filter_radius_source": "default",
+   "filter_solid_neighbours": "density_one",
+   "gpu_case": "auto",
+   "gpu_device": "auto",
+   "iterations": 80,
+   "max_active_voxels": 100000,
+   "max_grid_voxels": 5000000,
+   "mesh_method": "sdf",
+   "min_member_mm": null,
+   "move_limit": 0.2,
+   "objective": "compliance",
+   "penal": 3.0,
+   "robust": "off",
+   "solver": "auto",
+   "stop_rules": {
+    "enabled": false,
+    "grayness_max": 0.1,
+    "objective_change": 0.0001,
+    "time_budget_s": null,
+    "window": 5
+   },
+   "stress_power": 0.5,
+   "stress_q": 40.0,
+   "stress_scale": "auto",
+   "stress_step_acceptance": true,
+   "volume_fraction": 0.2,
+   "voxel_size": 1.2
+  },
+  "springs": [],
+  "yaml_path": "<repo>/examples/hook/hook_mirror.yaml"
+ },
+ "examples/hook/hook_short.yaml": {
+  "assumptions": [],
+  "buckling": {
+   "check": false,
+   "density": "printed",
+   "max_gb": null,
+   "max_seconds": 120.0,
+   "modes": 6
+  },
+  "interfaces": [],
+  "limits": {
+   "alignment": [],
+   "displacement": []
+  },
+  "load_cases": [
+   {
+    "allowable_mpa": null,
+    "allowable_source": null,
+    "compliance_limit": null,
+    "forces": [
+     {
+      "at": null,
+      "force": [
+       0.0,
+       0.0,
+       -1.96
+      ],
+      "moment": null,
+      "region": "tip"
+     }
+    ],
+    "name": "hang",
+    "pressures": [],
+    "safety_factor": null,
+    "stress_limit": null,
+    "weight": 234.0
+   },
+   {
+    "allowable_mpa": null,
+    "allowable_source": null,
+    "compliance_limit": null,
+    "forces": [
+     {
+      "at": null,
+      "force": [
+       20.89,
+       5.21,
+       -20.89
+      ],
+      "moment": null,
+      "region": "tip"
+     }
+    ],
+    "name": "pull_off",
+    "pressures": [],
+    "safety_factor": null,
+    "stress_limit": null,
+    "weight": 1.0
+   }
+  ],
+  "material": {
+   "E": 3500.0,
+   "density": 1.24,
+   "nu": 0.35
+  },
+  "mirror": [],
+  "name": "tshirt_hook_short",
+  "print_settings": {
+   "bed_mm": [
+    220.0,
+    220.0
+   ],
+   "build_direction": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "given": [],
+   "limits": [],
+   "printer_type": "fdm",
+   "self_supporting_angle_deg": null
+  },
+  "regions": {
+   "design": "<repo>/examples/hook/design.stl",
+   "fixed": [
+    "<repo>/examples/hook/wall_plate.stl"
+   ],
+   "fixed_axes": [],
+   "keep_out": [
+    "<repo>/examples/hook/screw_hole_top.stl",
+    "<repo>/examples/hook/screw_hole_bottom.stl"
+   ],
+   "load": [
+    {
+     "name": "tip",
+     "path": "<repo>/examples/hook/hook_tip.stl"
+    }
+   ],
+   "measure": [],
+   "solid": []
+  },
+  "settings": {
+   "beta_schedule": [
+    [
+     0,
+     1.0
+    ],
+    [
+     16,
+     2.0
+    ],
+    [
+     26,
+     4.0
+    ],
+    [
+     34,
+     8.0
+    ]
+   ],
+   "case_combine": "sum",
+   "eta_eroded": null,
+   "filter_radius": 3.0,
+   "filter_radius_source": "default",
+   "filter_solid_neighbours": "density_one",
+   "gpu_case": "auto",
+   "gpu_device": "auto",
+   "iterations": 40,
+   "max_active_voxels": 100000,
+   "max_grid_voxels": 5000000,
+   "mesh_method": "sdf",
+   "min_member_mm": null,
+   "move_limit": 0.2,
+   "objective": "compliance",
+   "penal": 3.0,
+   "robust": "off",
+   "solver": "auto",
+   "stop_rules": {
+    "enabled": false,
+    "grayness_max": 0.1,
+    "objective_change": 0.0001,
+    "time_budget_s": null,
+    "window": 5
+   },
+   "stress_power": 0.5,
+   "stress_q": 40.0,
+   "stress_scale": "auto",
+   "stress_step_acceptance": true,
+   "volume_fraction": 0.2,
+   "voxel_size": 2.0
+  },
+  "springs": [],
+  "yaml_path": "<repo>/examples/hook/hook_short.yaml"
+ },
+ "examples/hook/hook_stress.yaml": {
+  "assumptions": [],
+  "buckling": {
+   "check": false,
+   "density": "printed",
+   "max_gb": null,
+   "max_seconds": 120.0,
+   "modes": 6
+  },
+  "interfaces": [],
+  "limits": {
+   "alignment": [],
+   "displacement": []
+  },
+  "load_cases": [
+   {
+    "allowable_mpa": null,
+    "allowable_source": null,
+    "compliance_limit": null,
+    "forces": [
+     {
+      "at": null,
+      "force": [
+       0.0,
+       0.0,
+       -1.96
+      ],
+      "moment": null,
+      "region": "tip"
+     }
+    ],
+    "name": "hang",
+    "pressures": [],
+    "safety_factor": null,
+    "stress_limit": 1.5,
+    "weight": 1.0
+   },
+   {
+    "allowable_mpa": 40.0,
+    "allowable_source": "generic PLA tensile strength, example value only; layer direction and voxel stress estimate not covered",
+    "compliance_limit": null,
+    "forces": [
+     {
+      "at": null,
+      "force": [
+       20.89,
+       5.21,
+       -20.89
+      ],
+      "moment": null,
+      "region": "tip"
+     }
+    ],
+    "name": "pull_off",
+    "pressures": [],
+    "safety_factor": null,
+    "stress_limit": 0.5,
+    "weight": 1.0
+   }
+  ],
+  "material": {
+   "E": 3500.0,
+   "density": 1.24,
+   "nu": 0.35
+  },
+  "mirror": [],
+  "name": "tshirt_hook_stress",
+  "print_settings": {
+   "bed_mm": [
+    220.0,
+    220.0
+   ],
+   "build_direction": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "given": [],
+   "limits": [],
+   "printer_type": "fdm",
+   "self_supporting_angle_deg": null
+  },
+  "regions": {
+   "design": "<repo>/examples/hook/design.stl",
+   "fixed": [
+    "<repo>/examples/hook/wall_plate.stl"
+   ],
+   "fixed_axes": [],
+   "keep_out": [
+    "<repo>/examples/hook/screw_hole_top.stl",
+    "<repo>/examples/hook/screw_hole_bottom.stl"
+   ],
+   "load": [
+    {
+     "name": "tip",
+     "path": "<repo>/examples/hook/hook_tip.stl"
+    }
+   ],
+   "measure": [],
+   "solid": []
+  },
+  "settings": {
+   "beta_schedule": [
+    [
+     0,
+     1.0
+    ],
+    [
+     60,
+     2.0
+    ],
+    [
+     100,
+     4.0
+    ],
+    [
+     140,
+     8.0
+    ]
+   ],
+   "case_combine": "sum",
+   "eta_eroded": null,
+   "filter_radius": 3.5999999999999996,
+   "filter_radius_source": "default",
+   "filter_solid_neighbours": "density_one",
+   "gpu_case": "auto",
+   "gpu_device": "auto",
+   "iterations": 220,
+   "max_active_voxels": 100000,
+   "max_grid_voxels": 5000000,
+   "mesh_method": "sdf",
+   "min_member_mm": null,
+   "move_limit": 0.03,
+   "objective": "mass",
+   "penal": 3.0,
+   "robust": "off",
+   "solver": "auto",
+   "stop_rules": {
+    "enabled": false,
+    "grayness_max": 0.1,
+    "objective_change": 0.0001,
+    "time_budget_s": null,
+    "window": 5
+   },
+   "stress_power": 0.5,
+   "stress_q": 40.0,
+   "stress_scale": "auto",
+   "stress_step_acceptance": true,
+   "volume_fraction": 0.3,
+   "voxel_size": 2.4
+  },
+  "springs": [],
+  "yaml_path": "<repo>/examples/hook/hook_stress.yaml"
+ },
+ "examples/interfaces/bracket.yaml": {
+  "assumptions": [],
+  "buckling": {
+   "check": false,
+   "density": "printed",
+   "max_gb": null,
+   "max_seconds": 120.0,
+   "modes": 6
+  },
+  "interfaces": [
+   {
+    "axis": [
+     0.0,
+     0.0,
+     1.0
+    ],
+    "inner_radius_mm": null,
+    "kind": "boss",
+    "length_mm": 20.0,
+    "name": "bushing_seat",
+    "op": "union",
+    "path": null,
+    "point": [
+     28.0,
+     10.0,
+     -2.0
+    ],
+    "radius_mm": 5.5,
+    "stock_mm": 0.4
+   },
+   {
+    "axis": [
+     0.0,
+     0.0,
+     -1.0
+    ],
+    "inner_radius_mm": null,
+    "kind": "bore",
+    "length_mm": 24.0,
+    "name": "pin_bore",
+    "op": "cut",
+    "path": null,
+    "point": [
+     28.0,
+     10.0,
+     20.0
+    ],
+    "radius_mm": 3.0,
+    "stock_mm": 0.4
+   },
+   {
+    "axis": [
+     -1.0,
+     0.0,
+     0.0
+    ],
+    "inner_radius_mm": null,
+    "kind": "face",
+    "length_mm": null,
+    "name": "mounting_face",
+    "op": "cut",
+    "path": null,
+    "point": [
+     2.0,
+     0.0,
+     0.0
+    ],
+    "radius_mm": null,
+    "stock_mm": 0.5
+   }
+  ],
+  "limits": {
+   "alignment": [],
+   "displacement": []
+  },
+  "load_cases": [
+   {
+    "allowable_mpa": null,
+    "allowable_source": null,
+    "compliance_limit": null,
+    "forces": [
+     {
+      "at": null,
+      "force": [
+       0.0,
+       0.0,
+       -15.0
+      ],
+      "moment": null,
+      "region": "tip"
+     }
+    ],
+    "name": "pull_down",
+    "pressures": [],
+    "safety_factor": null,
+    "stress_limit": null,
+    "weight": 1.0
+   }
+  ],
+  "material": {
+   "E": 3500.0,
+   "density": 1.24,
+   "nu": 0.35
+  },
+  "mirror": [],
+  "name": "bracket",
+  "print_settings": {
+   "bed_mm": [
+    220.0,
+    220.0
+   ],
+   "build_direction": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "given": [],
+   "limits": [],
+   "printer_type": "fdm",
+   "self_supporting_angle_deg": null
+  },
+  "regions": {
+   "design": "<repo>/examples/interfaces/design.stl",
+   "fixed": [
+    "<repo>/examples/interfaces/plate.stl"
+   ],
+   "fixed_axes": [],
+   "keep_out": [],
+   "load": [
+    {
+     "name": "tip",
+     "path": "<repo>/examples/interfaces/tip.stl"
+    }
+   ],
+   "measure": [],
+   "solid": []
+  },
+  "settings": {
+   "beta_schedule": [
+    [
+     0,
+     1.0
+    ],
+    [
+     30,
+     2.0
+    ],
+    [
+     50,
+     4.0
+    ],
+    [
+     65,
+     8.0
+    ]
+   ],
+   "case_combine": "sum",
+   "eta_eroded": null,
+   "filter_radius": 1.5,
+   "filter_radius_source": "default",
+   "filter_solid_neighbours": "density_one",
+   "gpu_case": "auto",
+   "gpu_device": "auto",
+   "iterations": 40,
+   "max_active_voxels": 100000,
+   "max_grid_voxels": 5000000,
+   "mesh_method": "sdf",
+   "min_member_mm": null,
+   "move_limit": 0.2,
+   "objective": "compliance",
+   "penal": 3.0,
+   "robust": "off",
+   "solver": "auto",
+   "stop_rules": {
+    "enabled": false,
+    "grayness_max": 0.1,
+    "objective_change": 0.0001,
+    "time_budget_s": null,
+    "window": 5
+   },
+   "stress_power": 0.5,
+   "stress_q": 40.0,
+   "stress_scale": "auto",
+   "stress_step_acceptance": true,
+   "volume_fraction": 0.3,
+   "voxel_size": 1.0
+  },
+  "springs": [],
+  "yaml_path": "<repo>/examples/interfaces/bracket.yaml"
+ },
+ "examples/interfaces/bracket_nostock.yaml": {
+  "assumptions": [],
+  "buckling": {
+   "check": false,
+   "density": "printed",
+   "max_gb": null,
+   "max_seconds": 120.0,
+   "modes": 6
+  },
+  "interfaces": [
+   {
+    "axis": [
+     0.0,
+     0.0,
+     1.0
+    ],
+    "inner_radius_mm": null,
+    "kind": "boss",
+    "length_mm": 20.0,
+    "name": "bushing_seat",
+    "op": "union",
+    "path": null,
+    "point": [
+     28.0,
+     10.0,
+     -2.0
+    ],
+    "radius_mm": 5.5,
+    "stock_mm": 0.0
+   },
+   {
+    "axis": [
+     0.0,
+     0.0,
+     -1.0
+    ],
+    "inner_radius_mm": null,
+    "kind": "bore",
+    "length_mm": 24.0,
+    "name": "pin_bore",
+    "op": "cut",
+    "path": null,
+    "point": [
+     28.0,
+     10.0,
+     20.0
+    ],
+    "radius_mm": 3.0,
+    "stock_mm": 0.0
+   },
+   {
+    "axis": [
+     -1.0,
+     0.0,
+     0.0
+    ],
+    "inner_radius_mm": null,
+    "kind": "face",
+    "length_mm": null,
+    "name": "mounting_face",
+    "op": "cut",
+    "path": null,
+    "point": [
+     2.0,
+     0.0,
+     0.0
+    ],
+    "radius_mm": null,
+    "stock_mm": 0.0
+   }
+  ],
+  "limits": {
+   "alignment": [],
+   "displacement": []
+  },
+  "load_cases": [
+   {
+    "allowable_mpa": null,
+    "allowable_source": null,
+    "compliance_limit": null,
+    "forces": [
+     {
+      "at": null,
+      "force": [
+       0.0,
+       0.0,
+       -15.0
+      ],
+      "moment": null,
+      "region": "tip"
+     }
+    ],
+    "name": "pull_down",
+    "pressures": [],
+    "safety_factor": null,
+    "stress_limit": null,
+    "weight": 1.0
+   }
+  ],
+  "material": {
+   "E": 3500.0,
+   "density": 1.24,
+   "nu": 0.35
+  },
+  "mirror": [],
+  "name": "bracket_nostock",
+  "print_settings": {
+   "bed_mm": [
+    220.0,
+    220.0
+   ],
+   "build_direction": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "given": [],
+   "limits": [],
+   "printer_type": "fdm",
+   "self_supporting_angle_deg": null
+  },
+  "regions": {
+   "design": "<repo>/examples/interfaces/design.stl",
+   "fixed": [
+    "<repo>/examples/interfaces/plate.stl"
+   ],
+   "fixed_axes": [],
+   "keep_out": [],
+   "load": [
+    {
+     "name": "tip",
+     "path": "<repo>/examples/interfaces/tip.stl"
+    }
+   ],
+   "measure": [],
+   "solid": []
+  },
+  "settings": {
+   "beta_schedule": [
+    [
+     0,
+     1.0
+    ],
+    [
+     30,
+     2.0
+    ],
+    [
+     50,
+     4.0
+    ],
+    [
+     65,
+     8.0
+    ]
+   ],
+   "case_combine": "sum",
+   "eta_eroded": null,
+   "filter_radius": 1.5,
+   "filter_radius_source": "default",
+   "filter_solid_neighbours": "density_one",
+   "gpu_case": "auto",
+   "gpu_device": "auto",
+   "iterations": 40,
+   "max_active_voxels": 100000,
+   "max_grid_voxels": 5000000,
+   "mesh_method": "sdf",
+   "min_member_mm": null,
+   "move_limit": 0.2,
+   "objective": "compliance",
+   "penal": 3.0,
+   "robust": "off",
+   "solver": "auto",
+   "stop_rules": {
+    "enabled": false,
+    "grayness_max": 0.1,
+    "objective_change": 0.0001,
+    "time_budget_s": null,
+    "window": 5
+   },
+   "stress_power": 0.5,
+   "stress_q": 40.0,
+   "stress_scale": "auto",
+   "stress_step_acceptance": true,
+   "volume_fraction": 0.3,
+   "voxel_size": 1.0
+  },
+  "springs": [],
+  "yaml_path": "<repo>/examples/interfaces/bracket_nostock.yaml"
+ },
+ "examples/ladle/ladle.yaml": {
+  "assumptions": [],
+  "buckling": {
+   "check": false,
+   "density": "printed",
+   "max_gb": null,
+   "max_seconds": 120.0,
+   "modes": 6
+  },
+  "interfaces": [],
+  "limits": {
+   "alignment": [],
+   "displacement": []
+  },
+  "load_cases": [
+   {
+    "allowable_mpa": null,
+    "allowable_source": null,
+    "compliance_limit": null,
+    "forces": [
+     {
+      "at": null,
+      "force": [
+       0.0,
+       0.0,
+       -4.9
+      ],
+      "moment": null,
+      "region": "bowl"
+     }
+    ],
+    "name": "full_scoop",
+    "pressures": [],
+    "safety_factor": null,
+    "stress_limit": null,
+    "weight": 1.0
+   },
+   {
+    "allowable_mpa": null,
+    "allowable_source": null,
+    "compliance_limit": null,
+    "forces": [
+     {
+      "at": null,
+      "force": [
+       -30.0,
+       0.0,
+       -40.0
+      ],
+      "moment": null,
+      "region": "bowl"
+     }
+    ],
+    "name": "scrape",
+    "pressures": [],
+    "safety_factor": null,
+    "stress_limit": null,
+    "weight": 1.0
+   },
+   {
+    "allowable_mpa": null,
+    "allowable_source": null,
+    "compliance_limit": null,
+    "forces": [
+     {
+      "at": null,
+      "force": [
+       0.0,
+       18.0,
+       -5.0
+      ],
+      "moment": null,
+      "region": "bowl"
+     }
+    ],
+    "name": "side_stir",
+    "pressures": [],
+    "safety_factor": null,
+    "stress_limit": null,
+    "weight": 1.0
+   }
+  ],
+  "material": {
+   "E": 3500.0,
+   "density": 1.24,
+   "nu": 0.35
+  },
+  "mirror": [],
+  "name": "ladle",
+  "print_settings": {
+   "bed_mm": [
+    220.0,
+    220.0
+   ],
+   "build_direction": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "given": [],
+   "limits": [],
+   "printer_type": "fdm",
+   "self_supporting_angle_deg": null
+  },
+  "regions": {
+   "design": "<repo>/examples/ladle/design.stl",
+   "fixed": [
+    "<repo>/examples/ladle/grip.stl"
+   ],
+   "fixed_axes": [],
+   "keep_out": [
+    "<repo>/examples/ladle/gravy_space.stl",
+    "<repo>/examples/ladle/over_opening.stl"
+   ],
+   "load": [
+    {
+     "name": "bowl",
+     "path": "<repo>/examples/ladle/bowl.stl"
+    }
+   ],
+   "measure": [],
+   "solid": []
+  },
+  "settings": {
+   "beta_schedule": [
+    [
+     0,
+     1.0
+    ],
+    [
+     30,
+     2.0
+    ],
+    [
+     50,
+     4.0
+    ],
+    [
+     65,
+     8.0
+    ]
+   ],
+   "case_combine": "sum",
+   "eta_eroded": null,
+   "filter_radius": 4.875,
+   "filter_radius_source": "default",
+   "filter_solid_neighbours": "density_one",
+   "gpu_case": "auto",
+   "gpu_device": "auto",
+   "iterations": 80,
+   "max_active_voxels": 100000,
+   "max_grid_voxels": 5000000,
+   "mesh_method": "sdf",
+   "min_member_mm": null,
+   "move_limit": 0.2,
+   "objective": "compliance",
+   "penal": 3.0,
+   "robust": "off",
+   "solver": "auto",
+   "stop_rules": {
+    "enabled": false,
+    "grayness_max": 0.1,
+    "objective_change": 0.0001,
+    "time_budget_s": null,
+    "window": 5
+   },
+   "stress_power": 0.5,
+   "stress_q": 40.0,
+   "stress_scale": "auto",
+   "stress_step_acceptance": true,
+   "volume_fraction": 0.10628,
+   "voxel_size": 3.25
+  },
+  "springs": [],
+  "yaml_path": "<repo>/examples/ladle/ladle.yaml"
+ }
+}

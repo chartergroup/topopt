@@ -1,0 +1,917 @@
+{
+ "about": "Seconds of each test file in CI runs (scripts/ci/make_tiers.py durations). Used by scripts/ci/shards.py to balance the shards. `all`: every test of the file. `not_slow`: the tests that are not in slow.txt (the fast tier).",
+ "files": {
+  "tests/test_a4b_a3b_merge.py": {
+   "all": 3.2,
+   "not_slow": 0.0
+  },
+  "tests/test_apply_marks.py": {
+   "all": 173.4,
+   "not_slow": 47.0
+  },
+  "tests/test_apply_marks_seam.py": {
+   "all": 126.4,
+   "not_slow": 31.7
+  },
+  "tests/test_assumptions.py": {
+   "all": 6.3,
+   "not_slow": 6.3
+  },
+  "tests/test_bench_gpu_mg.py": {
+   "all": 6.3,
+   "not_slow": 1.7
+  },
+  "tests/test_beta_stage_fact.py": {
+   "all": 39.7,
+   "not_slow": 10.2
+  },
+  "tests/test_bore_checks_config.py": {
+   "all": 0.8,
+   "not_slow": 0.8
+  },
+  "tests/test_buckling.py": {
+   "all": 72.4,
+   "not_slow": 38.2
+  },
+  "tests/test_buckling_joints.py": {
+   "all": 8.0,
+   "not_slow": 8.0
+  },
+  "tests/test_buckling_row.py": {
+   "all": 86.2,
+   "not_slow": 16.3
+  },
+  "tests/test_buckling_row_failure.py": {
+   "all": 42.9,
+   "not_slow": 17.2
+  },
+  "tests/test_buckling_row_joints.py": {
+   "all": 6.7,
+   "not_slow": 6.7
+  },
+  "tests/test_buckling_row_resume.py": {
+   "all": 75.7,
+   "not_slow": 0.0
+  },
+  "tests/test_buckling_row_wiring.py": {
+   "all": 12.7,
+   "not_slow": 12.7
+  },
+  "tests/test_builder_settings.py": {
+   "all": 0.4,
+   "not_slow": 0.4
+  },
+  "tests/test_builder_top_level.py": {
+   "all": 0.8,
+   "not_slow": 0.8
+  },
+  "tests/test_case.py": {
+   "all": 1.8,
+   "not_slow": 1.8
+  },
+  "tests/test_case_mcp.py": {
+   "all": 12.9,
+   "not_slow": 12.9
+  },
+  "tests/test_case_method_keys.py": {
+   "all": 0.5,
+   "not_slow": 0.5
+  },
+  "tests/test_cgroup_working_set.py": {
+   "all": 0.0,
+   "not_slow": 0.0
+  },
+  "tests/test_check_coverage.py": {
+   "all": 0.0,
+   "not_slow": 0.0
+  },
+  "tests/test_checkpoint.py": {
+   "all": 399.6,
+   "not_slow": 23.4
+  },
+  "tests/test_checkpoint_mcp.py": {
+   "all": 28.8,
+   "not_slow": 20.8
+  },
+  "tests/test_child_safe_path.py": {
+   "all": 8.9,
+   "not_slow": 3.5
+  },
+  "tests/test_choice_value_types.py": {
+   "all": 0.1,
+   "not_slow": 0.1
+  },
+  "tests/test_ci_intel_legs.py": {
+   "all": 0.6,
+   "not_slow": 0.6
+  },
+  "tests/test_ci_scripts.py": {
+   "all": 44.9,
+   "not_slow": 34.6
+  },
+  "tests/test_ci_shards.py": {
+   "all": 11.3,
+   "not_slow": 11.3
+  },
+  "tests/test_cleanup.py": {
+   "all": 22.8,
+   "not_slow": 22.8
+  },
+  "tests/test_cleanup_mcp.py": {
+   "all": 2.5,
+   "not_slow": 2.5
+  },
+  "tests/test_cleanup_ratchet.py": {
+   "all": 143.5,
+   "not_slow": 0.0
+  },
+  "tests/test_cli.py": {
+   "all": 4.8,
+   "not_slow": 4.8
+  },
+  "tests/test_client_configs.py": {
+   "all": 13.8,
+   "not_slow": 4.8
+  },
+  "tests/test_compat.py": {
+   "all": 0.4,
+   "not_slow": 0.4
+  },
+  "tests/test_connectivity.py": {
+   "all": 3.3,
+   "not_slow": 3.3
+  },
+  "tests/test_continue.py": {
+   "all": 426.9,
+   "not_slow": 3.7
+  },
+  "tests/test_continue_gpu_mg.py": {
+   "all": 0.0,
+   "not_slow": 0.0
+  },
+  "tests/test_continue_mcp.py": {
+   "all": 50.1,
+   "not_slow": 0.1
+  },
+  "tests/test_continue_policy.py": {
+   "all": 0.0,
+   "not_slow": 0.0
+  },
+  "tests/test_dashboard_boxes.py": {
+   "all": 5.5,
+   "not_slow": 0.1
+  },
+  "tests/test_dashboard_server.py": {
+   "all": 2.5,
+   "not_slow": 2.5
+  },
+  "tests/test_dashboard_talk.py": {
+   "all": 0.7,
+   "not_slow": 0.7
+  },
+  "tests/test_doctor.py": {
+   "all": 29.6,
+   "not_slow": 5.5
+  },
+  "tests/test_earlier_run_aside.py": {
+   "all": 34.3,
+   "not_slow": 24.6
+  },
+  "tests/test_environment.py": {
+   "all": 20.6,
+   "not_slow": 20.6
+  },
+  "tests/test_estimate_bounds.py": {
+   "all": 15.5,
+   "not_slow": 5.7
+  },
+  "tests/test_eta.py": {
+   "all": 43.1,
+   "not_slow": 8.7
+  },
+  "tests/test_failed_run.py": {
+   "all": 9.3,
+   "not_slow": 9.3
+  },
+  "tests/test_fe.py": {
+   "all": 5.0,
+   "not_slow": 5.0
+  },
+  "tests/test_feedback.py": {
+   "all": 24.7,
+   "not_slow": 20.0
+  },
+  "tests/test_feedback_extended_loads.py": {
+   "all": 0.7,
+   "not_slow": 0.7
+  },
+  "tests/test_feedback_hardening.py": {
+   "all": 32.1,
+   "not_slow": 23.2
+  },
+  "tests/test_feedback_mcp.py": {
+   "all": 18.6,
+   "not_slow": 2.2
+  },
+  "tests/test_filament_key.py": {
+   "all": 12.5,
+   "not_slow": 6.5
+  },
+  "tests/test_filament_preferences.py": {
+   "all": 3.9,
+   "not_slow": 3.9
+  },
+  "tests/test_find_features.py": {
+   "all": 0.5,
+   "not_slow": 0.5
+  },
+  "tests/test_fine_cli.py": {
+   "all": 31.1,
+   "not_slow": 17.1
+  },
+  "tests/test_fine_mcp.py": {
+   "all": 10.1,
+   "not_slow": 10.1
+  },
+  "tests/test_fine_pass.py": {
+   "all": 15.0,
+   "not_slow": 15.0
+  },
+  "tests/test_first_run_table.py": {
+   "all": 2.5,
+   "not_slow": 2.5
+  },
+  "tests/test_first_start_text.py": {
+   "all": 0.0,
+   "not_slow": 0.0
+  },
+  "tests/test_gpu_check.py": {
+   "all": 10.5,
+   "not_slow": 10.5
+  },
+  "tests/test_gpu_mg.py": {
+   "all": 0.0,
+   "not_slow": 0.0
+  },
+  "tests/test_gpu_mg_axes.py": {
+   "all": 18.2,
+   "not_slow": 0.6
+  },
+  "tests/test_gpu_mg_border.py": {
+   "all": 7.2,
+   "not_slow": 7.2
+  },
+  "tests/test_gpu_mg_cap.py": {
+   "all": 0.3,
+   "not_slow": 0.3
+  },
+  "tests/test_gpu_mg_deflation.py": {
+   "all": 0.4,
+   "not_slow": 0.4
+  },
+  "tests/test_gpu_mg_device.py": {
+   "all": 3.8,
+   "not_slow": 3.8
+  },
+  "tests/test_gpu_mg_fallback.py": {
+   "all": 0.0,
+   "not_slow": 0.0
+  },
+  "tests/test_gpu_mg_floor.py": {
+   "all": 0.1,
+   "not_slow": 0.1
+  },
+  "tests/test_gpu_mg_harmonic.py": {
+   "all": 16.7,
+   "not_slow": 16.7
+  },
+  "tests/test_gpu_mg_memory.py": {
+   "all": 1.4,
+   "not_slow": 1.4
+  },
+  "tests/test_gpu_mg_robust.py": {
+   "all": 0.0,
+   "not_slow": 0.0
+  },
+  "tests/test_gpu_mg_time.py": {
+   "all": 6.0,
+   "not_slow": 6.0
+  },
+  "tests/test_gpu_mg_x_merge.py": {
+   "all": 8.3,
+   "not_slow": 0.4
+  },
+  "tests/test_hostinfo.py": {
+   "all": 1.5,
+   "not_slow": 1.5
+  },
+  "tests/test_input.py": {
+   "all": 1.7,
+   "not_slow": 1.7
+  },
+  "tests/test_install_checklist.py": {
+   "all": 0.1,
+   "not_slow": 0.1
+  },
+  "tests/test_intel_mac.py": {
+   "all": 5.0,
+   "not_slow": 5.0
+  },
+  "tests/test_interface_cuts.py": {
+   "all": 13.7,
+   "not_slow": 13.7
+  },
+  "tests/test_interface_integrity.py": {
+   "all": 12.6,
+   "not_slow": 6.2
+  },
+  "tests/test_interfaces.py": {
+   "all": 143.6,
+   "not_slow": 8.8
+  },
+  "tests/test_job_facts.py": {
+   "all": 22.7,
+   "not_slow": 16.0
+  },
+  "tests/test_joints.py": {
+   "all": 53.0,
+   "not_slow": 40.7
+  },
+  "tests/test_ks_stress.py": {
+   "all": 21.3,
+   "not_slow": 10.3
+  },
+  "tests/test_levers.py": {
+   "all": 45.3,
+   "not_slow": 7.9
+  },
+  "tests/test_levers_run.py": {
+   "all": 12.3,
+   "not_slow": 12.3
+  },
+  "tests/test_load_path_fact.py": {
+   "all": 18.0,
+   "not_slow": 18.0
+  },
+  "tests/test_load_paths_stability.py": {
+   "all": 31.3,
+   "not_slow": 10.6
+  },
+  "tests/test_load_types.py": {
+   "all": 19.7,
+   "not_slow": 7.7
+  },
+  "tests/test_locks.py": {
+   "all": 4.5,
+   "not_slow": 4.5
+  },
+  "tests/test_lost_force.py": {
+   "all": 10.8,
+   "not_slow": 3.5
+  },
+  "tests/test_mass_run_facts.py": {
+   "all": 15.2,
+   "not_slow": 15.2
+  },
+  "tests/test_material_reference.py": {
+   "all": 2.9,
+   "not_slow": 2.9
+  },
+  "tests/test_material_tools.py": {
+   "all": 6.9,
+   "not_slow": 1.8
+  },
+  "tests/test_materials_catalog.py": {
+   "all": 0.9,
+   "not_slow": 0.9
+  },
+  "tests/test_mcp.py": {
+   "all": 5.9,
+   "not_slow": 5.9
+  },
+  "tests/test_mcp_tool_surface.py": {
+   "all": 1.5,
+   "not_slow": 1.5
+  },
+  "tests/test_mcp_workspace.py": {
+   "all": 3.9,
+   "not_slow": 3.9
+  },
+  "tests/test_mcpb.py": {
+   "all": 2.2,
+   "not_slow": 2.2
+  },
+  "tests/test_min_member_tool.py": {
+   "all": 0.5,
+   "not_slow": 0.5
+  },
+  "tests/test_mirror.py": {
+   "all": 17.5,
+   "not_slow": 17.5
+  },
+  "tests/test_mirror_parity_fact.py": {
+   "all": 6.6,
+   "not_slow": 6.6
+  },
+  "tests/test_mma_reference_steps.py": {
+   "all": 3.4,
+   "not_slow": 3.4
+  },
+  "tests/test_mma_sub.py": {
+   "all": 6.5,
+   "not_slow": 0.8
+  },
+  "tests/test_motion_rows.py": {
+   "all": 38.3,
+   "not_slow": 21.3
+  },
+  "tests/test_motion_rows_mirror.py": {
+   "all": 1.8,
+   "not_slow": 1.8
+  },
+  "tests/test_motion_rows_robust.py": {
+   "all": 7.9,
+   "not_slow": 7.9
+  },
+  "tests/test_motion_rows_step.py": {
+   "all": 5.1,
+   "not_slow": 5.1
+  },
+  "tests/test_multirow_mma.py": {
+   "all": 55.2,
+   "not_slow": 15.0
+  },
+  "tests/test_no_demo_budget.py": {
+   "all": 12.7,
+   "not_slow": 6.1
+  },
+  "tests/test_no_load_case.py": {
+   "all": 17.9,
+   "not_slow": 12.5
+  },
+  "tests/test_objective_scale.py": {
+   "all": 77.0,
+   "not_slow": 5.3
+  },
+  "tests/test_objective_scale_resume.py": {
+   "all": 66.0,
+   "not_slow": 3.4
+  },
+  "tests/test_opencl_guard.py": {
+   "all": 0.0,
+   "not_slow": 0.0
+  },
+  "tests/test_optimize.py": {
+   "all": 5.3,
+   "not_slow": 5.3
+  },
+  "tests/test_packaging.py": {
+   "all": 0.9,
+   "not_slow": 0.9
+  },
+  "tests/test_part_card.py": {
+   "all": 0.2,
+   "not_slow": 0.2
+  },
+  "tests/test_part_card_wiring.py": {
+   "all": 11.1,
+   "not_slow": 11.1
+  },
+  "tests/test_part_only.py": {
+   "all": 51.8,
+   "not_slow": 3.8
+  },
+  "tests/test_part_only_film.py": {
+   "all": 126.4,
+   "not_slow": 2.8
+  },
+  "tests/test_part_skill.py": {
+   "all": 9.0,
+   "not_slow": 9.0
+  },
+  "tests/test_perimeter.py": {
+   "all": 46.4,
+   "not_slow": 10.5
+  },
+  "tests/test_platform_probe.py": {
+   "all": 0.4,
+   "not_slow": 0.4
+  },
+  "tests/test_plugin_launcher.py": {
+   "all": 125.7,
+   "not_slow": 125.7
+  },
+  "tests/test_plugin_manifest.py": {
+   "all": 0.0,
+   "not_slow": 0.0
+  },
+  "tests/test_pm2_types.py": {
+   "all": 0.0,
+   "not_slow": 0.0
+  },
+  "tests/test_post.py": {
+   "all": 82.8,
+   "not_slow": 1.7
+  },
+  "tests/test_preferences.py": {
+   "all": 32.0,
+   "not_slow": 8.1
+  },
+  "tests/test_print_coverage.py": {
+   "all": 2.6,
+   "not_slow": 2.6
+  },
+  "tests/test_print_report.py": {
+   "all": 50.7,
+   "not_slow": 24.8
+  },
+  "tests/test_printcheck.py": {
+   "all": 99.0,
+   "not_slow": 64.8
+  },
+  "tests/test_printcheck_coverage.py": {
+   "all": 16.6,
+   "not_slow": 10.7
+  },
+  "tests/test_printers.py": {
+   "all": 34.0,
+   "not_slow": 25.8
+  },
+  "tests/test_ratchet.py": {
+   "all": 12.2,
+   "not_slow": 4.9
+  },
+  "tests/test_ratchet_e2e.py": {
+   "all": 119.1,
+   "not_slow": 0.0
+  },
+  "tests/test_ratchet_fixes.py": {
+   "all": 9.1,
+   "not_slow": 9.1
+  },
+  "tests/test_ratchet_mcp.py": {
+   "all": 15.6,
+   "not_slow": 14.3
+  },
+  "tests/test_ratchet_pins.py": {
+   "all": 3.8,
+   "not_slow": 3.8
+  },
+  "tests/test_ratchet_verify_rules.py": {
+   "all": 0.8,
+   "not_slow": 0.8
+  },
+  "tests/test_readme_extras.py": {
+   "all": 0.1,
+   "not_slow": 0.1
+  },
+  "tests/test_readme_links.py": {
+   "all": 0.0,
+   "not_slow": 0.0
+  },
+  "tests/test_refine.py": {
+   "all": 33.4,
+   "not_slow": 7.2
+  },
+  "tests/test_refused_run_keeps_result.py": {
+   "all": 14.4,
+   "not_slow": 4.3
+  },
+  "tests/test_refused_run_reply.py": {
+   "all": 4.4,
+   "not_slow": 4.4
+  },
+  "tests/test_refused_run_rows.py": {
+   "all": 3.5,
+   "not_slow": 3.5
+  },
+  "tests/test_region_planes.py": {
+   "all": 1.4,
+   "not_slow": 1.4
+  },
+  "tests/test_region_rules.py": {
+   "all": 0.0,
+   "not_slow": 0.0
+  },
+  "tests/test_regions_tool.py": {
+   "all": 18.0,
+   "not_slow": 15.8
+  },
+  "tests/test_registry.py": {
+   "all": 5.5,
+   "not_slow": 5.5
+  },
+  "tests/test_registry_mcp.py": {
+   "all": 20.4,
+   "not_slow": 15.9
+  },
+  "tests/test_release_notes.py": {
+   "all": 0.6,
+   "not_slow": 0.6
+  },
+  "tests/test_release_pin.py": {
+   "all": 0.3,
+   "not_slow": 0.3
+  },
+  "tests/test_render.py": {
+   "all": 73.5,
+   "not_slow": 73.5
+  },
+  "tests/test_render_loads.py": {
+   "all": 19.9,
+   "not_slow": 19.9
+  },
+  "tests/test_render_look.py": {
+   "all": 0.1,
+   "not_slow": 0.1
+  },
+  "tests/test_repeated_load_cases.py": {
+   "all": 5.7,
+   "not_slow": 5.7
+  },
+  "tests/test_replay.py": {
+   "all": 5.0,
+   "not_slow": 5.0
+  },
+  "tests/test_robust.py": {
+   "all": 46.0,
+   "not_slow": 33.4
+  },
+  "tests/test_robust_x_stress.py": {
+   "all": 0.8,
+   "not_slow": 0.8
+  },
+  "tests/test_root_guard.py": {
+   "all": 47.1,
+   "not_slow": 34.9
+  },
+  "tests/test_run_stop.py": {
+   "all": 188.3,
+   "not_slow": 15.0
+  },
+  "tests/test_run_yaml_path.py": {
+   "all": 38.9,
+   "not_slow": 12.7
+  },
+  "tests/test_runinfo.py": {
+   "all": 12.3,
+   "not_slow": 1.0
+  },
+  "tests/test_runjob.py": {
+   "all": 36.2,
+   "not_slow": 19.9
+  },
+  "tests/test_screw_rings.py": {
+   "all": 22.3,
+   "not_slow": 10.0
+  },
+  "tests/test_sdf_envelope_cut.py": {
+   "all": 40.3,
+   "not_slow": 33.2
+  },
+  "tests/test_sdf_pocket_shell.py": {
+   "all": 9.7,
+   "not_slow": 9.7
+  },
+  "tests/test_sdf_shared_planes.py": {
+   "all": 27.0,
+   "not_slow": 27.0
+  },
+  "tests/test_session_mode.py": {
+   "all": 0.9,
+   "not_slow": 0.9
+  },
+  "tests/test_smooth_sdf.py": {
+   "all": 163.8,
+   "not_slow": 35.5
+  },
+  "tests/test_solid_filter.py": {
+   "all": 40.7,
+   "not_slow": 24.0
+  },
+  "tests/test_solid_x_sdf.py": {
+   "all": 31.1,
+   "not_slow": 12.7
+  },
+  "tests/test_solver_choice.py": {
+   "all": 10.1,
+   "not_slow": 10.1
+  },
+  "tests/test_spec_shape.py": {
+   "all": 9.1,
+   "not_slow": 4.5
+  },
+  "tests/test_springs.py": {
+   "all": 15.8,
+   "not_slow": 4.7
+  },
+  "tests/test_springs_x_merge.py": {
+   "all": 34.4,
+   "not_slow": 15.8
+  },
+  "tests/test_stage_facts.py": {
+   "all": 42.2,
+   "not_slow": 28.0
+  },
+  "tests/test_state_isolation.py": {
+   "all": 0.0,
+   "not_slow": 0.0
+  },
+  "tests/test_step.py": {
+   "all": 96.3,
+   "not_slow": 38.8
+  },
+  "tests/test_step_acceptance.py": {
+   "all": 38.1,
+   "not_slow": 1.7
+  },
+  "tests/test_step_mcp.py": {
+   "all": 16.5,
+   "not_slow": 9.6
+  },
+  "tests/test_stl_region_kind.py": {
+   "all": 5.7,
+   "not_slow": 5.7
+  },
+  "tests/test_stress_example.py": {
+   "all": 84.0,
+   "not_slow": 0.0
+  },
+  "tests/test_stress_public_parts.py": {
+   "all": 0.1,
+   "not_slow": 0.1
+  },
+  "tests/test_stress_report.py": {
+   "all": 71.7,
+   "not_slow": 4.3
+  },
+  "tests/test_stress_x_loads.py": {
+   "all": 8.2,
+   "not_slow": 0.0
+  },
+  "tests/test_talk_block.py": {
+   "all": 0.1,
+   "not_slow": 0.1
+  },
+  "tests/test_target_mass.py": {
+   "all": 116.2,
+   "not_slow": 1.4
+  },
+  "tests/test_team_guide.py": {
+   "all": 2.7,
+   "not_slow": 2.7
+  },
+  "tests/test_tet.py": {
+   "all": 43.9,
+   "not_slow": 10.1
+  },
+  "tests/test_tet_clean_retry.py": {
+   "all": 60.6,
+   "not_slow": 26.8
+  },
+  "tests/test_tet_intersect.py": {
+   "all": 7.0,
+   "not_slow": 0.0
+  },
+  "tests/test_tet_nested_shell.py": {
+   "all": 1.2,
+   "not_slow": 1.2
+  },
+  "tests/test_tet_weld.py": {
+   "all": 1.6,
+   "not_slow": 1.6
+  },
+  "tests/test_tet_worker_core.py": {
+   "all": 0.6,
+   "not_slow": 0.6
+  },
+  "tests/test_third_party_notices.py": {
+   "all": 0.1,
+   "not_slow": 0.1
+  },
+  "tests/test_unit_fact.py": {
+   "all": 18.7,
+   "not_slow": 18.7
+  },
+  "tests/test_user_errors.py": {
+   "all": 0.7,
+   "not_slow": 0.7
+  },
+  "tests/test_uv_command.py": {
+   "all": 0.2,
+   "not_slow": 0.2
+  },
+  "tests/test_verdict.py": {
+   "all": 0.2,
+   "not_slow": 0.2
+  },
+  "tests/test_verify_bodies.py": {
+   "all": 9.4,
+   "not_slow": 9.4
+  },
+  "tests/test_verify_bore.py": {
+   "all": 1.5,
+   "not_slow": 1.5
+  },
+  "tests/test_verify_bore_ring.py": {
+   "all": 39.2,
+   "not_slow": 0.0
+  },
+  "tests/test_verify_bore_run.py": {
+   "all": 139.2,
+   "not_slow": 2.7
+  },
+  "tests/test_verify_buckling.py": {
+   "all": 24.6,
+   "not_slow": 7.3
+  },
+  "tests/test_verify_buckling_modes.py": {
+   "all": 11.3,
+   "not_slow": 7.5
+  },
+  "tests/test_verify_buckling_run.py": {
+   "all": 160.8,
+   "not_slow": 2.3
+  },
+  "tests/test_verify_coverage.py": {
+   "all": 95.6,
+   "not_slow": 0.4
+  },
+  "tests/test_verify_factor.py": {
+   "all": 0.0,
+   "not_slow": 0.0
+  },
+  "tests/test_verify_fatigue.py": {
+   "all": 0.0,
+   "not_slow": 0.0
+  },
+  "tests/test_verify_gate.py": {
+   "all": 100.4,
+   "not_slow": 2.4
+  },
+  "tests/test_verify_mcp.py": {
+   "all": 34.9,
+   "not_slow": 14.7
+  },
+  "tests/test_verify_memory.py": {
+   "all": 0.2,
+   "not_slow": 0.2
+  },
+  "tests/test_verify_motion.py": {
+   "all": 5.2,
+   "not_slow": 5.2
+  },
+  "tests/test_verify_p2.py": {
+   "all": 1.2,
+   "not_slow": 1.2
+  },
+  "tests/test_verify_part_only.py": {
+   "all": 127.1,
+   "not_slow": 19.6
+  },
+  "tests/test_verify_plain.py": {
+   "all": 8.9,
+   "not_slow": 0.1
+  },
+  "tests/test_verify_plain_offer.py": {
+   "all": 0.0,
+   "not_slow": 0.0
+  },
+  "tests/test_verify_pressfit.py": {
+   "all": 48.5,
+   "not_slow": 3.1
+  },
+  "tests/test_verify_pressfit_run.py": {
+   "all": 150.7,
+   "not_slow": 1.9
+  },
+  "tests/test_verify_regions.py": {
+   "all": 0.5,
+   "not_slow": 0.5
+  },
+  "tests/test_verify_result_keys_card.py": {
+   "all": 0.0,
+   "not_slow": 0.0
+  },
+  "tests/test_verify_run.py": {
+   "all": 134.9,
+   "not_slow": 15.0
+  },
+  "tests/test_verify_solid.py": {
+   "all": 0.0,
+   "not_slow": 0.0
+  },
+  "tests/test_verify_supports.py": {
+   "all": 73.1,
+   "not_slow": 17.6
+  },
+  "tests/test_work_folder.py": {
+   "all": 4.3,
+   "not_slow": 4.3
+  },
+  "tests/test_work_folder_texts.py": {
+   "all": 2.6,
+   "not_slow": 2.6
+  }
+ }
+}

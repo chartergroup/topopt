@@ -1,0 +1,55 @@
+name: phone_stand
+regions:
+  design:
+  - prism:
+      plane: xz
+      extent: [0, 70]
+      points:
+      - [0, 0]
+      - [100, 0]
+      - [100, 20]
+      - [70, 20]
+      - [30, 105]
+      - [0, 105]
+  fixed:
+    table_pad:
+    - box:
+        min: [0, 0, -4]
+        max: [100, 70, 0]
+  load:
+    ledge:
+    - box:
+        min: [70, 5, 20]
+        max: [100, 65, 28]
+    back_rest:
+    - prism:
+        plane: xz
+        extent: [5, 65]
+        points:
+        - [65.29, 30]
+        - [71.59, 32.94]
+        - [36.3, 107.94]
+        - [30, 105]
+load_cases:
+- name: phone
+  weight: 1.0
+  forces:
+  - region: ledge
+    force: [0.741, 0, -1.588]
+  - region: back_rest
+    force: [-0.741, 0, -0.372]
+  stress_limit: 0.007679
+- name: poke
+  weight: 1.0
+  forces:
+  - region: ledge
+    force: [-0.5, 0, -0.4]
+  - region: back_rest
+    force: [-3.6, 0, -1.7]
+  stress_limit: 0.01216
+material: {E: 3500, nu: 0.35, density: 1.24}
+assumptions: [Phone 0.2 kg x 9.81 = 1.96 N; the ledge takes the part along the incline
+    and the back rest the part across it, 'Poke: a 4 N press on the screen, mostly
+    across the incline, with a small friction part at the ledge', 'The table pad stands
+    for the table: a full clamp under the base']
+settings: {volume_fraction: 0.2, iterations: 80, voxel_size: auto, objective: mass}

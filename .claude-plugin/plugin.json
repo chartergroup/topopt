@@ -1,0 +1,20 @@
+{
+  "name": "topopt",
+  "displayName": "topopt: topology optimization for 3D printing",
+  "version": "0.5.0",
+  "description": "Describe a part in words. Claude builds the problem, runs a topology optimization on your computer, and gives you a printable STL. Skills, a local MCP server and five role sub-agents. The first start sets up Python for 1 to 3 minutes. Meanwhile topopt connects at once with all its tools, and a tool call answers with the setup status. After the setup the tools work in the same session.",
+  "author": {
+    "name": "chartergroup"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/chartergroup/topopt",
+  "repository": "https://github.com/chartergroup/topopt",
+  "keywords": ["topology-optimization", "3d-printing", "stl", "mcp", "fea"],
+  "skills": ["./.claude/skills/part-to-topopt"],
+  "mcpServers": {
+    "topopt": {
+      "command": "sh",
+      "args": ["${CLAUDE_PLUGIN_ROOT}/scripts/topopt-env.sh", "mcp"]
+    }
+  }
+}

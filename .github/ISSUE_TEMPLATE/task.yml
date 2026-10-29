@@ -1,0 +1,36 @@
+name: Task
+description: One piece of work with a clear end (a fix, a feature, a docs change, a research question).
+body:
+  - type: markdown
+    attributes:
+      value: |
+        One issue is one piece of work with a clear end. Write for a reader who has not seen the chat. See CONTRIBUTING.md.
+  - type: textarea
+    id: goal
+    attributes:
+      label: Goal
+      description: One sentence. What is true when the work is done?
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why
+      description: Who needs it, and what it changes. Link the source (a finding, a request, another issue).
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance
+      description: A check that anyone can run, with the expected result. Done means merged, tests green, docs updated.
+      placeholder: "- Run `topopt check examples/hook/hook.yaml`: it prints ..."
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: The facts that exist now. Numbers, test output, `path:line`, images, links. Write "none yet" if there are none.
+    validations:
+      required: true

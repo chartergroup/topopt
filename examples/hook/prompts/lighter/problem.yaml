@@ -1,0 +1,22 @@
+name: tshirt_hook_light
+regions:
+  design: design.stl
+  fixed: [wall_plate.stl]
+  keep_out: [screw_hole_top.stl, screw_hole_bottom.stl]
+  load: {hook_tip: hook_tip.stl}
+load_cases:
+- name: hang
+  weight: 234.0
+  forces:
+  - region: hook_tip
+    force: [0, 0, -1.96]
+- name: pull_off
+  weight: 1.0
+  forces:
+  - region: hook_tip
+    force: [20.89, 5.21, -20.89]
+material: {E: 3500.0, nu: 0.35, density: 1.24}
+settings: {voxel_size: 1.5, target_mass_g: 18, iterations: 80}
+assumptions: [Target mass 18 g for the whole hook (the plain hook on the same grid
+    is 28 g). The user gave the number., 'Loads, plate, screws, saddle and lip are
+    as in the plain hook: a 0.2 kg shirt (1.96 N) and a 30 N pull.']

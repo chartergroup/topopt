@@ -1,0 +1,15 @@
+name: shelf_bracket
+regions:
+  design: design.stl
+  fixed: [wall_plate.stl]
+  keep_out: [screw_hole_top.stl, screw_hole_bottom.stl]
+  load: {shelf_seat: shelf_seat.stl}
+load_cases:
+- name: shelf
+  weight: 1.0
+  forces:
+  - region: shelf_seat
+    force: [0, 0, -39.2]
+material: {E: 3500.0, nu: 0.35, density: 1.24}
+settings: {voxel_size: 1.35, volume_fraction: 0.25, iterations: 80}
+assumptions: ['shelf with books: 4 kg x 9.81 = 39.2 N down', PETG]

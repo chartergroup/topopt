@@ -1,0 +1,6 @@
+schema_version: "1.1"
+name: lost-force
+context:
+  # add_dirs only grants Read on the folder; the run does not tell Claude its path.
+  # So the scaffold copies the files into the workspace (needs --scaffold).
+  scaffold_script: stage-files.sh

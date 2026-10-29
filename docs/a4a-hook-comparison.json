@@ -1,0 +1,339 @@
+{
+ "what": "topopt hook at 1.2 mm, 80 iterations, 1 thread (OMP/MKL/OPENBLAS/NUMBA_NUM_THREADS=1), PARDISO, through the CLI (topopt run --quiet). default = examples/hook/hook.yaml. mirror = examples/hook/hook_mirror.yaml (plane y = 0 mm, align auto). control = the grid and the facts of the mirror run with the average switched off (tools of this check: /tmp script that replaces symmetry.average by the identity; the code is the same). Shared host: load average (1 min, 5 min, 15 min) at the start and the end, the largest and the mean of the 1 min load (sampled every 20 s), and peak RSS (ru_maxrss of the child) are in each row.",
+ "reading": "wall_s is the wall time of the whole command (wrapper); run_time_s is metrics.json; t_iter_* are from history.jsonl. The mirror deviation of x and rho is run.json mirror.end (max over the design voxels of |v - v[perm]| for the last call of Model.density). It is defined only on a grid that has the plane (mirror and control rows). The default run has no grid plane at y = 0 (origin y -17.5 mm). final_snapshot_flip_deviation_u8 compares the last snapshot (uint8 density of the whole grid) with its flip along y.",
+ "machine": {
+  "platform": "Linux x86_64",
+  "python": "3.12.13"
+ },
+ "commands": {
+  "default": "python -m topopt run examples/hook/hook.yaml --out <dir> --quiet",
+  "mirror": "python -m topopt run examples/hook/hook_mirror.yaml --out <dir> --quiet",
+  "control": "python control_main.py run examples/hook/hook_mirror.yaml --out <dir> --quiet, with control_main.py = `from topopt import symmetry; symmetry.average = lambda model, v, transpose=False: v; from topopt.cli import main; raise SystemExit(main(sys.argv[1:]))`",
+  "base": "the base run of origin/main at 1 thread (compliance_final 1.3891411615538347)"
+ },
+ "head": "d5831e66672a29aca2cc2fc554dec5e1bf998e5e",
+ "rows": [
+  {
+   "name": "default",
+   "note": "examples/hook/hook.yaml, no mirror key",
+   "wall_s": 466.5,
+   "run_time_s": 459.0,
+   "load_start": [
+    0.06,
+    0.07,
+    0.12
+   ],
+   "load_end": [
+    2.73,
+    3.32,
+    1.84
+   ],
+   "load1_max_sampled": 8.52,
+   "load1_mean_sampled": 4.1,
+   "peak_rss_mib": 1605.1,
+   "date_utc": "2026-10-20T11:49Z",
+   "passes": 81,
+   "t_iter_sum_s": 457.7,
+   "t_iter_mean_s": 5.65,
+   "t_iter_median_s": 5.792,
+   "grid_shape": [
+    68,
+    30,
+    55
+   ],
+   "origin_mm": [
+    -1.0,
+    -17.5,
+    -30.0
+   ],
+   "n_active": 39944,
+   "compliance_initial": 64.43259563600358,
+   "compliance_final": 1.3891411615538347,
+   "mass_final_g": 26.49,
+   "mass_saved_pct": 69.0,
+   "volume_fraction_final": 0.19999803495268564,
+   "stiffness_cases": [
+    {
+     "name": "hang",
+     "N_per_mm": 1260.501
+    },
+    {
+     "name": "pull_off",
+     "N_per_mm": 1331.285
+    }
+   ],
+   "triangles": 85610,
+   "watertight": true
+  },
+  {
+   "name": "mirror",
+   "note": "examples/hook/hook_mirror.yaml, mirror y = 0 mm (align auto)",
+   "wall_s": 481.1,
+   "run_time_s": 471.9,
+   "load_start": [
+    2.73,
+    3.32,
+    1.84
+   ],
+   "load_end": [
+    11.26,
+    8.14,
+    4.73
+   ],
+   "load1_max_sampled": 12.87,
+   "load1_mean_sampled": 7.86,
+   "peak_rss_mib": 1606.9,
+   "date_utc": "2026-10-20T11:57Z",
+   "passes": 81,
+   "t_iter_sum_s": 470.3,
+   "t_iter_mean_s": 5.806,
+   "t_iter_median_s": 5.824,
+   "grid_shape": [
+    68,
+    31,
+    55
+   ],
+   "origin_mm": [
+    -1.0,
+    -18.599999999999998,
+    -30.0
+   ],
+   "n_active": 39946,
+   "compliance_initial": 64.44161136836883,
+   "compliance_final": 1.4413536885369997,
+   "mass_final_g": 26.51,
+   "mass_saved_pct": 69.0,
+   "volume_fraction_final": 0.19999832623578484,
+   "stiffness_cases": [
+    {
+     "name": "hang",
+     "N_per_mm": 1282.736
+    },
+    {
+     "name": "pull_off",
+     "N_per_mm": 1215.201
+    }
+   ],
+   "triangles": 85904,
+   "watertight": true,
+   "final_snapshot_flip_deviation_u8": {
+    "max": 0,
+    "voxels_that_differ": 0,
+    "snapshot": "it_0080.bin"
+   },
+   "mirror": {
+    "planes": [
+     {
+      "axis": "y",
+      "at_mm": 0.0,
+      "align": "auto",
+      "parity": "centre",
+      "k": 31,
+      "plane_index": 15,
+      "label_mismatches": {
+       "face": 134,
+       "centre": 0
+      },
+      "orphans": {
+       "count": 0,
+       "share": 0.0,
+       "outside_grid": 0,
+       "empty": 0,
+       "keep_out": 0,
+       "fixed": 0,
+       "load": 0
+      }
+     }
+    ],
+    "design_voxels": 34222,
+    "load_asymmetry": [
+     {
+      "case": "hang",
+      "planes": [
+       0.0
+      ]
+     },
+     {
+      "case": "pull_off",
+      "planes": [
+       0.3473471696045004
+      ]
+     }
+    ],
+    "end": {
+     "x_deviation": [
+      0.0
+     ],
+     "rho_deviation": [
+      4.440892098500626e-16
+     ]
+    }
+   }
+  },
+  {
+   "name": "control",
+   "note": "hook_mirror.yaml grid (centre parity), the average switched off",
+   "wall_s": 504.2,
+   "run_time_s": 497.0,
+   "load_start": [
+    10.83,
+    8.1,
+    4.73
+   ],
+   "load_end": [
+    6.11,
+    7.09,
+    5.89
+   ],
+   "load1_max_sampled": 14.71,
+   "load1_mean_sampled": 8.45,
+   "peak_rss_mib": 1605.9,
+   "date_utc": "2026-10-20T12:06Z",
+   "passes": 81,
+   "t_iter_sum_s": 495.3,
+   "t_iter_mean_s": 6.115,
+   "t_iter_median_s": 5.997,
+   "grid_shape": [
+    68,
+    31,
+    55
+   ],
+   "origin_mm": [
+    -1.0,
+    -18.599999999999998,
+    -30.0
+   ],
+   "n_active": 39946,
+   "compliance_initial": 64.44161136836883,
+   "compliance_final": 1.3889090116611134,
+   "mass_final_g": 26.49,
+   "mass_saved_pct": 69.1,
+   "volume_fraction_final": 0.19999850531969582,
+   "stiffness_cases": [
+    {
+     "name": "hang",
+     "N_per_mm": 1261.204
+    },
+    {
+     "name": "pull_off",
+     "N_per_mm": 1330.959
+    }
+   ],
+   "triangles": 85626,
+   "watertight": true,
+   "final_snapshot_flip_deviation_u8": {
+    "max": 254,
+    "voxels_that_differ": 7300,
+    "snapshot": "it_0080.bin"
+   },
+   "mirror": {
+    "planes": [
+     {
+      "axis": "y",
+      "at_mm": 0.0,
+      "align": "auto",
+      "parity": "centre",
+      "k": 31,
+      "plane_index": 15,
+      "label_mismatches": {
+       "face": 134,
+       "centre": 0
+      },
+      "orphans": {
+       "count": 0,
+       "share": 0.0,
+       "outside_grid": 0,
+       "empty": 0,
+       "keep_out": 0,
+       "fixed": 0,
+       "load": 0
+      }
+     }
+    ],
+    "design_voxels": 34222,
+    "load_asymmetry": [
+     {
+      "case": "hang",
+      "planes": [
+       0.0
+      ]
+     },
+     {
+      "case": "pull_off",
+      "planes": [
+       0.3473471696045004
+      ]
+     }
+    ],
+    "end": {
+     "x_deviation": [
+      0.8667286301430518
+     ],
+     "rho_deviation": [
+      0.9961796604352933
+     ]
+    }
+   }
+  }
+ ],
+ "default_bit_equal_to_base": {
+  "snapshot_files": [
+   81,
+   81
+  ],
+  "snapshots_equal": "81 of 81",
+  "final.stl": true,
+  "preview.bin": true,
+  "labels.bin": true,
+  "history_compliance_equal": true,
+  "history_compliance_cases_equal": true,
+  "compliance_final": [
+   1.3891411615538347,
+   1.3891411615538347
+  ],
+  "compliance_final_equal": true
+ },
+ "rows_note_fix_round_1": "The rows above were measured at head d5831e6, before fix round 1. Fix round 1 changed the end value x_deviation: it is now measured on the averaged design A x (before: on the raw optimizer variable). For one plane without orphans (the hook mirror row) the two are the same (0.0), and the control row has the identity average, so both rows stay valid. They were not run again.",
+ "default_after_fix_round_1": {
+  "head": "ff513feeae920ffcb0df7593a059b737c368af05",
+  "note": "The default run (examples/hook/hook.yaml, no mirror key) again at the head after fix round 1 (the last change to topopt/), through the CLI, 1 thread, on a busy shared host. It is bit-equal to the run of origin/main.",
+  "wall_s": 581.5,
+  "run_time_s": 573.1,
+  "peak_rss_mib": 1603.7,
+  "load_start": [
+   6.7,
+   6.16,
+   6.27
+  ],
+  "load_end": [
+   19.81,
+   16.8,
+   11.25
+  ],
+  "load1_max_sampled": 24.25,
+  "load1_mean_sampled": 14.44,
+  "date_utc": "2026-10-20T13:02Z",
+  "passes": 81,
+  "t_iter_mean_s": 7.053,
+  "t_iter_median_s": 6.728,
+  "compliance_final": 1.3891411615538347,
+  "run_json_has_mirror_key": false,
+  "bit_equal_to_base": {
+   "snapshot_files": [
+    81,
+    81
+   ],
+   "snapshots_equal": "81 of 81",
+   "final.stl": true,
+   "preview.bin": true,
+   "labels.bin": true,
+   "history_compliance_equal": true,
+   "history_compliance_cases_equal": true,
+   "compliance_final": [
+    1.3891411615538347,
+    1.3891411615538347
+   ],
+   "compliance_final_equal": true
+  }
+ }
+}

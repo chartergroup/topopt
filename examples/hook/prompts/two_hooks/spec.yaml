@@ -1,0 +1,38 @@
+name: tshirt_hook_two
+assumptions:
+  - "Two arms leave the shared plate at 30 degrees to the left and to the right of the plate normal (the plan view is a V)."
+  - "One shirt on each arm: 0.2 kg x 9.81 = 1.96 N down on each tip (the same as the plain hook)."
+  - "Abuse case: a 30 N pull on one arm at a time, 45 degrees down, along the arm axis."
+  - "The plate is 40 mm wide (the plain hook has 35 mm) so that both arms start on it; screws, saddle and lip are as in the plain hook."
+regions:
+  design:
+    - prism: {plane: xz, extent: [-55, 55], points: [[2,-30],[72,8],[72,11],[56,15],[2,36]]}
+    - subtract: {prism: {plane: xy, extent: [-40, 45], points: [[-6.0,10.4],[80.6,60.4],[80.6,70],[-10,70],[-10,8.1]]}}
+    - subtract: {prism: {plane: xy, extent: [-40, 45], points: [[-10,-8.1],[-10,-70],[80.6,-70],[80.6,-60.4],[-6.0,-10.4]]}}
+    - subtract: {prism: {plane: xy, extent: [-40, 45], points: [[92.6,-39.6],[92.6,39.6],[24.0,0]]}}
+    - subtract: {prism: {plane: xy, extent: [15, 45], points: [[54.5,17.6],[92.6,39.6],[80.6,60.4],[42.5,38.4]]}}
+    - subtract: {prism: {plane: xy, extent: [15, 45], points: [[42.5,-38.4],[80.6,-60.4],[92.6,-39.6],[54.5,-17.6]]}}
+    - subtract: {prism: {plane: xy, extent: [-40, 45], points: [[86.7,3.9],[123.9,25.4],[83.9,94.6],[46.7,73.1]]}}
+    - subtract: {prism: {plane: xy, extent: [-40, 45], points: [[46.7,-73.1],[83.9,-94.6],[123.9,-25.4],[86.7,-3.9]]}}
+  fixed:
+    wall_plate:
+      - box: {min: [0,-20,-30], max: [3.5,20,36]}
+  keep_out:
+    screw_hole_top:
+      - cylinder: {p0: [-1,0,30], p1: [4,0,30], radius: 2.25}
+      - cylinder: {p0: [3.5,0,30], p1: [80,0,30], radius: 4.5}
+    screw_hole_bottom:
+      - cylinder: {p0: [-1,0,-20], p1: [4,0,-20], radius: 2.25}
+      - cylinder: {p0: [3.5,0,-20], p1: [80,0,-20], radius: 4.5}
+  load:
+    tip_right:
+      - prism: {plane: xy, extent: [11, 15], points: [[53.0,20.2],[70.3,30.2],[61.3,45.8],[44.0,35.8]]}
+      - prism: {plane: xy, extent: [11, 24], points: [[67.7,28.7],[70.3,30.2],[61.3,45.8],[58.7,44.3]]}
+    tip_left:
+      - prism: {plane: xy, extent: [11, 15], points: [[44.0,-35.8],[61.3,-45.8],[70.3,-30.2],[53.0,-20.2]]}
+      - prism: {plane: xy, extent: [11, 24], points: [[58.7,-44.3],[61.3,-45.8],[70.3,-30.2],[67.7,-28.7]]}
+load_cases:
+  - {name: hang, weight: 234.0, forces: [{region: tip_right, force: [0,0,-1.96]}, {region: tip_left, force: [0,0,-1.96]}]}
+  - {name: pull_off_right, weight: 1.0, forces: [{region: tip_right, force: [18.37,10.61,-21.21]}]}
+  - {name: pull_off_left, weight: 1.0, forces: [{region: tip_left, force: [18.37,-10.61,-21.21]}]}
+settings: {volume_fraction: 0.2, iterations: 80, voxel_size: 1.5}

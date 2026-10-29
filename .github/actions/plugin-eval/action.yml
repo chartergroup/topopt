@@ -1,0 +1,96 @@
+# Composite action: install Claude Code and run the mocked eval cases of the topopt plugin (`claude plugin eval`).
+# The workflow .github/workflows/evals.yml uses it (by hand only). The steps hold no logic: the run step calls scripts/ci/run_evals.py.
+# The models and the score threshold are inputs. threshold 0 turns the score gate off: the job then fails only when the run fails.
+# The workflow gives the credential from a repository secret (a composite action cannot read secrets). Set ANTHROPIC_API_KEY or CLAUDE_CODE_OAUTH_TOKEN.
+# Use it after actions/checkout: the paths are relative to the repo root. The cases need no Bash grant, so the job needs no sandbox packages.
+# The step env names start with IN_, not EVAL_: `claude plugin eval` passes every EVAL_* variable to the agent under test.
+name: topopt plugin eval
+description: Install Claude Code and run the mocked eval cases of the topopt plugin, with the models and the score threshold as inputs.
+
+inputs:
+  model:
+    description: "The model of the agent under test (--model), for example claude-sonnet-5-5."
+    required: true
+  judge-model:
+    description: "The model of the llm graders and the agent mocks (--judge-model), for example claude-haiku-5-5."
+    required: true
+  threshold:
+    description: "The lowest case score that passes, 0 to 1. 0: no score gate (the job fails only when the run fails)."
+    required: false
+    default: "0.8"
+  tag:
+    description: "smoke (the short cases) or mock (all mocked cases)."
+    required: false
+    default: smoke
+  case:
+    description: "Optional glob of case names (--case). Empty: all the cases of the tag."
+    required: false
+    default: ""
+  runs:
+    description: "Runs per case, 1 to 50."
+    required: false
+    default: "1"
+  concurrency:
+    description: "Runs at the same time (-j), 1 to 8. They share the rate limit of the credential."
+    required: false
+    default: "4"
+  max-cost-usd:
+    description: "The cost ceiling in USD (list-price estimate). When the run gets to it, it stops with exit code 2."
+    required: false
+    default: "15"
+  claude-version:
+    description: "The version of @anthropic-ai/claude-code to install (2.1.269 or later has plugin eval)."
+    required: false
+    default: "2.1.303"
+  output-dir:
+    description: "The folder for aggregate-result.json, report.html and the mock recordings, relative to the repo root."
+    required: false
+    default: evals/results/ci
+  artifact-name:
+    description: "The name of the uploaded artifact with the output folder."
+    required: false
+    default: evals
+  anthropic-api-key:
+    description: "The API key (secret ANTHROPIC_API_KEY). Give this or claude-code-oauth-token."
+    required: false
+    default: ""
+  claude-code-oauth-token:
+    description: "The token of `claude setup-token` (secret CLAUDE_CODE_OAUTH_TOKEN). Give this or anthropic-api-key."
+    required: false
+    default: ""
+
+runs:
+  using: composite
+  steps:
+    - name: Set up Node.js 22 (Claude Code needs Node 22 or later)
+      uses: actions/setup-node@v6
+      with:
+        node-version: "22"
+    - name: Install the pinned Claude Code
+      shell: bash
+      env:
+        IN_CLAUDE_VERSION: ${{ inputs.claude-version }}
+      run: npm install --global --no-fund --no-audit "@anthropic-ai/claude-code@${IN_CLAUDE_VERSION}"
+    - name: Run the mocked eval cases and write the job summary
+      shell: bash
+      env:
+        ANTHROPIC_API_KEY: ${{ inputs.anthropic-api-key }}
+        CLAUDE_CODE_OAUTH_TOKEN: ${{ inputs.claude-code-oauth-token }}
+        IN_MODEL: ${{ inputs.model }}
+        IN_JUDGE_MODEL: ${{ inputs.judge-model }}
+        IN_THRESHOLD: ${{ inputs.threshold }}
+        IN_TAG: ${{ inputs.tag }}
+        IN_CASE: ${{ inputs.case }}
+        IN_RUNS: ${{ inputs.runs }}
+        IN_CONCURRENCY: ${{ inputs.concurrency }}
+        IN_MAX_COST_USD: ${{ inputs.max-cost-usd }}
+        IN_OUTPUT_DIR: ${{ inputs.output-dir }}
+      run: python3 scripts/ci/run_evals.py --model "$IN_MODEL" --judge-model "$IN_JUDGE_MODEL" --threshold "$IN_THRESHOLD" --tag "$IN_TAG" --case "$IN_CASE" --runs "$IN_RUNS" --concurrency "$IN_CONCURRENCY" --max-cost-usd "$IN_MAX_COST_USD" --output-dir "$IN_OUTPUT_DIR"
+    - name: Upload the report, the result file and the mock recordings
+      if: ${{ !cancelled() }}
+      uses: actions/upload-artifact@v6
+      with:
+        name: ${{ inputs.artifact-name }}
+        path: ${{ inputs.output-dir }}
+        retention-days: 14
+        if-no-files-found: warn

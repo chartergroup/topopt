@@ -1,0 +1,63 @@
+{
+ "done": true,
+ "metrics": {
+  "mass_design_space_g": 77.73,
+  "mass_final_g": 29.29,
+  "mass_saved_pct": 62.3,
+  "volume_final_mm3": 23060.0,
+  "compliance_initial": 45.6,
+  "compliance_final": 0.9214083517260442,
+  "stiffness_cases": [
+   {
+    "name": "hang",
+    "N_per_mm": 4350.2
+   },
+   {
+    "name": "pull_off",
+    "N_per_mm": 2049.5
+   }
+  ],
+  "run_time_s": 15.6,
+  "iterations": 80,
+  "solver": "cholesky",
+  "watertight": true,
+  "triangles": 26400
+ },
+ "lost_force": {
+  "cases": [
+   {
+    "name": "hang",
+    "total_magnitude_n": 2.94,
+    "lost_magnitude_n": 0.0,
+    "lost_percent": 0.0,
+    "regions": []
+   },
+   {
+    "name": "pull_off",
+    "total_magnitude_n": 30.6,
+    "lost_magnitude_n": 0.0,
+    "lost_percent": 0.0,
+    "regions": []
+   }
+  ],
+  "max_lost_percent": 0.0
+ },
+ "verdict": {
+  "state": "iteration_limit",
+  "converged": false,
+  "feasible": true,
+  "text": "iteration limit reached at pass 80. Tests: objective change 0.00094 (relative) in the last 5 passes (threshold 0.0001: not met); grayness 0.023 (threshold 0.1: met); largest g +0.0000564 (row volume, threshold 0.005: met); the beta schedule has reached its last stage (beta 8 from pass 52)."
+ },
+ "final_stl": "/Users/me/topopt-work/runs/tshirt_hook_petg_run/result/final.stl",
+ "final_stl_rel": "runs/tshirt_hook_petg_run/result/final.stl",
+ "run_dir": "/Users/me/topopt-work/runs/tshirt_hook_petg_run",
+ "run_dir_rel": "runs/tshirt_hook_petg_run",
+ "workspace": "/Users/me/topopt-work",
+ "preview": {
+  "kind": "ascii-silhouettes",
+  "note": "Coarse silhouettes of surface points. The tool render_part gives real images.",
+  "triangles": 26400,
+  "watertight": true,
+  "volume_mm3": 23060.0
+ }
+}

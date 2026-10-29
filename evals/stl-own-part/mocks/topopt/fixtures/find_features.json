@@ -1,0 +1,244 @@
+{
+ "ok": true,
+ "mesh": {
+  "source": "/Users/me/topopt-work/files/bracket.stl",
+  "faces": 276,
+  "vertices": 136,
+  "unit": "mm (an STL has no unit; the values are mm if the file is in mm)",
+  "watertight": true,
+  "winding_consistent": true,
+  "normals_flipped": false,
+  "zero_area_faces": 0,
+  "bounds_mm": [
+   [
+    0.0,
+    0.0,
+    0.0
+   ],
+   [
+    40.0,
+    20.0,
+    4.0
+   ]
+  ],
+  "size_mm": [
+   40.0,
+   20.0,
+   4.0
+  ],
+  "volume_mm3": 3037.685,
+  "source_rel": "files/bracket.stl"
+ },
+ "holes": [
+  {
+   "id": "H1",
+   "axis": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "point": [
+    30.0,
+    10.0,
+    0.0
+   ],
+   "end_point": [
+    30.0,
+    10.0,
+    4.0
+   ],
+   "radius_mm": 2.0,
+   "diameter_mm": 4.0,
+   "length_mm": 4.0,
+   "depth": "through",
+   "ends": [
+    "open",
+    "open"
+   ],
+   "arc_deg": 360.0,
+   "closed_ring": true,
+   "segments": 32,
+   "chord_sag_mm": 0.009631,
+   "area_mm2": 50.185,
+   "faces": 64,
+   "fit": {
+    "rms_mm": 0.0,
+    "max_mm": 1e-06,
+    "normal_deviation_deg": 0.0
+   },
+   "coaxial_with": []
+  },
+  {
+   "id": "H2",
+   "axis": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "point": [
+    10.0,
+    10.0,
+    0.0
+   ],
+   "end_point": [
+    10.0,
+    10.0,
+    4.0
+   ],
+   "radius_mm": 3.0,
+   "diameter_mm": 6.0,
+   "length_mm": 4.0,
+   "depth": "through",
+   "ends": [
+    "open",
+    "open"
+   ],
+   "arc_deg": 360.0,
+   "closed_ring": true,
+   "segments": 32,
+   "chord_sag_mm": 0.014446,
+   "area_mm2": 75.277,
+   "faces": 64,
+   "fit": {
+    "rms_mm": 0.0,
+    "max_mm": 0.0,
+    "normal_deviation_deg": 0.0
+   },
+   "coaxial_with": []
+  }
+ ],
+ "bosses": [],
+ "flat_faces": [
+  {
+   "id": "F1",
+   "normal": [
+    0.0,
+    0.0,
+    -1.0
+   ],
+   "area_mm2": 759.421,
+   "centroid": [
+    20.2055,
+    10.0,
+    0.0
+   ],
+   "offset_mm": 0.0,
+   "faces": 70,
+   "max_normal_deviation_deg": 0.0
+  },
+  {
+   "id": "F2",
+   "normal": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "area_mm2": 759.421,
+   "centroid": [
+    20.2055,
+    10.0,
+    4.0
+   ],
+   "offset_mm": 4.0,
+   "faces": 70,
+   "max_normal_deviation_deg": 0.0
+  },
+  {
+   "id": "F3",
+   "normal": [
+    0.0,
+    -1.0,
+    0.0
+   ],
+   "area_mm2": 160.0,
+   "centroid": [
+    20.0,
+    0.0,
+    2.0
+   ],
+   "offset_mm": 0.0,
+   "faces": 2,
+   "max_normal_deviation_deg": 0.0
+  },
+  {
+   "id": "F4",
+   "normal": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "area_mm2": 160.0,
+   "centroid": [
+    20.0,
+    20.0,
+    2.0
+   ],
+   "offset_mm": 20.0,
+   "faces": 2,
+   "max_normal_deviation_deg": 0.0
+  },
+  {
+   "id": "F5",
+   "normal": [
+    -1.0,
+    0.0,
+    0.0
+   ],
+   "area_mm2": 80.0,
+   "centroid": [
+    0.0,
+    10.0,
+    2.0
+   ],
+   "offset_mm": 0.0,
+   "faces": 2,
+   "max_normal_deviation_deg": 0.0
+  },
+  {
+   "id": "F6",
+   "normal": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "area_mm2": 80.0,
+   "centroid": [
+    40.0,
+    10.0,
+    2.0
+   ],
+   "offset_mm": 40.0,
+   "faces": 2,
+   "max_normal_deviation_deg": 0.0
+  }
+ ],
+ "method": {
+  "numbers": {
+   "smooth_angle_deg": 30.0,
+   "flat_angle_deg": 1.0,
+   "fit_residual_frac": 0.01,
+   "axis_normal_deg": 2.0,
+   "arc_min_deg": 180.0,
+   "flat_min_area_mm2": 1.0,
+   "flat_soft_share_max": 0.5,
+   "near_limit_share": 0.5,
+   "angle_eps_rad": 1e-06,
+   "zero_area_mm2": 1e-12
+  },
+  "counts": {
+   "smooth_regions": 8,
+   "cylinder_candidates": 2,
+   "cylinders": 2,
+   "rejected_normal": 0,
+   "rejected_fit": 0,
+   "arcs_not_listed": 0,
+   "flat_regions_not_listed": 0,
+   "flat_regions_curved_facets": 0
+  },
+  "text": "Smooth regions (neighbour normals within smooth_angle_deg) are tested as cylinders: normals across one axis (axis_normal_deg), vertices on one circle (fit_residual_frac of the radius), at least arc_min_deg of the circle. Normals to the axis: a hole; away from it: a boss. Through or blind from the faces across the rim of the wall. Flat faces: regions within flat_angle_deg, no cylinder, at least flat_min_area_mm2. Radii are the radii of the wall vertices; a tessellated wall lies chord_sag_mm inside."
+ },
+ "facts": [
+  "Radius: the radius of the wall vertices (a circle fit). A tessellated wall lies up to chord_sag_mm inside it. Each entry has `segments` and `chord_sag_mm`."
+ ],
+ "timing_s": 0.005
+}

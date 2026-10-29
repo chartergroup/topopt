@@ -1,0 +1,17 @@
+### topopt printcheck <ladle-run> --strict   (exit/time below)
+print check: <ladle-run>/result/final.stl
+  run, 41,680 triangles, area 37,657 mm2, sha256 170c799ce673
+  settings from: defaults, run.json; build direction +z, bed 220 x 220 mm, printer fdm, angle 45 deg (default of printer_type fdm); assumed: build_direction, bed_mm, printer_type
+  pass     mesh_closed     after the float32 reload every edge joins 2 faces, the winding agrees and the volume is positive
+  pass     bodies          1 body; the limit is 1 (assumed)
+  pass     closed_voids    no closed void
+  pass     bed_fit         with build direction +z (assumed) the part fits turned 45 degrees (margin 46.2 mm) on a 220 x 220 mm bed (assumed)
+  unknown  overhang        8,661 mm2 of overhang (23 % of the area) below 45 degrees from the plate (default of printer_type fdm). No max_overhang_area_mm2 in the print block, so there is no limit
+  unknown  support_volume  the support estimate is 83,684 mm3 (a solid-column upper bound; real supports use less). No max_support_volume_mm3 in the print block, so there is no limit
+  unknown  plate_contact   151.2 mm2 rests on the plate. No min_plate_contact_mm2 in the print block, so there is no limit
+  unknown  wall_thickness  no min_wall_mm in the print block, so there is no limit. p1 of the chords is 4.016 mm; the area with a chord under 0.8 / 1.2 / 2.0 mm is 0.0 / 0.0 / 0.0 mm2. The rule of this check: a pass needs a limit of at least 3 x the resolution (3.25 mm, voxel size of the run (run.json), or the median mesh edge if that is larger), here 9.75 mm (see pitfalls/mesh-coarser-than-members). A member under 9.75 mm (3 x the voxel size 3.25 mm of this run) was under-resolved in the analysis of the run. This is the printed shape, not the stress
+summary: 4 pass, 0 fail, 4 unknown
+gate: pass (strict)
+time 1.81 s (mesh health 0.31 s, V2 numbers 0.24 s, thickness 1.26 s)
+exit 0
+TIMED wall_s=1.92 peak_rss_mb=146 load_before=2.76 2.27 1.56 load_after=2.76 2.27 1.56 rc=0

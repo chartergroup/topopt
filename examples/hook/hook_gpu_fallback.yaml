@@ -1,0 +1,53 @@
+# A short hook run that forces the GPU solver to fail, so that you can see the fallback of `settings.solver: auto`.
+#
+# On a machine where `auto` runs gpu-mg (a GPU that passes the self-test), gpu_tol asks for a true relative residual of 1e-30 in each solve, and
+# gpu_backward_error accepts a solve at a backward error of 1e-30. No device reaches either: a 64-bit residual cannot go below about 1e-16, and the
+# backward error of a solve at the rounding floor is about 4e-17. (A backward error of 0 turns the rule off, and then the residual that the PCG updates
+# by recurrence decides in case B; it can go far below the true residual. So the rule is on here, with a limit that is below any floor.) The first solve
+# is not accepted, gpu-mg stops with a GpuFailure of the kind not_accepted, and the run goes on with the CPU solver of the machine, from the last
+# checkpoint, and ends with the exit code 0.
+#
+#   topopt run examples/hook/hook_gpu_fallback.yaml --out runs/gpu-fallback
+#
+# What to look for: run.log has the line "solver: gpu-mg stopped ... the run goes on with <cpu solver>"; run.json has "solver_parts" with two parts
+# (gpu-mg with an "end", then the CPU solver) and "solver" is the CPU solver; verdict.json has a note about the switch.
+# The same values force the failure in case B and in case C (gpu_case: auto takes B on a device with 64-bit float, else C).
+# On a machine with no usable GPU, `auto` runs the CPU solver from the start and nothing is forced: the run is a plain short run.
+# Do not use these values for a real part.
+name: tshirt_hook_gpu_fallback
+
+regions:
+  design: design.stl
+  fixed:
+    - wall_plate.stl
+  keep_out:
+    - screw_hole_top.stl
+    - screw_hole_bottom.stl
+  load:
+    tip: hook_tip.stl
+
+load_cases:
+  - name: hang
+    weight: 234.0
+    forces:
+      - region: tip
+        force: [0.0, 0.0, -1.96]
+  - name: pull_off
+    weight: 1.0
+    forces:
+      - region: tip
+        force: [20.89, 5.21, -20.89]
+
+material:
+  E: 3500.0
+  nu: 0.35
+  density: 1.24
+
+settings:
+  voxel_size: 2.0
+  volume_fraction: 0.2
+  iterations: 12
+  beta_schedule: [[0, 1], [6, 2]]
+  solver: auto
+  gpu_tol: 1.0e-30
+  gpu_backward_error: 1.0e-30

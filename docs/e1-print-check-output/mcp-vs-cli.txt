@@ -1,0 +1,8 @@
+hook strict=False limits=-: cli exit 0, gate off, mcp gate off, same JSON (without timing): True
+hook strict=True limits=-: cli exit 0, gate pass, mcp gate pass, same JSON (without timing): True
+hook strict=True limits={'min_wall_mm': 2.5, 'max_overhang_area_mm2': 100}: cli exit 4, gate fail, mcp gate fail, same JSON (without timing): True
+ladle strict=False limits=-: cli exit 0, gate off, mcp gate off, same JSON (without timing): True
+ladle strict=True limits=-: cli exit 0, gate pass, mcp gate pass, same JSON (without timing): True
+ladle strict=True limits={'min_wall_mm': 2.5, 'max_overhang_area_mm2': 100}: cli exit 4, gate fail, mcp gate fail, same JSON (without timing): True
+ALL SAME
+TIMED wall_s=26.01 peak_rss_mb=268 load_before=2.37 2.20 1.55 load_after=2.04 2.14 1.55 rc=0

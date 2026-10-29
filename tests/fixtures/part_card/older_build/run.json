@@ -1,0 +1,76 @@
+{
+ "format": 1,
+ "name": "tshirt_hook",
+ "yaml_path": "../../examples/hook/hook.yaml",
+ "started_at": "2026-10-08T20:24:52-04:00",
+ "shape": [
+  68,
+  30,
+  55
+ ],
+ "origin": [
+  -1.0,
+  -17.5,
+  -30.0
+ ],
+ "h": 1.2,
+ "n_active": 39944,
+ "n_free_dofs": 115836,
+ "iterations": 80,
+ "volume_fraction": 0.2,
+ "load_cases": [
+  {
+   "name": "hang",
+   "weight": 234.0,
+   "forces": [
+    {
+     "region": "tip",
+     "force": [
+      0.0,
+      0.0,
+      -1.96
+     ],
+     "center": [
+      67.7493,
+      -0.1,
+      14.1761
+     ]
+    }
+   ]
+  },
+  {
+   "name": "pull_off",
+   "weight": 1.0,
+   "forces": [
+    {
+     "region": "tip",
+     "force": [
+      20.89,
+      5.21,
+      -20.89
+     ],
+     "center": [
+      67.7493,
+      -0.1,
+      14.1761
+     ]
+    }
+   ]
+  }
+ ],
+ "regions": {
+  "design": "design.stl",
+  "fixed": [
+   "wall_plate.stl"
+  ],
+  "keep_out": [
+   "screw_hole_top.stl",
+   "screw_hole_bottom.stl"
+  ],
+  "load": {
+   "tip": "hook_tip.stl"
+  }
+ },
+ "solver": "cholesky",
+ "mass_design_space_g": 85.58880767999999
+}

@@ -1,0 +1,86 @@
+solid plate
+  facet normal 0 -1 0
+    outer loop
+      vertex 0 0 16
+      vertex 0 0 0
+      vertex 4 0 0
+    endloop
+  endfacet
+  facet normal 0 0 -1
+    outer loop
+      vertex 0 20 0
+      vertex 4 0 0
+      vertex 0 0 0
+    endloop
+  endfacet
+  facet normal -1 0 0
+    outer loop
+      vertex 0 0 16
+      vertex 0 20 16
+      vertex 0 0 0
+    endloop
+  endfacet
+  facet normal 0 0 1
+    outer loop
+      vertex 0 20 16
+      vertex 0 0 16
+      vertex 4 0 16
+    endloop
+  endfacet
+  facet normal -1 0 -0
+    outer loop
+      vertex 0 20 16
+      vertex 0 20 0
+      vertex 0 0 0
+    endloop
+  endfacet
+  facet normal -0 1 0
+    outer loop
+      vertex 0 20 16
+      vertex 4 20 16
+      vertex 0 20 0
+    endloop
+  endfacet
+  facet normal 1 0 0
+    outer loop
+      vertex 4 0 16
+      vertex 4 0 0
+      vertex 4 20 0
+    endloop
+  endfacet
+  facet normal -0 -1 -0
+    outer loop
+      vertex 4 0 16
+      vertex 0 0 16
+      vertex 4 0 0
+    endloop
+  endfacet
+  facet normal -0 -0 -1
+    outer loop
+      vertex 4 20 0
+      vertex 4 0 0
+      vertex 0 20 0
+    endloop
+  endfacet
+  facet normal 0 1 0
+    outer loop
+      vertex 4 20 16
+      vertex 4 20 0
+      vertex 0 20 0
+    endloop
+  endfacet
+  facet normal 0 0 1
+    outer loop
+      vertex 4 20 16
+      vertex 0 20 16
+      vertex 4 0 16
+    endloop
+  endfacet
+  facet normal 1 0 0
+    outer loop
+      vertex 4 20 16
+      vertex 4 0 16
+      vertex 4 20 0
+    endloop
+  endfacet
+endsolid plate

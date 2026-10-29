@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume|clear|compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/scripts/dev/session_mode.py\" || echo \"Mode: contributor. Follow CONTRIBUTING.md. If you are a member of the chartergroup GitHub organization, clone the knowledge base next to this repo (gh repo clone chartergroup/topopt-kb ../topopt-kb) or set TOPOPT_KB, then start a new session.\"",
+            "timeout": 15
+          }
+        ]
+      }
+    ]
+  }
+}

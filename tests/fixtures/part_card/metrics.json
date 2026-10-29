@@ -1,0 +1,491 @@
+{
+ "mass_design_space_g": 89.1,
+ "mass_final_g": 25.72,
+ "mass_saved_pct": 71.1,
+ "volume_final_mm3": 20738.6,
+ "compliance_initial": 59.08071562652286,
+ "compliance_final": 1.3777520293840295,
+ "stiffness_cases": [
+  {
+   "name": "hang",
+   "N_per_mm": 1294.703
+  },
+  {
+   "name": "pull_off",
+   "N_per_mm": 1316.773
+  }
+ ],
+ "run_time_s": 59.6,
+ "iterations": 40,
+ "solver": "pardiso",
+ "filter": {
+  "radius_mm": 3.0,
+  "radius_source": "default",
+  "solid_neighbours": "density_one",
+  "min_member_mm": null,
+  "min_member_radius_mm": null,
+  "min_feature_mm": 3.0,
+  "min_feature_note": "walls survive from about 1.6 mm and rods from about 2.81 mm (continuum values, interior of the design space; thinner ones vanish). The grid sets a floor of about one voxel (2 mm). A skin at a free face of the design space can be about half as thin (0.799 mm for a wall)",
+  "size": {
+   "radius_voxels": 1.5,
+   "entries_per_row": 19,
+   "entries": 145369,
+   "build_peak_bytes_estimate": 8722140,
+   "build_peak_gib_estimate": 0.01,
+   "held_bytes_estimate": 4070332,
+   "held_gib_estimate": 0.0
+  },
+  "facts": []
+ },
+ "constraints": [
+  {
+   "name": "volume",
+   "value": 0.20002912400851466,
+   "limit": 0.2,
+   "g": 0.0001456200425733467,
+   "violation": 0.0001456200425733467
+  }
+ ],
+ "rows": [],
+ "watertight": true,
+ "triangles": 20586,
+ "mesh": {
+  "method": "sdf",
+  "params": {
+   "sigma": 1.0,
+   "window": 1.67,
+   "level_range": 0.67,
+   "n_levels": 13,
+   "clip": 2.8,
+   "near": 1.33,
+   "taubin_iterations": 10,
+   "taubin_lambda": 0.5,
+   "taubin_mu": -0.53,
+   "pin_tol": 0.35,
+   "calibrate_steps": 3,
+   "band": 3.0,
+   "simplify_tol": 1e-05,
+   "deep_depth": 1.5,
+   "up": 2,
+   "sigma_mm": 2.0,
+   "pitch_mm": 1.0
+  },
+  "sources": {
+   "frozen": "stl",
+   "keep_out": "stl"
+  },
+  "exact": {
+   "union": true,
+   "cut": true
+  },
+  "volume_thresholded_mm3": 20740.0,
+  "volume_smoothed_mm3": 20288.74857272682,
+  "calibration": [
+   {
+    "delta_mm": 0.0,
+    "mc_mm3": 20988.20479927561,
+    "final_mm3": 21483.670996071025,
+    "target_mm3": 20740.0,
+    "error": 0.03585684648365598
+   },
+   {
+    "delta_mm": -0.0993138671338479,
+    "mc_mm3": 19996.413615295718,
+    "final_mm3": 20498.26245816135,
+    "target_mm3": 20740.0,
+    "error": -0.011655619182191462
+   },
+   {
+    "delta_mm": -0.0752550166412089,
+    "mc_mm3": 20238.56064185684,
+    "final_mm3": 20738.59463939271,
+    "target_mm3": 20740.0,
+    "error": -6.776087788276074e-05
+   }
+  ],
+  "islands_removed": 0,
+  "extra_bodies_removed": 0,
+  "extra_bodies_volume_mm3": 0.0,
+  "local_loss": {
+   "deep_lost_mm3": 19.0,
+   "parts": 5,
+   "largest_mm3": 6.0,
+   "depth_fine_voxels": 1.5,
+   "sharp_mm3": 20740.0
+  },
+  "grid": {
+   "voxels": 293040,
+   "limit": 30000000,
+   "est_peak_gib": 0.03,
+   "ram_gib": 93.8,
+   "ok": true,
+   "message": "the SDF grid has 293040 voxels (about 0.0 GiB peak), the limit is 30000000."
+  },
+  "t_s": {
+   "fields": 0.299,
+   "smooth": 2.344,
+   "mesh": 1.595,
+   "local_loss": 0.421,
+   "checks": 0.275
+  },
+  "requested": "sdf",
+  "fallback": null,
+  "volume_final_mm3": 20738.6,
+  "volume_error_pct": -0.007,
+  "stl_roundtrip": {
+   "watertight": true,
+   "winding_consistent": true,
+   "bodies": 1,
+   "open_edges": 0,
+   "nonmanifold_edges": 0,
+   "zero_area_faces": 0,
+   "volume_mm3": 20738.595,
+   "triangles": 20586,
+   "ok": true
+  },
+  "watertight": true,
+  "checks": {
+   "fixed": {
+    "fixed:wall_plate.stl": {
+     "uncovered_mm3": 0.0,
+     "max_outside_mm": 0.0,
+     "region_mm3": 7973.98747790944
+    },
+    "load:tip": {
+     "uncovered_mm3": 0.0,
+     "max_outside_mm": 0.0,
+     "region_mm3": 1926.0
+    }
+   },
+   "keep_out": {
+    "screw_hole_top.stl": {
+     "intersect_mm3": 2.297217218348709e-08
+    },
+    "screw_hole_bottom.stl": {
+     "intersect_mm3": 9.540979117872439e-18
+    }
+   }
+  }
+ },
+ "robust": {
+  "on": false
+ },
+ "print": {
+  "ok": true,
+  "settings": {
+   "build_direction": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "build_direction_label": "+z",
+   "bed_mm": [
+    220.0,
+    220.0
+   ],
+   "printer_type": "fdm",
+   "self_supporting_angle_deg": 45.0,
+   "angle_source": "default of printer_type fdm",
+   "assumed": [
+    "build_direction",
+    "bed_mm",
+    "printer_type"
+   ],
+   "assumed_note": "these keys are not in the YAML print block: the report uses the defaults of CONTRACTS.md section 18"
+  },
+  "support_needed": true,
+  "total_area_mm2": 12591.66,
+  "configured": {
+   "label": "+z",
+   "direction": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "extents_mm": [
+    76.024,
+    35.0,
+    66.024
+   ],
+   "height_mm": 66.024,
+   "bed_fit": true,
+   "bed_turn_deg": 0,
+   "bed_footprint_mm": [
+    76.024,
+    35.0
+   ],
+   "bed_margin_mm": 143.976,
+   "overhang_area_mm2": 2413.743,
+   "overhang_fraction": 0.19169,
+   "plate_contact_area_mm2": 122.5,
+   "support_volume_mm3": 52599.8,
+   "support_rays": 6833
+  },
+  "options": [
+   {
+    "label": "+x",
+    "direction": [
+     1.0,
+     0.0,
+     0.0
+    ],
+    "extents_mm": [
+     35.0,
+     66.024,
+     76.024
+    ],
+    "height_mm": 76.024,
+    "bed_fit": true,
+    "bed_turn_deg": 0,
+    "bed_footprint_mm": [
+     35.0,
+     66.024
+    ],
+    "bed_margin_mm": 153.976,
+    "overhang_area_mm2": 224.597,
+    "overhang_fraction": 0.01784,
+    "plate_contact_area_mm2": 2278.283,
+    "support_volume_mm3": 7223.3,
+    "support_rays": 358
+   },
+   {
+    "label": "-x",
+    "direction": [
+     -1.0,
+     0.0,
+     0.0
+    ],
+    "extents_mm": [
+     35.0,
+     66.024,
+     76.024
+    ],
+    "height_mm": 76.024,
+    "bed_fit": true,
+    "bed_turn_deg": 0,
+    "bed_footprint_mm": [
+     35.0,
+     66.024
+    ],
+    "bed_margin_mm": 153.976,
+    "overhang_area_mm2": 2099.579,
+    "overhang_fraction": 0.16674,
+    "plate_contact_area_mm2": 234.0,
+    "support_volume_mm3": 119898.1,
+    "support_rays": 608
+   },
+   {
+    "label": "+y",
+    "direction": [
+     0.0,
+     1.0,
+     0.0
+    ],
+    "extents_mm": [
+     76.024,
+     66.024,
+     35.0
+    ],
+    "height_mm": 35.0,
+    "bed_fit": true,
+    "bed_turn_deg": 0,
+    "bed_footprint_mm": [
+     76.024,
+     66.024
+    ],
+    "bed_margin_mm": 143.976,
+    "overhang_area_mm2": 952.555,
+    "overhang_fraction": 0.07565,
+    "plate_contact_area_mm2": 231.0,
+    "support_volume_mm3": 5905.6,
+    "support_rays": 2754
+   },
+   {
+    "label": "-y",
+    "direction": [
+     0.0,
+     -1.0,
+     0.0
+    ],
+    "extents_mm": [
+     76.024,
+     66.024,
+     35.0
+    ],
+    "height_mm": 35.0,
+    "bed_fit": true,
+    "bed_turn_deg": 0,
+    "bed_footprint_mm": [
+     76.024,
+     66.024
+    ],
+    "bed_margin_mm": 143.976,
+    "overhang_area_mm2": 905.021,
+    "overhang_fraction": 0.07187,
+    "plate_contact_area_mm2": 231.0,
+    "support_volume_mm3": 7303.4,
+    "support_rays": 2426
+   },
+   {
+    "label": "+z",
+    "direction": [
+     0.0,
+     0.0,
+     1.0
+    ],
+    "extents_mm": [
+     76.024,
+     35.0,
+     66.024
+    ],
+    "height_mm": 66.024,
+    "bed_fit": true,
+    "bed_turn_deg": 0,
+    "bed_footprint_mm": [
+     76.024,
+     35.0
+    ],
+    "bed_margin_mm": 143.976,
+    "overhang_area_mm2": 2413.743,
+    "overhang_fraction": 0.19169,
+    "plate_contact_area_mm2": 122.5,
+    "support_volume_mm3": 52599.8,
+    "support_rays": 6833
+   },
+   {
+    "label": "-z",
+    "direction": [
+     0.0,
+     0.0,
+     -1.0
+    ],
+    "extents_mm": [
+     76.024,
+     35.0,
+     66.024
+    ],
+    "height_mm": 66.024,
+    "bed_fit": true,
+    "bed_turn_deg": 0,
+    "bed_footprint_mm": [
+     76.024,
+     35.0
+    ],
+    "bed_margin_mm": 143.976,
+    "overhang_area_mm2": 2370.911,
+    "overhang_fraction": 0.18829,
+    "plate_contact_area_mm2": 122.273,
+    "support_volume_mm3": 40410.5,
+    "support_rays": 6052
+   }
+  ],
+  "thinnest_member": {
+   "thinnest_member_mm": 2.818,
+   "min_mm": 1.507,
+   "samples": 60000,
+   "percentiles_mm": {
+    "p0.1": 2.101,
+    "p1": 2.818,
+    "p5": 3.442,
+    "p50": 4.511
+   },
+   "area_below_mm2": {
+    "0.8": 0.0,
+    "1.2": 0.0,
+    "2.0": 6.3
+   },
+   "area_below_pct": {
+    "0.8": 0.0,
+    "1.2": 0.0,
+    "2.0": 0.05
+   },
+   "percentile": 1.0,
+   "seed": 1,
+   "max_chord_mm": 12.0,
+   "method": "inward chord along the surface normal on the final mesh",
+   "estimate": true
+  },
+  "definitions": {
+   "overhang": "faces with n.b < -cos(angle) (strict), n the outward face normal and b the unit build direction (up); the angle is measured from the plate; plate-contact faces are not counted; a face within about 1e-15 of the limit can fall on either side (floating point)",
+   "plate_contact": "faces with n.b < -0.99 whose centre is less than 0.3 mm above the lowest point along b",
+   "support_volume": "estimate of the space under the overhang faces: sum over the faces of (free gap down to the plate or to the part) x (projected face area), in mm3; a solid-column upper bound, real supports use less material; for up to 30000 faces (random sample, fixed seed) scaled to the full overhang area",
+   "bed_fit": "extents_mm are the part extents in the build frame (two in-plane extents and the height). The footprint is the part projected on the plate. For a turn about the build axis of 0 to 89 degrees in 1-degree steps, the margin is the smaller of the two spare lengths: bed side minus footprint side, the sides sorted (so a turn of 90 degrees is the same as 0). For a part in the middle of the bed, the gap to each edge is half of the spare length. bed_turn_deg is the turn with the largest margin. If the part fits as it is, a turn is reported only if it gains at least 10 mm of margin; otherwise bed_turn_deg is 0. bed_footprint_mm is the footprint at that turn and bed_margin_mm that margin. bed_fit is true if the margin is not negative. If no turn fits, bed_margin_mm is negative: the footprint is that many mm longer than the bed at the best turn. The height is not limited",
+   "thinnest_member": "estimate: percentile 1 of the inward chord lengths (surface point along the negative face normal to the first wall), in mm. It means: 1 percent of the sampled surface area has a thinner chord. A thin feature on less than about 1 percent of the area does not move it: see area_below_mm2. min_mm is the shortest chord of the sample; it includes noise from sharp edges. A value equal to max_chord_mm means that many mm or more",
+   "area_below_mm2": "surface area (mm2) whose chord is thinner than each threshold in mm: the share of the sampled chords below the threshold times the total area; area_below_pct is the same share in percent. The sampling error of a share f is about sqrt(f (1 - f) / samples)"
+  },
+  "elapsed_s": 4.42
+ },
+ "verdict": {
+  "format": 1,
+  "state": "iteration_limit",
+  "text": "iteration limit reached at pass 40. Tests: objective change 0.00175 (relative) in the last 5 passes (threshold 0.0001: not met); grayness 0.025 (threshold 0.1: met); largest g +0.000146 (row volume, threshold 0.005: met); the beta schedule has reached its last stage (beta 8 from pass 34). Facts: volume: 1.00 of the allowed volume used (projected design), 1.00 (thresholded part at 0.5).",
+  "final_iteration": 40,
+  "iterations": 40,
+  "converged": false,
+  "feasible": true,
+  "measures": {
+   "objective_change": {
+    "value": 0.0017472304086881244,
+    "threshold": 0.0001,
+    "window": 5,
+    "met": false,
+    "passes_at_beta": 7,
+    "passes_needed": 6,
+    "beta": 8.0
+   },
+   "grayness": {
+    "value": 0.02499890290648277,
+    "threshold": 0.1,
+    "met": true
+   },
+   "max_g": {
+    "value": 0.0001456200425733467,
+    "threshold": 0.005,
+    "met": true,
+    "row": "volume"
+   },
+   "last_beta_stage": {
+    "value": true,
+    "met": true,
+    "beta": 8.0,
+    "last_beta": 8.0,
+    "from_iteration": 34
+   },
+   "last_step_change": {
+    "value": 0.19938217955065585,
+    "threshold": null,
+    "met": null
+   }
+  },
+  "stop_rules": {
+   "enabled": false,
+   "objective_change": 0.0001,
+   "window": 5,
+   "grayness_max": 0.1,
+   "time_budget_s": null
+  },
+  "stop": null,
+  "resume_points": [],
+  "notes": [],
+  "facts": {
+   "iteration": 40,
+   "beta": 8.0,
+   "next_beta": null,
+   "volume": {
+    "limit": 0.2,
+    "projected": 0.20002912400851466,
+    "thresholded": 0.19905894654293557,
+    "used_projected": 1.0001456200425733,
+    "used_thresholded": 0.9952947327146778
+   },
+   "load_path": {
+    "regions": {
+     "tip": true
+    },
+    "not_joined": [],
+    "bodies": 1,
+    "bodies_with_a_support": 1
+   }
+  }
+ }
+}

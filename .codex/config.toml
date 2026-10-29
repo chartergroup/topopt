@@ -1,0 +1,20 @@
+# Codex CLI reads this file in a trusted project only (see docs/clients.md).
+# Start Codex in the repo root: the path in `args` is relative to the folder where Codex runs.
+# Codex has no variable for the workspace folder.
+#
+# The server is the same as in .mcp.json and in the Claude Code plugin: scripts/topopt-env.sh mcp.
+# The first start downloads about 200 MB (about 1 minute on a fast link). Two options:
+#   - run `sh scripts/topopt-env.sh sync` once before the first start (a later start takes about 2 s), or
+#   - let the first start finish in one go: the values below give it time.
+# TOPOPT_MCP_WAIT is the time (s) that the launcher waits for the setup. startup_timeout_sec is the time that
+# Codex waits for the server. The Codex docs and the Codex code give different defaults for the two timeouts
+# (10 s and 30 s for the start, 60 s and 300 s for a tool call), so this file sets them.
+
+[mcp_servers.topopt]
+command = "sh"
+args = ["scripts/topopt-env.sh", "mcp"]
+startup_timeout_sec = 240
+tool_timeout_sec = 300
+
+[mcp_servers.topopt.env]
+TOPOPT_MCP_WAIT = "180"
