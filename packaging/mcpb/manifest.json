@@ -2,7 +2,7 @@
   "manifest_version": "0.4",
   "name": "topopt",
   "display_name": "topopt: topology optimization for 3D printing",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Describe a part in words. Claude builds the problem, runs a topology optimization on your computer, and gives you a printable STL.",
   "long_description": "topopt makes a part lighter. You give it the space, the mounting and the loads. It removes the material that does little work and writes a printable STL. Everything runs on your computer.\n\nThe extension gives Claude tools to build a problem from a description, check it, run it, show the dashboard link and read the result. It also gives five role playbooks (lead design, CAD, FEA, print, finish) as the tool `team_guide`, as prompts and as resources.\n\nTarget: a Mac with Apple silicon. The first start downloads Python 3.13 and about 200 MB of packages, so it takes 1 to 3 minutes. topopt connects at once with all its tools: until the setup is done, a tool call gives the setup status, and then the tools work in the same chat. The Mac needs no Python and no uv: the extension downloads a checked uv release when there is none. If the tools are missing, turn the extension off and on in Settings > Extensions; each start continues from the uv cache, so a stopped download is not lost. Runs, STLs and results go in the work folder: the folder Documents/topopt in your home folder, or the folder that you choose in the settings of the extension.",
   "author": {

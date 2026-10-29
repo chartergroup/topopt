@@ -138,14 +138,37 @@ def _tagged_file(path):
 
 
 def _pieces(man, material: FieldMaterial):
-    """Split a manifold into connected pieces. Return `(kept, dropped)`: the pieces that hold material of the field (all, if there is one piece)."""
+    """Split a manifold into connected pieces. Return `(kept, dropped)`: the pieces that hold material of the field (all, if there is one piece).
+
+    A part with a negative volume is the wall of a cavity (the mesh step keeps a closed void of the design). It is not a piece: it
+    goes with the innermost piece around it, kept or dropped, so a kept piece keeps its cavity, and a dropped piece counts its material.
+    `Manifold.compose` drops a part with a negative volume, so the piece is made again as the piece minus the solid of its cavity.
+    """
+    import manifold3d as m3d
+
     from . import smooth_sdf
 
     parts = man.decompose() if not man.is_empty() else []
+    groups = [[p] for p in parts if p.volume() >= 0.0]
+    for c in (p for p in parts if p.volume() < 0.0):
+        cv, cf = smooth_sdf._from_manifold(c)
+        around = [g for g in groups if smooth_sdf._inside_shell(cv[0], *smooth_sdf._from_manifold(g[0]))]
+        if not around:   # a cavity in no piece: on its own, as before
+            groups.append([c])
+            continue
+        solid = m3d.Manifold(m3d.Mesh(vert_properties=np.ascontiguousarray(cv, np.float32),
+                                      tri_verts=np.ascontiguousarray(cf[:, ::-1], np.uint32)))
+        min(around, key=lambda g: g[0].volume()).append(solid)
+    pieces = []
+    for g in groups:
+        piece = g[0]
+        for solid in g[1:]:
+            piece = piece - solid
+        pieces.append(piece)
     keep, dropped = [], []
-    for p in parts:
+    for p in pieces:
         v, f = smooth_sdf._from_manifold(p)
-        (keep if len(parts) == 1 or material.held_by(v, f) else dropped).append(p)
+        (keep if len(pieces) == 1 or material.held_by(v, f) else dropped).append(p)
     return keep, dropped
 
 

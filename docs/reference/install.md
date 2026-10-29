@@ -78,7 +78,7 @@ In the Code tab of Claude Desktop, the session form opens the Plugins page of th
 ### The install prompt (Python before the first start)
 
 Use this form when you want the Python environment ready before the first start. Then the tools work from the first start: no setup status.
-Each form below installs the release `v0.5.0`.
+Each form below installs the release `v0.5.1`.
 
 - **Ask Claude.** Start `claude` in your work folder (see [The work folder](#the-work-folder)) and paste this prompt.
   Claude runs the commands. Depending on the permission mode of Claude Code, it asks you to approve each one, or it decides by
@@ -87,11 +87,11 @@ Each form below installs the release `v0.5.0`.
 
   ```text
   Install the Claude Code plugin topopt from the GitHub repo chartergroup/topopt. Run exactly this command:
-  claude plugin install topopt --marketplace chartergroup/topopt#v0.5.0
+  claude plugin install topopt --marketplace chartergroup/topopt#v0.5.1
   If it says that the option --marketplace is unknown, run these two commands instead:
-  claude plugin marketplace add chartergroup/topopt#v0.5.0
+  claude plugin marketplace add chartergroup/topopt#v0.5.1
   claude plugin install topopt@topopt
-  If there is no claude command, stop and tell me to type this in the chat: /plugin install topopt --marketplace chartergroup/topopt#v0.5.0
+  If there is no claude command, stop and tell me to type this in the chat: /plugin install topopt --marketplace chartergroup/topopt#v0.5.1
   Then set up the Python environment of the plugin before it starts (about 200 MB, 1 to 3 minutes).
   Run claude plugin list --json. In the entry of topopt, take readFromFolder if it is there, else installPath. Use it as FOLDER:
   sh "FOLDER/scripts/topopt-env.sh" plugin-sync
@@ -99,12 +99,12 @@ Each form below installs the release `v0.5.0`.
   If another error comes, stop and show it to me. Use no other source. When it is done, tell me to type /reload-plugins.
   ```
 
-- **Type it in the chat** (Claude Code 2.1.275 or later): `/plugin install topopt --marketplace chartergroup/topopt#v0.5.0`
-- **Run it in a terminal** (Claude Code 2.1.292 or later): `claude plugin install topopt --marketplace chartergroup/topopt#v0.5.0`
+- **Type it in the chat** (Claude Code 2.1.275 or later): `/plugin install topopt --marketplace chartergroup/topopt#v0.5.1`
+- **Run it in a terminal** (Claude Code 2.1.292 or later): `claude plugin install topopt --marketplace chartergroup/topopt#v0.5.1`
 - **An older Claude Code.** Run these two commands in a terminal:
 
   ```
-  claude plugin marketplace add chartergroup/topopt#v0.5.0
+  claude plugin marketplace add chartergroup/topopt#v0.5.1
   claude plugin install topopt@topopt
   ```
 
@@ -128,7 +128,7 @@ see [Pin the release, use a checkout or take the newest main](#pin-the-release-u
   While the setup runs, a call of a tool answers with the setup status: the step, the time, and what to do next.
   The setup goes on in the background. When it is done, the tools work in the same session: no `/mcp` and no reconnect
   (checked with Claude Code 2.1.293 on Linux).
-  The same in the Code tab of Claude Desktop on a Mac (2026-10-27, release v0.4.0). Not checked yet: Codex CLI, Cursor, VS Code and Gemini CLI.
+  The same in the Code tab of Claude Desktop on a Mac (2026-10-27, release 0.4.0). Not checked yet: Codex CLI, Cursor, VS Code and Gemini CLI.
   The Claude Desktop extension starts the same launcher (seen in the app on a Mac on 2026-10-27, Claude Desktop 3.6556.2).
   On a slow link the download took 4 minutes 43 seconds (Linux, 2026-10-25), so wait for the line "ready" in the doctor or in `status`.
   `/topopt:start-here` gives the commands to check the setup. Later starts take 1 to 2 s.
@@ -213,15 +213,15 @@ gets other files.
 
 ### Pin the release, use a checkout or take the newest main
 
-The part `#v0.5.0` pins the install to the release `v0.5.0`. The branch `main` can hold work that is not released yet.
-To try the newest `main`, leave out `#v0.5.0`. That path has no checks. On that path the marketplace is named `topopt`,
+The part `#v0.5.1` pins the install to the release `v0.5.1`. The branch `main` can hold work that is not released yet.
+To try the newest `main`, leave out `#v0.5.1`. That path has no checks. On that path the marketplace is named `topopt`,
 so in the two-command form write that name in the install command. The one-command forms need no name.
 
 To use a checkout, run these three commands in place of the add command. Then run the install command.
 
 ```
 git clone https://github.com/chartergroup/topopt
-git -C topopt checkout v0.5.0
+git -C topopt checkout v0.5.1
 claude plugin marketplace add ./topopt
 ```
 
@@ -249,7 +249,7 @@ Checked on Linux with a local mirror and Claude Code 2.1.293, 2026-10-27.
 
 #### Update to a newer release
 
-A release is a tag of this repo, for example `v0.5.0`. `CHANGELOG.md` lists the changes of each release.
+A release is a tag of this repo, for example `v0.5.1`. `CHANGELOG.md` lists the changes of each release.
 The install command names the tag, so your install stays on that release.
 A new commit on `main` does not change it, and a new release does not reach you by itself.
 `claude plugin update topopt@topopt` alone does not move a pinned install to a new tag:
@@ -407,7 +407,7 @@ Claude Desktop for macOS runs topopt in two ways:
 - In the **chat**, topopt runs through an extension (a `.mcpb` file), plus a plugin upload for the skills:
   [The chat: the extension](#the-chat-the-extension).
 
-Both passed a first-use test on a Mac on 2026-10-27 with release v0.4.0 (MacBook Air, Apple M4, 16 GB; a clean start with no uv,
+Both passed a first-use test on a Mac on 2026-10-27 with release 0.4.0 (MacBook Air, Apple M4, 16 GB; a clean start with no uv,
 no uv cache and no earlier topopt). topopt connected with 31 tools. A tool call during the setup gave the setup status.
 After the setup, the same session gave the real result, with no restart: topopt 0.4.0 and the GPU solver on the M4 (its self-test
 passed). The chat test ran in Claude Desktop 3.6556.2. The Code tab test did not record the version of the app.
@@ -459,7 +459,7 @@ Claude Desktop has a beta for Debian-based Linux (Ubuntu 22.04 or later, Debian 
 use the [Claude Code plugin](#install-the-claude-code-plugin).
 You must be signed in to claude.ai in the app. An organization can turn extensions off; then Settings has no Extensions page.
 
-Each release from v0.4.0 on has the extension as a download: `topopt-X.Y.Z.mcpb`, and the same file as `topopt.mcpb`. This link gives the `topopt.mcpb`
+Each release from 0.4.0 on has the extension as a download: `topopt-X.Y.Z.mcpb`, and the same file as `topopt.mcpb`. This link gives the `topopt.mcpb`
 of the newest release:
 https://github.com/chartergroup/topopt/releases/latest/download/topopt.mcpb
 With the downloaded file, skip steps 1 and 2. If the repository is private, the link works only when you are signed in to GitHub

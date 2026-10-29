@@ -34,6 +34,8 @@ The method is ported from the s9 print pass of the pipeline (`smooth_vp`, `close
    CONTRACTS.md section 19): the staircase of a slanted face is filled, and the cut to the envelope then makes the face flat. The volume target is the volume before the growth.
    After the booleans, the closed voids are filled (`_drop_voids`, before `_orient`): the snap can close the narrow rim of a thin slit
    between a region face and the design, and the union then seals the rest of it as a void, which `_orient` would turn into a thin second body.
+   A void that encloses a closed cavity of the sharp field stays: the design has the cavity, and the volume target does not hold it,
+   so the mesh keeps it as a cavity, and `_orient` keeps its faces turned inward.
 
 All lengths in `SdfParams` are in multiples of the voxel size `h` unless the name ends in `_mm`.
 The module needs only numpy, scipy, scikit-image, trimesh and manifold3d.
@@ -614,7 +616,11 @@ def _keep_faces(verts, faces, keep_mask):
 def _keep_touching(verts, faces, touches):
     """Keep the bodies for which `touches(body_vertex_ids)` is true. If none, keep the largest.
 
-    Return (verts, faces, n_removed, removed_volume).
+    A void (a closed shell that turns inward: a negative signed volume) is not a body. It stays with the body around it, and
+    `_drop_voids` decides on it later; a void whose innermost body around it is removed goes with that body, and its volume is not part of
+    the removed volume. The faces must turn outward from the material (the marching cubes and the manifold3d output do): a mesh that is
+    inside out has only voids, and nothing is removed.
+    Return (verts, faces, n_removed, removed_volume): the count of the removed bodies and the volume of their material.
     """
     lab = _split_faces(faces, len(verts))
     n = int(lab.max()) + 1
@@ -623,16 +629,26 @@ def _keep_touching(verts, faces, touches):
     vols = np.zeros(n)
     v0, v1, v2 = verts[faces[:, 0]], verts[faces[:, 1]], verts[faces[:, 2]]
     np.add.at(vols, lab, np.einsum("ij,ij->i", v0, np.cross(v1, v2)) / 6.0)
-    keep = np.zeros(n, bool)
-    for k in range(n):
+    body = vols >= 0.0
+    keep = ~body
+    for k in np.flatnonzero(body):
         keep[k] = bool(touches(np.unique(faces[lab == k])))
-    if not keep.any():
-        keep[int(np.argmax(np.abs(vols)))] = True
+    if not keep[body].any():
+        keep[int(np.argmax(np.where(body, vols, -np.inf)))] = True
+    gone = body & ~keep
+    removed = float(vols[gone].sum())
+    if gone.any():   # a void goes with the innermost body around it: removed with a removed body
+        for k in np.flatnonzero(~body):
+            point = verts[faces[lab == k][0, 0]]
+            around = [j for j in np.flatnonzero(body) if _inside_shell(point, verts, faces[lab == j])]
+            if around and gone[min(around, key=lambda j: vols[j])]:
+                keep[k] = False
+                removed += float(vols[k])
     vv, ff = _keep_faces(verts, faces, keep[lab])
-    return vv, ff, int((~keep).sum()), float(np.abs(vols[~keep]).sum())
+    return vv, ff, int(gone.sum()), removed
 
 
-def _drop_voids(verts, faces):
+def _drop_voids(verts, faces, keep=None):
     """Fill the closed voids of a mesh: drop each closed shell that holds empty space inside the material.
 
     The faces must turn outward from the material (the marching cubes and the manifold3d output do): a solid body then has a
@@ -641,8 +657,12 @@ def _drop_voids(verts, faces):
     for example, when the snap closes the narrow rim of a thin slit between the face of a fixed region and the design, and the exact
     union with the region seals the rest. The volume of the void is material after the fill, so the volume calibration counts it as material.
 
-    Return `(verts, faces, facts)`; `facts` has `count` and `volume_mm3` (the volume of the voids, positive). With nothing to fill, the
-    arrays come back as they are. A mesh with no solid shell (all shells turn inward) is not changed either: its faces are not oriented.
+    `keep(shell_verts, shell_faces)`: True for a void that stays (a closed cavity of the sharp field, so the void is part of the
+    design and its volume is not material in the target either). Such a void is not filled, and `_orient` keeps its faces turned inward.
+
+    Return `(verts, faces, facts)`; `facts` has `count` and `volume_mm3` (the volume of the filled voids, positive), and `kept`
+    (`count`, `volume_mm3`) when a void stays. With nothing to fill, the arrays come back as they are. A mesh with no solid shell (all
+    shells turn inward) is not changed either: its faces are not oriented.
     """
     none = {"count": 0, "volume_mm3": 0.0}
     if len(faces) == 0:
@@ -656,18 +676,90 @@ def _drop_voids(verts, faces):
     void = vols < 0.0
     if not void.any() or not (vols > 0.0).any():
         return verts, faces, none
-    vv, ff = _keep_faces(verts, faces, ~void[lab])
-    return vv, ff, {"count": int(void.sum()), "volume_mm3": float(-vols[void].sum())}
+    stays = np.zeros_like(void)
+    if keep is not None:
+        for k in np.flatnonzero(void):
+            stays[k] = bool(keep(verts, faces[lab == k]))
+    fill = void & ~stays
+    facts = {"count": int(fill.sum()), "volume_mm3": float(-vols[fill].sum()) if fill.any() else 0.0}
+    if stays.any():
+        facts["kept"] = {"count": int(stays.sum()), "volume_mm3": float(-vols[stays].sum())}
+    if not fill.any():
+        return verts, faces, facts
+    vv, ff = _keep_faces(verts, faces, ~fill[lab])
+    return vv, ff, facts
+
+
+def _inside_shell(point, verts, shell_faces) -> bool:
+    """True if the point lies inside the closed shell, whatever the orientation of its faces (the winding number of the print check)."""
+    from .printcheck import _winding_number
+
+    return bool(abs(_winding_number(np.asarray(point, np.float64), np.asarray(verts, np.float64)[shell_faces])) > 0.5)
+
+
+def closed_cavities(S, origin_f, pitch: float) -> dict:
+    """The closed cavities of the sharp field `S` (bool, fine grid): the components of its empty voxels that do not reach the border.
+
+    Return `{"count", "volume_mm3", "points"}`: `points` has one world point for each cavity, the middle of its voxels that lie farthest
+    from the solid (or one of them, if the middle is not in the cavity), so that the wall of the cavity in the mesh encloses it. On a
+    flat cavity two fine layers tie, and a voxel centre lies a quarter of a coarse voxel off the mid-plane: the smoothed wall can miss it.
+    A keep-out region that the solid encloses is a cavity too.
+    """
+    from scipy import ndimage as ndi
+
+    lab, n = ndi.label(~S)
+    if n <= 1:
+        return {"count": 0, "volume_mm3": 0.0, "points": np.zeros((0, 3))}
+    border = np.unique(np.concatenate([lab[0].ravel(), lab[-1].ravel(), lab[:, 0].ravel(), lab[:, -1].ravel(),
+                                       lab[:, :, 0].ravel(), lab[:, :, -1].ravel()]))
+    points, voxels = [], 0
+    for k, sl in enumerate(ndi.find_objects(lab), start=1):
+        if sl is None or k in border:
+            continue
+        sub = lab[sl] == k
+        voxels += int(sub.sum())
+        deep = ndi.distance_transform_edt(np.pad(sub, 1))[1:-1, 1:-1, 1:-1]
+        top = np.argwhere(deep == deep.max())
+        at = top.mean(axis=0)   # a flat cavity of an even count of fine layers ties two of them: the point is the mid-plane between them
+        if not sub[tuple(np.clip(np.floor(at + 0.5).astype(int), 0, np.array(sub.shape) - 1))]:
+            at = top[0].astype(np.float64)   # the middle of the deepest voxels is outside a cavity that bends: take one of them
+        points.append(np.asarray(origin_f, np.float64) + pitch * (at + [q.start for q in sl] + 0.5))
+    del lab
+    return {"count": len(points), "volume_mm3": voxels * pitch ** 3, "points": np.array(points).reshape(-1, 3)}
 
 
 def _orient(verts, faces):
+    """Turn the faces outward from the material, with one winding. A cavity keeps its faces turned inward: a closed shell
+    with a negative volume inside a shell with a positive volume is the wall of a void, and `fix_normals` alone turns it outward,
+    a second body inside the material. The signs are read with the mesh turned right side out, as the print check reads them. An input
+    whose outer shell is inside out and whose cavity turns inward is ambiguous and comes out as two bodies; the callers pass the output of
+    manifold3d, which has no such shells."""
     import trimesh
 
+    verts, faces = np.asarray(verts, np.float64), np.asarray(faces, np.int64)
+    cavity = None
+    lab = _split_faces(faces, len(verts)) if len(faces) else np.zeros(0, np.int64)
+    if len(faces) and lab.max() > 0:
+        vols = np.zeros(int(lab.max()) + 1)
+        np.add.at(vols, lab, np.einsum("ij,ij->i", verts[faces[:, 0]], np.cross(verts[faces[:, 1]], verts[faces[:, 2]])) / 6.0)
+        vols = vols if vols.sum() >= 0.0 else -vols   # the signs of the mesh turned right side out, as the print check reads them
+        bodies = np.flatnonzero(vols > 0.0)
+        cav = [k for k in np.flatnonzero(vols < 0.0)
+               if any(_inside_shell(verts[faces[lab == k][0, 0]], verts, faces[lab == j]) for j in bodies)]
+        cavity = np.isin(lab, cav) if cav else None
     tm = trimesh.Trimesh(verts, faces, process=False)
     tm.fix_normals()
     if tm.volume < 0:
         tm.invert()
-    return np.asarray(tm.vertices, np.float64), np.asarray(tm.faces, np.int64)
+    v, f = np.asarray(tm.vertices, np.float64), np.asarray(tm.faces, np.int64)
+    if cavity is not None:   # the faces keep their order; each cavity shell turns inward again
+        lab2 = _split_faces(f, len(v))
+        for k in np.unique(lab2[cavity]):
+            ids = lab2 == k
+            sv = np.einsum("ij,ij->i", v[f[ids, 0]], np.cross(v[f[ids, 1]], v[f[ids, 2]])).sum()
+            if sv > 0.0:
+                f[ids] = f[ids][:, ::-1]
+    return v, f
 
 
 def _face_normals(verts, faces):
@@ -1335,6 +1427,9 @@ def make_mesh_sdf(rho, labels, origin, h, *, up: int, pad: int, fixed_stls=(), l
     if "grown_inside_mm3" in surf:
         surf["grown_share_pct"] = 100.0 * surf["grown_inside_mm3"] / v_target if v_target > 0 else 0.0
     v_thr = v_target
+    # The closed cavities of the sharp field: their walls stay in the mesh as voids (`_drop_voids` with `keep`), so a void of the design
+    # is not filled, and the calibration does not thin the part to pay for it (the target, the sharp volume, does not hold the void either).
+    cavities = closed_cavities(S, origin_f, pitch)
     tm_["fields"] = time.monotonic() - t0
 
     # --- the limit of the field to the envelope (#319) ---
@@ -1485,6 +1580,13 @@ def make_mesh_sdf(rho, labels, origin, h, *, up: int, pad: int, fixed_stls=(), l
         place = "the build without the move" if where["build"] == "without_move" else f"round {where['round']} of pass {where['pass']}"
         log.warning("mesh fallback in %s, step %s: %s: %s; %s", place, step, entry["error_type"], entry["error"], outcome)
 
+    def design_void(verts_, shell_faces):
+        """True if the void shell encloses a closed cavity of the sharp field: a void of the design, not one that the snap and the union made."""
+        pts = cavities["points"]
+        box = verts_[np.unique(shell_faces)]
+        sel = pts[np.all((pts >= box.min(0)) & (pts <= box.max(0)), axis=1)]
+        return any(_inside_shell(q, verts_, shell_faces) for q in sel)
+
     def build(v, f, snap=True, cut=True):
         """Taubin with pinned vertices, then the snap, the cut at the shared planes, the cut to the envelope and the exact boolean steps.
         Return (verts, faces, facts).
@@ -1582,7 +1684,8 @@ def make_mesh_sdf(rho, labels, origin, h, *, up: int, pad: int, fixed_stls=(), l
                 exact["error"] = str(exc)
                 if snapf is not None and "error" not in snapf:
                     snapf = {"error": f"the exact boolean step failed, so the mesh was not moved: {type(exc).__name__}: {exc}"}
-        verts, faces, voids = _drop_voids(verts, faces)   # before `_orient`, which would turn a void into a body
+        verts, faces, voids = _drop_voids(verts, faces, keep=design_void if cavities["count"] else None)   # before `_orient` (it keeps a cavity)
+        steps["voids_kept"] = voids.pop("kept", {"count": 0, "volume_mm3": 0.0})
         steps["voids_filled"] = voids
         verts, faces = _orient(verts, faces)
         verts = verts.astype(np.float32).astype(np.float64)   # the STL holds float32
@@ -1731,6 +1834,11 @@ def make_mesh_sdf(rho, labels, origin, h, *, up: int, pad: int, fixed_stls=(), l
     if voids["count"]:
         log.warning("SDF mesh step filled %d closed void(s) of %.2f mm3 (a thin slit between a fixed or load region and the design "
                     "that the exact union sealed); the volume calibration counts them as material", voids["count"], voids["volume_mm3"])
+    kept = steps.get("voids_kept") or {"count": 0, "volume_mm3": 0.0}
+    if kept["count"]:
+        log.warning("SDF mesh step kept %d closed void(s) of %.2f mm3 of the design: the design has a cavity with no opening there, so the mesh "
+                    "has one too; its volume is not material, in the mesh and in the volume target (print_check closed_voids reports it)",
+                    kept["count"], kept["volume_mm3"])
     pc = bf["plane_clip"]
     if pc.get("vertices_beyond"):
         log.warning("SDF mesh step cut the smooth mesh at %d plane(s) that the design space shares with a fixed, load or solid region: "
@@ -1763,6 +1871,7 @@ def make_mesh_sdf(rho, labels, origin, h, *, up: int, pad: int, fixed_stls=(), l
         "extra_bodies_removed": int(n_extra),
         "extra_bodies_volume_mm3": float(extra_vol),
         "voids_filled": voids,
+        "voids_kept": kept,
         "plane_clip": bf["plane_clip"],
         "envelope_cut": bf["envelope_cut"],
         "envelope_fill": surf,

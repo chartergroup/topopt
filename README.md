@@ -50,7 +50,7 @@ You need no tool first: **topopt** uses your uv if you have one (uv 0.6.8 or new
 
 Claude Desktop is the most tested client and the one we recommend: the chat shows the pictures that **topopt** makes of your part.
 
-1. Download [topopt.mcpb](https://github.com/chartergroup/topopt/releases/latest/download/topopt.mcpb) from the newest release (v0.5.0).
+1. Download [topopt.mcpb](https://github.com/chartergroup/topopt/releases/latest/download/topopt.mcpb) from the newest release (v0.5.1).
 2. Open the file with Claude Desktop.
 3. In a new chat, ask for the first example: "Run the topopt example examples/hook/hook.yaml and give me the dashboard link."
 

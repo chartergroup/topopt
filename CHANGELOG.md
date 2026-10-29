@@ -9,6 +9,16 @@ The install command in [README.md](README.md) uses the branch `latest`, which po
 
 <!-- version list -->
 
+## v0.5.1 (2026-10-29)
+
+_This release is published under the MIT License._
+
+### Bug Fixes
+
+- Move Pillow to 13.0.0, which fixes 41 known advisories.
+- Keep a closed void of the design as a cavity, so the mesh meets the mass target.
+- Use the gpu-mg memory model in the fine-pass memory guard.
+
 ## v0.5.0 (2026-10-29)
 
 _This release is published under the MIT License._

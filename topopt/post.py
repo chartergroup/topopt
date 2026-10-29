@@ -491,7 +491,7 @@ def _mesh_method(run: dict, rho, labels, origin, h, ctx=None):
                 params=smooth_sdf.SdfParams(envelope_fill=fill_mode(run.get("envelope_fill"))), **pins)
             rec = {k: info[k] for k in ("method", "params", "sources", "exact", "snap", "volume_thresholded_mm3",
                                         "volume_smoothed_mm3", "calibration", "fallbacks", "islands_removed",
-                                        "extra_bodies_removed", "extra_bodies_volume_mm3", "voids_filled", "plane_clip", "envelope_cut", "envelope_fill", "local_loss", "grid", "t_s")}
+                                        "extra_bodies_removed", "extra_bodies_volume_mm3", "voids_filled", "voids_kept", "plane_clip", "envelope_cut", "envelope_fill", "local_loss", "grid", "t_s")}
             rec["requested"] = "sdf"
             rec["fallback"] = None
             return verts, faces, info, rec

@@ -38,7 +38,7 @@ numba==0.62.1
 numpy==2.3.5
 opentelemetry-api==1.45.1
 packaging==26.3
-pillow==12.3.0
+pillow==13.0.0
 pluggy==1.6.0
 pyamg==5.3.0
 pycparser==3.1

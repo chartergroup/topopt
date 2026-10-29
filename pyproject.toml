@@ -1,6 +1,6 @@
 [project]
 name = "topopt"
-version = "0.5.0"
+version = "0.5.1"
 description = "General 3D topology optimization: YAML + STL regions in, printable STL out."
 license = "MIT"
 license-files = ["LICENSE", "THIRD_PARTY_NOTICES.md"]
@@ -21,7 +21,7 @@ dependencies = [
   "numba==0.62.1; platform_system == 'Darwin' and platform_machine == 'x86_64'",
   "rtree==1.4.1",
   "networkx==3.7",
-  "Pillow==12.3.0",   # topopt render (PNG, text). License MIT-CMU. Same pin as requirements.lock.
+  "Pillow==13.0.0",   # topopt render (PNG, text). License MIT-CMU. Same pin as requirements.lock.
   # OpenCL for the solver gpu-mg, the main solver when the machine has a GPU that passes the self-test (CONTRACTS.md section 20).
   # pyopencl is MIT licensed. The marker names the platforms with a wheel and an OpenCL driver: an Apple silicon Mac and Linux x86_64.
   # The `gpu` extra has the same pin. Pins of pyopencl and of what it needs: requirements.lock (not the Intel Mac lock).

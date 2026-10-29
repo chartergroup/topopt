@@ -110,7 +110,7 @@ file of the upstream project at the pinned tag.
 | numba | 0.67.0; 0.62.1 (macOS x86_64) | BSD-2-Clause | wheel `LICENSE` (2-clause BSD text, Anaconda, Inc.; the text in 0.62.1 is the same as in 0.67.0); meta says "BSD" in both (0.62.1 also has the classifier "BSD License") |
 | rtree | 1.4.1 | MIT | meta (License-Expression); wheel `LICENSE.txt` |
 | networkx | 3.7 | BSD-3-Clause | meta (License-Expression); wheel `LICENSE.txt` |
-| Pillow | 12.3.0 | MIT-CMU | meta (License-Expression); wheel `LICENSE` |
+| Pillow | 13.0.0 | MIT-CMU | meta (License-Expression); wheel `LICENSE` |
 | pyopencl | 2026.1.4 (Apple silicon Mac and Linux x86_64) | MIT | meta (License-Expression MIT); wheel `licenses/LICENSE` (MIT/X Consortium text). The Linux x86_64 wheel bundles the ocl-icd loader (`pyopencl/.libs/libOpenCL-*.so*`, listed in the wheel `RECORD`); the same `LICENSE` holds its licence text (2-clause BSD, BSD-2-Clause), and it names parts of pyopencl under Apache-2.0 (derived from Thrust, the scan code) and under BSD-3-Clause (Random123) |
 
 numba needs llvmlite. The `meta` License-Expression of llvmlite 0.49.0 is
@@ -280,7 +280,7 @@ text of each licence is in the `LICENSE.txt` file of the installed package.
 
 These items are in the licence files of the Linux x86_64 wheels that were installed for the
 check, and in the macOS x86_64 wheels that were read as zip files (see "How the licences were
-checked"). The macOS arm64 wheels were not inspected.
+checked"). The macOS arm64 wheels were not inspected, except the wheel of Pillow.
 
 - **numpy 2.5.3 and scipy 1.18.1 (core), Linux x86_64 wheels.** Each wheel holds libgfortran
   (`GPL-3.0-or-later WITH GCC-exception-3.1`), libquadmath (`LGPL-2.1-or-later`), and
@@ -301,12 +301,14 @@ checked"). The macOS arm64 wheels were not inspected.
   materials (`sboms/sbom.json`) lists openssl 4.0.1 with no licence field. The second list
   (`sboms/cryptography-rust.cyclonedx.json`, 39 Rust packages) gives permissive licences or
   choices of licences. One entry, self_cell 1.2.2, has `Apache-2.0 OR GPL-2.0-only`.
-- **Pillow 12.3.0 (core).** The software bill of materials in the wheel
-  (`sboms/pillow-12.3.0.cdx.json`) lists a FriBiDi loader shim (`LGPL-2.1-or-later`) and marks
-  FriBiDi (`LGPL-2.1-or-later`) as optional. The shim loads `libfribidi` at run time (the
-  words of the list). The wheel does not hold `libfribidi`. The same list marks libimagequant
-  (`GPL-3.0-or-later`) as optional. The wheel holds no libimagequant file (`pillow.libs` has
-  none, and no `.so` file of the wheel holds the libimagequant function `liq_attr_create`).
+- **Pillow 13.0.0 (core), Linux x86_64, macOS x86_64 and macOS arm64 wheels.** The software bill
+  of materials in each wheel (`sboms/pillow-13.0.0.cdx.json`, the same file in all three) lists a
+  FriBiDi loader shim (`MIT-CMU`; the list of 12.3.0 gave it `LGPL-2.1-or-later`) and marks
+  FriBiDi (`LGPL-2.1-or-later`) as optional. The shim loads `libfribidi` at run time (the words
+  of the list). No wheel holds `libfribidi`. The same list marks libimagequant
+  (`GPL-3.0-or-later`) as optional. No wheel holds a libimagequant file (`pillow.libs` in the
+  Linux wheel and `PIL/.dylibs` in the macOS wheels have none, and no `.so` or `.dylib` file of
+  the three wheels holds the libimagequant function `liq_attr_create`).
   The list gives permissive licences to the other bundled libraries (FreeType under FTL,
   libjpeg, libtiff, libwebp, HarfBuzz and more).
 - **pocl-binary-distribution 3.0 (extra `gpu-test`, Linux x86_64).** The wheel holds pocl (MIT,

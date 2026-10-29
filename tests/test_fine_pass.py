@@ -611,3 +611,87 @@ def test_the_end_line_says_how_a_fine_pass_ended():
     assert "all stop rules were off (--no-stop-rules), so the fine pass ran its 12 passes" in F.end_line({"state": "iteration_limit"}, off)
     assert "ran its 20 passes" in F.end_line({"state": "iteration_limit"}, off, 20)
     assert F.end_line({"state": "stopped_by_request"}, off) is None
+
+
+# --- the memory model of the solver of the fine pass --------------------------------------------------
+
+def gpu_check(check=CHECK, **kw):
+    return {**check, "solver": {"resolved": "gpu-mg"}, "time_estimate": {"gpu_mg": {"case": "B"}}, **kw}
+
+
+def test_the_cpu_memory_estimate_of_a_fine_pass_is_the_cholesky_model_and_its_text_is_unchanged(tmp_path, monkeypatch):
+    from topopt.cli import estimate_memory_bytes
+    from topopt.members import filter_size, radius_for_grid
+    monkeypatch.setattr("topopt.cli.physical_ram_bytes", lambda: 1 * 2**20)
+    cfg = case_config(tmp_path, h=2.0)
+    est = F.fine_estimates(CHECK, cfg, 0.7, 10)
+    shape = [math.ceil(n * 2.0 / 0.7) for n in CHECK["grid"]["shape"]]
+    fb = filter_size(radius_for_grid(cfg.settings, 0.7), 0.7, est["free_design_voxels"], shape)["held_bytes_estimate"]
+    assert est["memory_bytes"] == estimate_memory_bytes(est["grid_voxels"], est["free_dofs"], fb)
+    assert est["memory_model"] == "cholesky" and est["memory_phase"] is None
+    text = F.fine_grid_guards(cfg, CHECK, 0.7)["failed"][0]["text"]
+    assert text == f"the memory estimate is {est['memory_bytes'] / 2**30:.1f} GiB and this machine has 0.0 GiB RAM"
+
+
+def test_a_gpu_mg_fine_pass_uses_the_gpu_mg_memory_model_with_the_filter(tmp_path, monkeypatch):
+    from topopt.gpu_mg.check import problem_memory
+    from topopt.members import filter_size, radius_for_grid
+    monkeypatch.setattr("topopt.cli.physical_ram_bytes", lambda: 64 * 2**30)
+    cfg = case_config(tmp_path, h=2.0)
+    chol = F.fine_estimates(CHECK, cfg, 0.7, 10)
+    est = F.fine_estimates(gpu_check(), cfg, 0.7, 10)
+    shape = [math.ceil(n * 2.0 / 0.7) for n in CHECK["grid"]["shape"]]
+    fsz = filter_size(radius_for_grid(cfg.settings, 0.7), 0.7, est["free_design_voxels"], shape)
+    m = problem_memory(est["free_dofs"], est["grid_voxels"], "B", 0, fsz)
+    assert est["memory_bytes"] == m["bytes"] and est["memory_model"] == "gpu-mg" and est["memory_phase"] == m["phase"]
+    assert est["memory_bytes"] != chol["memory_bytes"]
+    assert est["free_dofs"] == chol["free_dofs"] and est["solver"] == "gpu-mg"
+
+
+FOOTBRIDGE = {"grid": {"voxel_mm": 1.1, "voxels": 897600, "shape": [255, 40, 88]}, "active_voxels": 394348, "free_design_voxels": 315532, "free_dofs": 1134816,
+              "solver": {"resolved": "cholesky"}}
+
+
+def test_the_memory_guard_names_the_model_of_the_solver_on_the_same_check(tmp_path, monkeypatch):
+    # A RAM between the two numbers: the Cholesky model fails the fine grid, the gpu-mg model passes it.
+    cfg = case_config(tmp_path, h=1.1, edit=lambda d: d["settings"].update(max_active_voxels=10**7, max_grid_voxels=10**10))
+    chol = F.fine_estimates(FOOTBRIDGE, cfg, 0.75, 10)["memory_bytes"]
+    gpu = F.fine_estimates(gpu_check(FOOTBRIDGE), cfg, 0.75, 10)["memory_bytes"]
+    assert gpu < chol
+    monkeypatch.setattr("topopt.cli.physical_ram_bytes", lambda: (gpu + chol) // 2)
+    assert F.fine_grid_guards(cfg, gpu_check(FOOTBRIDGE), 0.75, 10)["ok"] is True
+    res = F.fine_grid_guards(cfg, FOOTBRIDGE, 0.75, 10)
+    assert res["ok"] is False and res["failed"][0]["guard"] == "memory" and "gpu-mg" not in res["failed"][0]["text"]
+    # A RAM below the gpu-mg number: the text names the gpu-mg model and its phase.
+    monkeypatch.setattr("topopt.cli.physical_ram_bytes", lambda: gpu // 2)
+    res = F.fine_grid_guards(cfg, gpu_check(FOOTBRIDGE), 0.75, 10)
+    phase = F.fine_estimates(gpu_check(FOOTBRIDGE), cfg, 0.75, 10)["memory_phase"]
+    assert res["failed"][0]["text"].startswith("the gpu-mg memory estimate is ") and f"(peak in the {phase} step)" in res["failed"][0]["text"]
+    assert "gpu-mg memory estimate" in res["text"]
+
+
+def test_the_footbridge_fine_pass_at_0_75_mm_is_not_blocked_on_memory_with_gpu_mg(tmp_path, monkeypatch):
+    # The numbers of `topopt check` of examples/footbridge at 1.1 mm with solver gpu-mg (case B, no joints), a 64 GiB machine.
+    monkeypatch.setattr("topopt.cli.physical_ram_bytes", lambda: 64 * 2**30)
+    check = gpu_check(FOOTBRIDGE)
+    edit = lambda d: d["settings"].update(min_member_mm=2.3, max_active_voxels=400000, max_grid_voxels=10**10)
+    cfg = case_config(tmp_path, h=1.1, edit=edit)
+    est = F.fine_estimates(check, cfg, 0.75, 200)
+    assert est["memory_model"] == "gpu-mg" and est["memory_bytes"] < 64 * 2**30 and est["memory_phase"] in ("loop", "mesh", "build")
+    res = F.fine_grid_guards(cfg, check, 0.75, 200)
+    assert not [f for f in res["failed"] if f["guard"] == "memory"]
+    cpu = F.fine_estimates({**check, "solver": {"resolved": "cholesky"}}, cfg, 0.75, 200)
+    assert cpu["memory_bytes"] > 64 * 2**30                    # the Cholesky model blocks the same grid
+
+
+def test_a_gpu_mg_fine_pass_counts_the_joints_of_the_check(tmp_path, monkeypatch):
+    # `extended.joints` of a check is the dict of `loads.extended_facts` (bond, bordered_dofs, joints): the count is its list `joints`.
+    import topopt.gpu_mg.check as G
+    seen = []
+    real = G.problem_memory
+    monkeypatch.setattr(G, "problem_memory", lambda *a: seen.append(a[2:4]) or real(*a))
+    cfg = case_config(tmp_path, h=2.0)
+    joints = {"bond": {}, "bordered_dofs": 12, "joints": [{"name": "a"}, {"name": "b"}]}
+    F.fine_estimates(gpu_check(time_estimate={"gpu_mg": {"case": "C"}}, extended={"joints": joints}), cfg, 0.7, 10)
+    F.fine_estimates(gpu_check(), cfg, 0.7, 10)
+    assert seen == [("C", 2), ("B", 0)]

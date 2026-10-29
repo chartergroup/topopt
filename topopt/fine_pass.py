@@ -331,9 +331,12 @@ def fine_estimates(check: dict, config, voxel_mm: float, max_passes: int) -> dic
     The counts scale with the cube of the voxel ratio (measured 2026-10-26 on a 5-inch drone arm: 20,496 active voxels at 1.0 mm gave 59,758 at 0.7 mm
     against 59,571 built, and 73,188 free dofs gave 213,000 against 199,041). The time is the time model of `topopt check`
     (`cli.estimate_seconds`) for `max_passes` passes: an upper bound, because a fine pass ends when its loss has settled. The same model gives
-    the time of a run from zero at the fine voxel with `settings.iterations` passes (`time_s_from_zero`). The memory is
-    `cli.estimate_memory_bytes` with the filter of the fine grid (its shape: the grid of the run scaled by the voxel ratio). A filter radius that follows the voxel (the default, 1.5 voxels; the wall rule, max(w / L, 1.5 voxels))
-    follows it here too. A bordered copy of K (joints) is not counted. The numbers are estimates.
+    the time of a run from zero at the fine voxel with `settings.iterations` passes (`time_s_from_zero`). The memory is the model of the solver
+    that the fine pass runs with: for `gpu-mg` the gpu-mg model (`gpu_mg.check.problem_memory`, the largest of its phases, with the held and
+    build peak of the filter), else `cli.estimate_memory_bytes` with the filter of the fine grid. `memory_model` names the model (`"gpu-mg"` or
+    `"cholesky"`), `memory_phase` is the phase that sets a gpu-mg number (else None). The filter has the shape of the grid of the run scaled by the voxel ratio. A filter radius that follows the voxel (the default, 1.5 voxels; the wall rule, max(w / L, 1.5 voxels))
+    follows it here too. A bordered copy of K (joints) is not counted for the CPU model; gpu-mg has no bordered copy and counts the joints of
+    the check as its own model does. The numbers are estimates.
     """
     from .cli import estimate_memory_bytes, estimate_seconds, physical_ram_bytes
     from .members import filter_size, radius_for_grid
@@ -347,16 +350,25 @@ def fine_estimates(check: dict, config, voxel_mm: float, max_passes: int) -> dic
     grid = int(round(check["grid"]["voxels"] * ratio))
     radius = radius_for_grid(st, float(voxel_mm))
     shape = [int(math.ceil(n * h / float(voxel_mm))) for n in check["grid"]["shape"]]
-    fbytes = filter_size(radius, float(voxel_mm), free_vox, shape)["held_bytes_estimate"]
+    fsz = filter_size(radius, float(voxel_mm), free_vox, shape)
+    fbytes = fsz["held_bytes_estimate"]
     kw = dict(stress_rows=n_stress, n_design=free_vox, step_acceptance=st.stress_step_acceptance, robust_mode=st.robust != "off")
     _, t_max = estimate_seconds(free_dofs, int(max_passes), solver, **kw)
     _, t_zero = estimate_seconds(free_dofs, int(st.iterations), solver, **kw)
     _, t_run = estimate_seconds(int(check["free_dofs"]), int(st.iterations), solver,
                                 **{**kw, "n_design": int(check["free_design_voxels"])})
+    if solver == "gpu-mg":
+        from .gpu_mg.check import problem_memory
+        case = (((check.get("time_estimate") or {}).get("gpu_mg")) or {}).get("case")       # as `gpu_mg.check.apply` reads the check
+        joints = len((((check.get("extended") or {}).get("joints")) or {}).get("joints") or [])   # the list of joints of `loads.extended_facts`
+        m = problem_memory(free_dofs, grid, case, joints, fsz)
+        memory, model, phase = int(m["bytes"]), "gpu-mg", m["phase"]
+    else:
+        memory, model, phase = int(estimate_memory_bytes(grid, free_dofs, fbytes)), "cholesky", None
     return {"voxel_mm": float(voxel_mm), "run_voxel_mm": h, "voxel_ratio": round(ratio, 2), "active_voxels": active,
             "free_design_voxels": free_vox, "free_dofs": free_dofs, "grid_voxels": grid, "max_passes": int(max_passes), "solver": solver,
             "time_s_max": round(t_max), "time_s_from_zero": round(t_zero), "time_s_run": round(t_run),
-            "memory_bytes": int(estimate_memory_bytes(grid, free_dofs, fbytes)), "ram_bytes": physical_ram_bytes()}
+            "memory_bytes": memory, "memory_model": model, "memory_phase": phase, "ram_bytes": physical_ram_bytes()}
 
 
 GUARD_SETTINGS = {"max_active_voxels": "active_voxels", "max_grid_voxels": "grid_voxels"}   # the two voxel guards: setting -> key of `fine_estimates`
@@ -388,8 +400,11 @@ def fine_grid_guards(config, check: dict, voxel_mm: float, max_passes: int | Non
                 out.append({"guard": f"settings.{key}", "value": int(value), "limit": int(limit),
                             "text": f"settings.{key}: about {int(value)} {'active' if name == 'active_voxels' else 'grid'} voxels, the limit is {int(limit)}"})
         if est["ram_bytes"] and est["memory_bytes"] > est["ram_bytes"]:
+            gpu = est["memory_model"] == "gpu-mg"       # the text names the model that the fine pass runs with
+            what = "gpu-mg memory estimate" if gpu else "memory estimate"
+            where = f" (peak in the {est['memory_phase']} step)" if gpu else ""
             out.append({"guard": "memory", "value": int(est["memory_bytes"]), "limit": int(est["ram_bytes"]),
-                        "text": f"the memory estimate is {gib(est['memory_bytes'])} and this machine has {gib(est['ram_bytes'])} RAM"})
+                        "text": f"the {what} is {gib(est['memory_bytes'])}{where} and this machine has {gib(est['ram_bytes'])} RAM"})
         return out
 
     failed = failures(float(voxel_mm))

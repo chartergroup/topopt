@@ -227,5 +227,5 @@ def test_the_desktop_texts_say_what_the_mac_test_showed():
     desktop = install_section("## Claude Desktop")
     for text in (readme, desktop):
         assert "Nobody has tested these steps" not in text
-    assert "2026-10-27" in desktop and "v0.4.0" in desktop and "Claude Desktop 3.6556.2" in desktop
+    assert "2026-10-27" in desktop and "release 0.4.0" in desktop and "Claude Desktop 3.6556.2" in desktop
     assert "The Code tab test did not record the version of the app." in re.sub(r"\s+", " ", desktop)   # only the chat test had it

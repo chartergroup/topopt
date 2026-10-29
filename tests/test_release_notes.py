@@ -256,13 +256,27 @@ def test_the_changelog_insert_keeps_the_marker_once_and_is_idempotent():
 
 # ---- the CHANGELOG of this repo ----
 
-def test_the_changelog_entry_of_v0_2_0_is_short_and_has_one_line_per_merge():
-    text = (REPO / "CHANGELOG.md").read_text(encoding="utf-8")
+def v0_2_0_entry(text):
+    """The v0.2.0 entry of a CHANGELOG text. A folded CHANGELOG (heading `## Earlier versions`) has none: the test skips."""
     m = re.search(r"^## v0\.2\.0 .*?(?=^## )", text, re.S | re.M)
     if not m and re.search(r"^## Earlier versions$", text, re.M):
         pytest.skip("the public CHANGELOG folds the entries of the releases before the first public one")
     assert m, "CHANGELOG.md has no v0.2.0 entry"
-    entry = m.group(0)
+    return m.group(0)
+
+
+def test_the_v0_2_0_entry_is_skipped_on_a_folded_changelog_and_missing_on_another():
+    entry = "## v0.2.0 (2026-01-01)\n- x\n"
+    assert v0_2_0_entry("head\n" + entry + "## v0.1.0\n- y\n") == entry
+    with pytest.raises(pytest.skip.Exception):
+        v0_2_0_entry("head\n## v0.5.0 (2026-02-01)\n- z\n## Earlier versions\nVersions 0.1.0 to 0.4.0 were released before.\n")
+    with pytest.raises(AssertionError):
+        v0_2_0_entry("head\n## v0.5.0 (2026-02-01)\n- z\n## v0.1.0\n- y\n")
+
+
+def test_the_changelog_entry_of_v0_2_0_is_short_and_has_one_line_per_merge():
+    text = (REPO / "CHANGELOG.md").read_text(encoding="utf-8")
+    entry = v0_2_0_entry(text)
     assert "Co-Authored-By" not in entry and "/commit/" not in entry
     lines = re.findall(r"^- .*\(\[#(\d+)\]\(https://github\.com/chartergroup/topopt/pull/\d+\)\)\.$", entry, re.M)
     assert len(lines) == len(set(lines)) == entry.count("\n- ")
